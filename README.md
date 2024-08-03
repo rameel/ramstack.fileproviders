@@ -10,6 +10,16 @@ To install the `Ramstack.FileProviders` [NuGet package](https://www.nuget.org/pa
 dotnet add package Ramstack.FileProviders
 ```
 
+## Main Types
+The main types provided by this library are:
+- `PrefixedFileProvider`
+- `SubFileProvider`
+- `ZipFileProvider`
+- `GlobbingFileProvider`
+- `FileNodeBase`
+- `DirectoryNode`
+- `FileNode`
+
 ## Supported versions
 
 |      | Version |
