@@ -48,7 +48,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Ramstack.Globbing" Version="2.1.0-preview.7" />
+    <PackageReference Include="Ramstack.Globbing" Version="2.1.0" />
   </ItemGroup>
 
   <ItemGroup>
