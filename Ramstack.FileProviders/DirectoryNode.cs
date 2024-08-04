@@ -108,10 +108,10 @@ public sealed class DirectoryNode : FileNodeBase
     }
 
     /// <summary>
-    /// Retrieves a collection of files within this directory.
+    /// Returns an enumerable collection of files in the current directory.
     /// </summary>
     /// <returns>
-    /// An enumerable collection of files within this directory.
+    /// An enumerable collection of files in the current directory.
     /// </returns>
     public IEnumerable<FileNode> EnumerateFiles()
     {
@@ -126,10 +126,10 @@ public sealed class DirectoryNode : FileNodeBase
     }
 
     /// <summary>
-    /// Retrieves a collection of files within this directory.
+    /// Returns an enumerable collection of files in the current directory.
     /// </summary>
     /// <returns>
-    /// An enumerable collection of directories within this directory.
+    /// An enumerable collection of directories in the current directory.
     /// </returns>
     public IEnumerable<DirectoryNode> EnumerateDirectories()
     {
@@ -144,10 +144,10 @@ public sealed class DirectoryNode : FileNodeBase
     }
 
     /// <summary>
-    /// Retrieves a collection of file nodes within this directory.
+    /// Returns an enumerable collection of file nodes in the current directory.
     /// </summary>
     /// <returns>
-    /// An enumerable collection of file nodes within this directory.
+    /// An enumerable collection of file nodes in the current directory.
     /// </returns>
     public IEnumerable<FileNodeBase> EnumerateFileNodes()
     {
