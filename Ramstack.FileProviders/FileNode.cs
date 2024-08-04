@@ -92,17 +92,8 @@ public sealed class FileNode : FileNodeBase
     public IFileInfo GetFileInfo() =>
         _file;
 
-    private static void EnsureDirectoryExists(string path)
-    {
-        var directoryPath = Path.GetDirectoryName(path)!;
-
-        if (!System.IO.Directory.Exists(directoryPath))
-            System.IO.Directory.CreateDirectory(directoryPath);
-    }
-
     [DoesNotReturn]
     private static void Error_FileExpected() =>
         throw new ArgumentException(
             "The specified path refers to a directory, not a file.");
-
 }
