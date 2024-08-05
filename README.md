@@ -61,6 +61,7 @@ allow specifying glob patterns to search for the desired files, as well as patte
 from the resulting list.
 ```csharp
 DirectoryNode directory = provider.GetDirectory("/project");
+
 // Finds all *.md files and converts them to HTML
 foreach (FileNode file in directory.EnumerateFiles(pattern: "**/*.md"))
     RenderMarkdown(file);
