@@ -44,7 +44,7 @@ public static partial class FileProviderExtensions
     }
 
     /// <summary>
-    /// Return file contents as readonly stream.
+    /// Returns file contents as readonly stream.
     /// </summary>
     /// <param name="provider">The <see cref="IFileProvider"/>.</param>
     /// <param name="path">The path of the file to open.</param>

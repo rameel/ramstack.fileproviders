@@ -74,7 +74,7 @@ public sealed class FileNode : FileNodeBase
         _file.CreateReadStream();
 
     /// <summary>
-    /// Creates a <see cref="StreamReader" /> with the specified character encoding that reads from the current text file.
+    /// Returns a <see cref="StreamReader" /> with the specified character encoding that reads from the current text file.
     /// </summary>
     /// <param name="encoding">The character encoding to use.</param>
     /// <returns>
