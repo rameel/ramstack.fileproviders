@@ -51,11 +51,8 @@ public static partial class FileProviderExtensions
     /// <returns>
     /// The file contents as readonly stream.
     /// </returns>
-    public static Stream OpenRead(this IFileProvider provider, string path)
-    {
-        path = FilePath.GetFullPath(path);
-        return provider.GetFileInfo(path).CreateReadStream();
-    }
+    public static Stream OpenRead(this IFileProvider provider, string path) =>
+        provider.GetFileInfo(path).OpenRead();
 
     /// <summary>
     /// Returns a <see cref="StreamReader"/> with the specified character encoding that reads from the current text file.
@@ -67,5 +64,5 @@ public static partial class FileProviderExtensions
     /// A new <see cref="StreamReader"/> with the specified character encoding.
     /// </returns>
     public static StreamReader OpenText(this IFileProvider provider, string path, Encoding? encoding = null) =>
-        new(provider.OpenRead(path), encoding, detectEncodingFromByteOrderMarks: true, bufferSize: -1, leaveOpen: false);
+        provider.GetFileInfo(path).OpenText(encoding);
 }
