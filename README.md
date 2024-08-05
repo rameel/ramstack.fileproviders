@@ -154,7 +154,7 @@ Console.WriteLine(file.Exists);
 ### GlobbingFileProvider
 `GlobbingFileProvider` supports glob pattern matching for file paths, allowing for flexible file selection.
 You can specify patterns for both including and excluding files.
-It relies on the [Ramstack.Globbing](https://www.nuget.org/packages/Ramstack.Globbing) project for its globbing capabilities.
+It relies on the [Ramstack.Globbing](https://www.nuget.org/packages/Ramstack.Globbing) package for its globbing capabilities.
 
 Example:
 ```csharp
