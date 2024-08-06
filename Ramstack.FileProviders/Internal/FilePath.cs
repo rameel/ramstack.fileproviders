@@ -68,7 +68,7 @@ internal static class FilePath
             return "";
 
         var p = index;
-        while (p - 1 >= 0 && (path[p - 1] == '/'))
+        while (p - 1 >= 0 && path[p - 1] == '/')
             p--;
 
         return p switch
