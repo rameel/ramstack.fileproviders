@@ -88,7 +88,7 @@ public sealed class ZipFileProvider : IFileProvider, IDisposable
                 continue;
 
             var path = FilePath.Normalize(entry.FullName);
-            var directory = GetDirectory(FilePath.GetDirectoryName(path)!);
+            var directory = GetDirectory(FilePath.GetDirectoryName(path));
             var file = new ZipFileInfo(entry);
 
             directory.RegisterFile(file);
@@ -101,7 +101,7 @@ public sealed class ZipFileProvider : IFileProvider, IDisposable
                 return (ZipDirectoryInfo)di;
 
             di = new ZipDirectoryInfo(path);
-            var parent = GetDirectory(FilePath.GetDirectoryName(path)!);
+            var parent = GetDirectory(FilePath.GetDirectoryName(path));
             parent.RegisterFile(di);
             cache.Add(path, di);
 

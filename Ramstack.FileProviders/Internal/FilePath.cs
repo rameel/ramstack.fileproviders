@@ -15,33 +15,65 @@ internal static class FilePath
     private const int StackallocThreshold = 160;
 
     /// <summary>
-    /// Returns the directory portion of a file path.
+    /// Gets the extension part of the specified path string, including the leading dot <c>.</c>
+    /// even if it is the entire file name, or an empty string if no extension is present.
     /// </summary>
-    /// <remarks>
-    /// Returns a string consisting of all characters up to but not including the last
-    /// forward slash (<c>/</c>) in the file path. The returned value is <see langword="null" />
-    /// if the specified path is a root (<c>/</c>).
-    /// </remarks>
-    /// <param name="path">The path of a file or directory.</param>
+    /// <param name="path">The path string from which to get the extension.</param>
     /// <returns>
-    /// Directory information for path, or <see langword="null" /> if path denotes a root directory.
+    /// The extension of the specified path, including the period <c>.</c>,
+    /// or an empty string if no extension is present.
     /// </returns>
-    public static string? GetDirectoryName(string path)
+    public static string GetExtension(string path)
     {
-        if (string.IsNullOrEmpty(path))
-            return null;
+        for (var i = path.Length - 1; i >= 0; i--)
+        {
+            if (path[i] == '.')
+                return path.AsSpan(i).ToString();
 
+            if (path[i] == '/')
+                break;
+        }
+
+        return "";
+    }
+
+    /// <summary>
+    /// Returns the file name and extension for the specified path.
+    /// </summary>
+    /// <param name="path">The path from which to obtain the file name and extension.</param>
+    /// <returns>
+    /// The file name and extension for the <paramref name="path"/>.
+    /// </returns>
+    public static string GetFileName(string path)
+    {
+        var p = path.AsSpan();
+
+        var start = p.LastIndexOf('/');
+        return start >= 0
+            ? p.Slice(start + 1).ToString()
+            : "";
+    }
+
+    /// <summary>
+    /// Returns the directory portion for the specified path.
+    /// </summary>
+    /// <param name="path">The path to retrieve the directory portion from.</param>
+    /// <returns>
+    /// Directory portion for <paramref name="path"/>, or an empty string if path denotes a root directory.
+    /// </returns>
+    public static string GetDirectoryName(string path)
+    {
         var index = path.AsSpan().LastIndexOf('/');
         if (index < 0)
             return "";
 
         var p = index;
-        while (p - 1 >= 0 && path[p - 1] == '/')
+        while (p - 1 >= 0 && (path[p - 1] == '/'))
             p--;
 
         return p switch
         {
-            0 when index + 1 == path.Length => null,
+            0 when index + 1 == path.Length => "",
             0 => "/",
             _ => path[..p]
         };

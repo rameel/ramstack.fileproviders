@@ -78,15 +78,15 @@ public class FilePathTests
     public bool IsNavigatesAboveRoot(string path) =>
         FilePath.IsNavigatesAboveRoot(path);
 
-    [TestCase("/", ExpectedResult = null)]
+    [TestCase("/", ExpectedResult = "")]
     [TestCase("/dir", ExpectedResult = "/")]
     [TestCase("/dir/file", ExpectedResult = "/dir")]
     [TestCase("/dir/dir/", ExpectedResult = "/dir/dir")]
     [TestCase("dir/dir", ExpectedResult = "dir")]
     [TestCase("dir/dir/", ExpectedResult = "dir/dir")]
 
-    [TestCase("//", ExpectedResult = null)]
-    [TestCase("///", ExpectedResult = null)]
+    [TestCase("//", ExpectedResult = "")]
+    [TestCase("///", ExpectedResult = "")]
     [TestCase("//dir", ExpectedResult = "/")]
     [TestCase("///dir", ExpectedResult = "/")]
     [TestCase("////dir", ExpectedResult = "/")]
