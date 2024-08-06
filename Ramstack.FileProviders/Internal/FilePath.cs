@@ -321,33 +321,6 @@ internal static class FilePath
     }
 
     /// <summary>
-    /// Combines two strings into a path.
-    /// </summary>
-    /// <param name="path1">The first path to combine.</param>
-    /// <param name="path2">The second path to combine.</param>
-    /// <returns>
-    /// The combined paths.
-    /// If one of the specified paths is a zero-length string, this method returns the other path.
-    /// If <paramref name="path2" /> contains an absolute path, this method returns <paramref name="path2" />.
-    /// </returns>
-    public static string Combine(string path1, string path2)
-    {
-        if (path2.Length == 0)
-            return path1;
-
-        if (path1.Length == 0)
-            return path2;
-
-        if (HasLeadingSlash(path2))
-            return path2;
-
-        if (HasTrailingSlash(path1))
-            return path1 + path2;
-
-        return path1 + "/" + path2;
-    }
-
-    /// <summary>
     /// Determines whether the specified path string starts with a directory separator.
     /// </summary>
     /// <param name="path">The path to test.</param>
