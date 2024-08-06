@@ -5,6 +5,23 @@ namespace Ramstack.FileProviders;
 [TestFixture]
 public class FilePathTests
 {
+    [TestCase("", ExpectedResult = "")]
+    [TestCase(".", ExpectedResult = ".")]
+    [TestCase("/", ExpectedResult = "")]
+    [TestCase("/.", ExpectedResult = ".")]
+    [TestCase("file.txt", ExpectedResult = ".txt")]
+    [TestCase("/path/to/file.txt", ExpectedResult = ".txt")]
+    [TestCase("/path/to/.hidden", ExpectedResult = ".hidden")]
+    [TestCase("/path/to/file", ExpectedResult = "")]
+    [TestCase("/path.with.dots/to/file.txt", ExpectedResult = ".txt")]
+    [TestCase("/path/with.dots/file.", ExpectedResult = ".")]
+    [TestCase("/path.with.dots/to/.hidden.ext", ExpectedResult = ".ext")]
+    [TestCase("file.with.multiple.dots.ext", ExpectedResult = ".ext")]
+    [TestCase("/path/to/file.with.multiple.dots.ext", ExpectedResult = ".ext")]
+    [TestCase("/.hidden", ExpectedResult = ".hidden")]
+    public string GetExtension(string path) =>
+        FilePath.GetExtension(path);
+
     [TestCase("/", ExpectedResult = true)]
     [TestCase("/a/b/c", ExpectedResult = true)]
     [TestCase("/a/./b/c", ExpectedResult = true)]
