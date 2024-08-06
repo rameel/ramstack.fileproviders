@@ -36,7 +36,7 @@ public class FilePathTests
     [TestCase("/.hidden", ExpectedResult = ".hidden")]
     [TestCase("/path/to/", ExpectedResult = "")]
     [TestCase("/path/to/directory/", ExpectedResult = "")]
-    public string GetFileNameTest(string path) =>
+    public string GetFileName(string path) =>
         FilePath.GetFileName(path);
 
     [TestCase("/", ExpectedResult = true)]
