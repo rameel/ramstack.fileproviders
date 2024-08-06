@@ -22,6 +22,23 @@ public class FilePathTests
     public string GetExtension(string path) =>
         FilePath.GetExtension(path);
 
+    [TestCase("", ExpectedResult = "")]
+    [TestCase(".", ExpectedResult = ".")]
+    [TestCase(".hidden", ExpectedResult = ".hidden")]
+    [TestCase("file.txt", ExpectedResult = "file.txt")]
+    [TestCase("/path/to/file.txt", ExpectedResult = "file.txt")]
+    [TestCase("/path/to/.hidden", ExpectedResult = ".hidden")]
+    [TestCase("/path/to/file", ExpectedResult = "file")]
+    [TestCase("/path/with.dots/file.txt", ExpectedResult = "file.txt")]
+    [TestCase("/path/with.dots/file.", ExpectedResult = "file.")]
+    [TestCase("/path/to/file.with.multiple.dots.ext", ExpectedResult = "file.with.multiple.dots.ext")]
+    [TestCase("/path/to/.hidden.ext", ExpectedResult = ".hidden.ext")]
+    [TestCase("/.hidden", ExpectedResult = ".hidden")]
+    [TestCase("/path/to/", ExpectedResult = "")]
+    [TestCase("/path/to/directory/", ExpectedResult = "")]
+    public string GetFileNameTest(string path) =>
+        FilePath.GetFileName(path);
+
     [TestCase("/", ExpectedResult = true)]
     [TestCase("/a/b/c", ExpectedResult = true)]
     [TestCase("/a/./b/c", ExpectedResult = true)]

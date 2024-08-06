@@ -51,7 +51,7 @@ internal static class FilePath
         var start = p.LastIndexOf('/');
         return start >= 0
             ? p.Slice(start + 1).ToString()
-            : "";
+            : path;
     }
 
     /// <summary>
