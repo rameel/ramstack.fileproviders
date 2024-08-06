@@ -44,7 +44,7 @@ public sealed class DirectoryNode : FileNodeBase
             if (IsRoot)
                 return null;
 
-            var parent = FilePath.GetDirectoryName(FullName)!;
+            var parent = FilePath.GetDirectoryName(FullName);
             var directory = Provider.GetDirectoryContents(parent);
             return new DirectoryNode(Provider, parent, directory);
         }
@@ -76,36 +76,6 @@ public sealed class DirectoryNode : FileNodeBase
     /// <param name="directory">The <see cref="IDirectoryContents"/> associated with this directory.</param>
     internal DirectoryNode(IFileProvider provider, string path, IDirectoryContents directory) : base(provider, path) =>
         _directory = directory;
-
-    /// <summary>
-    /// Returns a directory with the specified path.
-    /// </summary>
-    /// <param name="path">The path that identifies the directory.</param>
-    /// <returns>
-    /// The <see cref="DirectoryNode"/> representing the desired directory.
-    /// </returns>
-    public DirectoryNode GetDirectory(string path)
-    {
-        path = FilePath.GetFullPath(FilePath.Combine(FullName, path));
-
-        var directory = Provider.GetDirectoryContents(path);
-        return new DirectoryNode(Provider, path, directory);
-    }
-
-    /// <summary>
-    /// Returns a file with the specified path.
-    /// </summary>
-    /// <param name="path">The path that identifies the file.</param>
-    /// <returns>
-    /// The <see cref="FileNode"/> representing the desired file.
-    /// </returns>
-    public FileNode GetFile(string path)
-    {
-        path = FilePath.GetFullPath(FilePath.Combine(FullName, path));
-
-        var file = Provider.GetFileInfo(path);
-        return new FileNode(Provider, path, file);
-    }
 
     /// <summary>
     /// Returns an enumerable collection of files in the current directory.

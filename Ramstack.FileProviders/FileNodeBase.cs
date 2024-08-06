@@ -2,6 +2,8 @@ using System.Diagnostics;
 
 using Microsoft.Extensions.FileProviders;
 
+using Ramstack.FileProviders.Internal;
+
 namespace Ramstack.FileProviders;
 
 /// <summary>
@@ -23,7 +25,7 @@ public abstract class FileNodeBase
     /// <summary>
     /// Gets the name of the file or directory.
     /// </summary>
-    public string Name => Path.GetFileName(FullName);
+    public string Name => FilePath.GetFileName(FullName);
 
     /// <summary>
     /// Gets a value indicating whether the file or directory exists.

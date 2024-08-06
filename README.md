@@ -16,8 +16,6 @@
 Represents a lightweight .NET library of useful and convenient extensions for `Microsoft.Extensions.FileProviders`
 that enhances file handling capabilities in .NET applications.
 
-[![.NET](https://github.com/rameel/ramstack.fileproviders/actions/workflows/test.yml/badge.svg)](https://github.com/rameel/ramstack.fileproviders/actions/workflows/test.yml)
-
 ## Getting Started
 
 To install the `Ramstack.FileProviders` [NuGet package](https://www.nuget.org/packages/Ramstack.FileProviders)

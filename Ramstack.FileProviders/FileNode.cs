@@ -20,12 +20,12 @@ public sealed class FileNode : FileNodeBase
     /// <summary>
     /// Gets the string representing the extension part of the file.
     /// </summary>
-    public string Extension => Path.GetExtension(FullName);
+    public string Extension => FilePath.GetExtension(FullName);
 
     /// <summary>
     /// Gets the full path of the directory containing the file.
     /// </summary>
-    public string DirectoryName => FilePath.GetDirectoryName(FullName)!;
+    public string DirectoryName => FilePath.GetDirectoryName(FullName);
 
     /// <summary>
     /// Gets the last write time of the current file.
@@ -39,7 +39,7 @@ public sealed class FileNode : FileNodeBase
     {
         get
         {
-            var path = FilePath.GetDirectoryName(FullName)!;
+            var path = FilePath.GetDirectoryName(FullName);
             var directory = Provider.GetDirectoryContents(path);
             return new DirectoryNode(Provider, path, directory);
         }

@@ -5,6 +5,40 @@ namespace Ramstack.FileProviders;
 [TestFixture]
 public class FilePathTests
 {
+    [TestCase("", ExpectedResult = "")]
+    [TestCase(".", ExpectedResult = ".")]
+    [TestCase("/", ExpectedResult = "")]
+    [TestCase("/.", ExpectedResult = ".")]
+    [TestCase("file.txt", ExpectedResult = ".txt")]
+    [TestCase("/path/to/file.txt", ExpectedResult = ".txt")]
+    [TestCase("/path/to/.hidden", ExpectedResult = ".hidden")]
+    [TestCase("/path/to/file", ExpectedResult = "")]
+    [TestCase("/path.with.dots/to/file.txt", ExpectedResult = ".txt")]
+    [TestCase("/path/with.dots/file.", ExpectedResult = ".")]
+    [TestCase("/path.with.dots/to/.hidden.ext", ExpectedResult = ".ext")]
+    [TestCase("file.with.multiple.dots.ext", ExpectedResult = ".ext")]
+    [TestCase("/path/to/file.with.multiple.dots.ext", ExpectedResult = ".ext")]
+    [TestCase("/.hidden", ExpectedResult = ".hidden")]
+    public string GetExtension(string path) =>
+        FilePath.GetExtension(path);
+
+    [TestCase("", ExpectedResult = "")]
+    [TestCase(".", ExpectedResult = ".")]
+    [TestCase(".hidden", ExpectedResult = ".hidden")]
+    [TestCase("file.txt", ExpectedResult = "file.txt")]
+    [TestCase("/path/to/file.txt", ExpectedResult = "file.txt")]
+    [TestCase("/path/to/.hidden", ExpectedResult = ".hidden")]
+    [TestCase("/path/to/file", ExpectedResult = "file")]
+    [TestCase("/path/with.dots/file.txt", ExpectedResult = "file.txt")]
+    [TestCase("/path/with.dots/file.", ExpectedResult = "file.")]
+    [TestCase("/path/to/file.with.multiple.dots.ext", ExpectedResult = "file.with.multiple.dots.ext")]
+    [TestCase("/path/to/.hidden.ext", ExpectedResult = ".hidden.ext")]
+    [TestCase("/.hidden", ExpectedResult = ".hidden")]
+    [TestCase("/path/to/", ExpectedResult = "")]
+    [TestCase("/path/to/directory/", ExpectedResult = "")]
+    public string GetFileNameTest(string path) =>
+        FilePath.GetFileName(path);
+
     [TestCase("/", ExpectedResult = true)]
     [TestCase("/a/b/c", ExpectedResult = true)]
     [TestCase("/a/./b/c", ExpectedResult = true)]
@@ -78,15 +112,15 @@ public class FilePathTests
     public bool IsNavigatesAboveRoot(string path) =>
         FilePath.IsNavigatesAboveRoot(path);
 
-    [TestCase("/", ExpectedResult = null)]
+    [TestCase("/", ExpectedResult = "")]
     [TestCase("/dir", ExpectedResult = "/")]
     [TestCase("/dir/file", ExpectedResult = "/dir")]
     [TestCase("/dir/dir/", ExpectedResult = "/dir/dir")]
     [TestCase("dir/dir", ExpectedResult = "dir")]
     [TestCase("dir/dir/", ExpectedResult = "dir/dir")]
 
-    [TestCase("//", ExpectedResult = null)]
-    [TestCase("///", ExpectedResult = null)]
+    [TestCase("//", ExpectedResult = "")]
+    [TestCase("///", ExpectedResult = "")]
     [TestCase("//dir", ExpectedResult = "/")]
     [TestCase("///dir", ExpectedResult = "/")]
     [TestCase("////dir", ExpectedResult = "/")]
