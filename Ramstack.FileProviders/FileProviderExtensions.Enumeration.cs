@@ -5,48 +5,48 @@ namespace Ramstack.FileProviders;
 partial class FileProviderExtensions
 {
     /// <summary>
-    /// Enumerates files in a directory.
+    /// Returns an enumerable collection of files in the directory at the specified path using the provided file provider.
     /// </summary>
     /// <param name="provider">The file provider to retrieve files from.</param>
-    /// <param name="path">The path for which to retrieve files.</param>
+    /// <param name="path">The path of the directory from which to retrieve files.</param>
     /// <returns>
-    /// An enumerable collection of <see cref="FileNode"/> objects.
+    /// An enumerable collection of files in the specified directory.
     /// </returns>
     public static IEnumerable<FileNode> EnumerateFiles(this IFileProvider provider, string path) =>
         provider.GetDirectory(path).EnumerateFiles();
 
     /// <summary>
-    /// Enumerates directories in a directory.
+    /// Returns an enumerable collection of directories in the directory at the specified path using the provided file provider.
     /// </summary>
     /// <param name="provider">The file provider to retrieve directories from.</param>
-    /// <param name="path">The path for which to retrieve directories.</param>
+    /// <param name="path">The path of the directory from which to retrieve directories.</param>
     /// <returns>
-    /// An enumerable collection of <see cref="DirectoryNode"/> objects.
+    /// An enumerable collection of directories in the specified directory.
     /// </returns>
     public static IEnumerable<DirectoryNode> EnumerateDirectories(this IFileProvider provider, string path) =>
         provider.GetDirectory(path).EnumerateDirectories();
 
     /// <summary>
-    /// Enumerates file nodes in a directory.
+    /// Returns an enumerable collection of file nodes in the directory at the specified path using the provided file provider.
     /// </summary>
-    /// <param name="provider">The file provider to retrieve files from.</param>
-    /// <param name="path">The path for which to retrieve file nodes.</param>
+    /// <param name="provider">The file provider to retrieve file nodes from.</param>
+    /// <param name="path">The path of the directory from which to retrieve file nodes.</param>
     /// <returns>
-    /// An enumerable collection of <see cref="FileNodeBase"/> objects.
+    /// An enumerable collection of file nodes in the specified directory.
     /// </returns>
     public static IEnumerable<FileNodeBase> EnumerateFileNodes(this IFileProvider provider, string path) =>
         provider.GetDirectory(path).EnumerateFileNodes();
 
     /// <summary>
-    /// Enumerates files in a directory that match the specified glob pattern.
+    /// Returns an enumerable collection of files in the directory at the specified path using the provided file provider
+    /// that match the specified glob pattern.
     /// </summary>
     /// <param name="provider">The file provider to retrieve files from.</param>
-    /// <param name="path">The path for which to retrieve files.</param>
+    /// <param name="path">The path of the directory from which to retrieve file nodes.</param>
     /// <param name="pattern">The glob pattern to match against the names of files.</param>
     /// <param name="exclude">Optional glob pattern to exclude files.</param>
     /// <returns>
-    /// An enumerable collection of files in the directory specified by <paramref name="path"/>
-    /// that match the specified glob pattern.
+    /// An enumerable collection of files in the directory that match the specified glob pattern.
     /// </returns>
     /// <remarks>
     /// Glob pattern:
@@ -100,15 +100,15 @@ partial class FileProviderExtensions
         provider.GetDirectory(path).EnumerateFiles(pattern, exclude);
 
     /// <summary>
-    /// Enumerates files in a directory that match any of the specified glob patterns.
+    /// Returns an enumerable collection of files in the directory at the specified path using the provided file provider
+    /// that match any of the specified glob patterns.
     /// </summary>
     /// <param name="provider">The file provider to retrieve files from.</param>
-    /// <param name="path">The path for which to retrieve files.</param>
+    /// <param name="path">The path of the directory from which to retrieve files.</param>
     /// <param name="patterns">An array of glob patterns to match against the names of files.</param>
     /// <param name="excludes">Optional array of glob patterns to exclude files.</param>
     /// <returns>
-    /// An enumerable collection of files in the directory specified by <paramref name="path"/>
-    /// that match the specified glob patterns.
+    /// An enumerable collection of files in the directory that match any of the specified glob patterns.
     /// </returns>
     /// <remarks>
     /// Glob pattern:
@@ -162,15 +162,15 @@ partial class FileProviderExtensions
         provider.GetDirectory(path).EnumerateFiles(patterns, excludes);
 
     /// <summary>
-    /// Enumerates directories in a directory that match the specified glob pattern.
+    /// Returns an enumerable collection of directories in the directory at the specified path using the provided file provider
+    /// that match the specified glob pattern.
     /// </summary>
     /// <param name="provider">The file provider to retrieve directories from.</param>
-    /// <param name="path">The path for which to retrieve directories.</param>
+    /// <param name="path">The path of the directory from which to retrieve directories.</param>
     /// <param name="pattern">The glob pattern to match against the names of directories.</param>
     /// <param name="exclude">Optional glob pattern to exclude directories.</param>
     /// <returns>
-    /// An enumerable collection of directories in the directory specified by <paramref name="path"/>
-    /// that match the specified glob pattern.
+    /// An enumerable collection of directories in the directory that match the specified glob pattern.
     /// </returns>
     /// <remarks>
     /// Glob pattern:
@@ -224,15 +224,15 @@ partial class FileProviderExtensions
         provider.GetDirectory(path).EnumerateDirectories(pattern, exclude);
 
     /// <summary>
-    /// Enumerates directories in a directory that match any of the specified glob patterns.
+    /// Returns an enumerable collection of directories in the directory at the specified path using the provided file provider
+    /// that match any of the specified glob patterns.
     /// </summary>
     /// <param name="provider">The file provider to retrieve directories from.</param>
-    /// <param name="path">The path for which to retrieve directories.</param>
+    /// <param name="path">The path of the directory from which to retrieve directories.</param>
     /// <param name="patterns">An array of glob patterns to match against the names of directories.</param>
     /// <param name="excludes">Optional array of glob patterns to exclude directories.</param>
     /// <returns>
-    /// An enumerable collection of directories in the directory specified by <paramref name="path"/>
-    /// that match the specified glob patterns.
+    /// An enumerable collection of directories in the directory that match any of the specified glob patterns.
     /// </returns>
     /// <remarks>
     /// Glob pattern:
@@ -286,15 +286,15 @@ partial class FileProviderExtensions
         provider.GetDirectory(path).EnumerateDirectories(patterns, excludes);
 
     /// <summary>
-    /// Enumerates file nodes in a directory that match any of the specified glob pattern.
+    /// Returns an enumerable collection of file nodes in the directory at the specified path using the provided file provider
+    /// that match the specified glob pattern.
     /// </summary>
     /// <param name="provider">The file provider to retrieve file nodes from.</param>
-    /// <param name="path">The path for which to retrieve file nodes.</param>
-    /// <param name="pattern">The glob pattern to match against the names of file nodes in path.</param>
+    /// <param name="path">The path of the directory from which to retrieve file nodes.</param>
+    /// <param name="pattern">The glob pattern to match against the names of file nodes.</param>
     /// <param name="exclude">Optional glob pattern to exclude file nodes.</param>
     /// <returns>
-    /// An enumerable collection of file nodes in the directory specified by <paramref name="path"/>
-    /// that match the specified glob pattern.
+    /// An enumerable collection of file nodes in the directory that match the specified glob pattern.
     /// </returns>
     /// <remarks>
     /// Glob pattern:
@@ -348,15 +348,15 @@ partial class FileProviderExtensions
         provider.GetDirectory(path).EnumerateFileNodes(pattern, exclude);
 
     /// <summary>
-    /// Enumerates file nodes in a directory that match any of the specified glob patterns.
+    /// Returns an enumerable collection of file nodes in the directory at the specified path using the provided file provider
+    /// that match any of the specified glob patterns.
     /// </summary>
     /// <param name="provider">The file provider to retrieve file nodes from.</param>
-    /// <param name="path">The path for which to retrieve file nodes.</param>
+    /// <param name="path">The path of the directory from which to retrieve file nodes.</param>
     /// <param name="patterns">An array of glob patterns to match against the names of file nodes.</param>
     /// <param name="excludes">Optional array of glob patterns to exclude file nodes.</param>
     /// <returns>
-    /// An enumerable collection of file nodes in the directory specified by <paramref name="path"/>
-    /// that match the specified glob patterns.
+    /// An enumerable collection of file nodes in the directory that match any of the specified glob patterns.
     /// </returns>
     /// <remarks>
     /// Glob pattern:

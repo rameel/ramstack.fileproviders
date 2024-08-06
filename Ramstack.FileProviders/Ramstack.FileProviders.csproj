@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-    <Description>.NET library of useful and convenient extensions for Microsoft.Extensions.FileProviders.</Description>
+    <Description>A lightweight .NET library of useful and convenient extensions for Microsoft.Extensions.FileProviders.</Description>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <LangVersion>preview</LangVersion>

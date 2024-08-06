@@ -13,8 +13,10 @@
 
 # Ramstack.FileProviders
 
-`Ramstack.FileProviders` is a .NET library that provides useful and convenient extensions for `Microsoft.Extensions.FileProviders`,
-enhancing file handling capabilities in .NET applications.
+Represents a lightweight .NET library of useful and convenient extensions for `Microsoft.Extensions.FileProviders`
+that enhances file handling capabilities in .NET applications.
+
+[![.NET](https://github.com/rameel/ramstack.fileproviders/actions/workflows/test.yml/badge.svg)](https://github.com/rameel/ramstack.fileproviders/actions/workflows/test.yml)
 
 ## Getting Started
 
@@ -61,11 +63,12 @@ allow specifying glob patterns to search for the desired files, as well as patte
 from the resulting list.
 ```csharp
 DirectoryNode directory = provider.GetDirectory("/project");
+
 // Finds all *.md files and converts them to HTML
 foreach (FileNode file in directory.EnumerateFiles(pattern: "**/*.md"))
     RenderMarkdown(file);
 
-// Exclude files in a specific folder
+// Excludes files in a specific folder
 foreach (FileNode file in directory.EnumerateFiles(pattern: "**/*.md", exclude: "vendors/**"))
     RenderMarkdown(file);
 ```
@@ -153,7 +156,7 @@ Console.WriteLine(file.Exists);
 ### GlobbingFileProvider
 `GlobbingFileProvider` supports glob pattern matching for file paths, allowing for flexible file selection.
 You can specify patterns for both including and excluding files.
-It relies on the [Ramstack.Globbing](https://www.nuget.org/packages/Ramstack.Globbing) project for its globbing capabilities.
+It relies on the [Ramstack.Globbing](https://www.nuget.org/packages/Ramstack.Globbing) package for its globbing capabilities.
 
 Example:
 ```csharp

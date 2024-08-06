@@ -9,14 +9,13 @@ namespace Ramstack.FileProviders;
 public static class DirectoryNodeExtensions
 {
     /// <summary>
-    /// Enumerates files in a directory that match the specified glob pattern.
+    /// Returns an enumerable collection of files in the specified directory that match the specified glob pattern.
     /// </summary>
     /// <param name="directory">The <see cref="DirectoryNode"/> instance representing the directory to search.</param>
     /// <param name="pattern">The glob pattern to match against the names of files.</param>
     /// <param name="exclude">Optional glob pattern to exclude files.</param>
     /// <returns>
-    /// An enumerable collection of files in the directory specified by <paramref name="directory"/>
-    /// that match the specified glob pattern.
+    /// An enumerable collection of files in the specified directory that match the specified glob pattern.
     /// </returns>
     /// <remarks>
     /// Glob pattern:
@@ -70,14 +69,13 @@ public static class DirectoryNodeExtensions
         EnumerateFiles(directory, [pattern], ToExcludes(exclude));
 
     /// <summary>
-    /// Enumerates files in a directory that match any of the specified glob patterns.
+    /// Returns an enumerable collection of files in the specified directory that match any of the specified glob patterns.
     /// </summary>
     /// <param name="directory">The <see cref="DirectoryNode"/> instance representing the directory to search.</param>
     /// <param name="patterns">An array of glob patterns to match against the names of files.</param>
     /// <param name="excludes">Optional array of glob patterns to exclude files.</param>
     /// <returns>
-    /// An enumerable collection of files in the directory specified by <paramref name="directory"/>
-    /// that match the specified glob patterns.
+    /// An enumerable collection of files in the specified directory that match any the specified glob patterns.
     /// </returns>
     /// <remarks>
     /// Glob pattern:
@@ -143,14 +141,13 @@ public static class DirectoryNodeExtensions
     }
 
     /// <summary>
-    /// Enumerates directories in a directory that match the specified glob pattern.
+    /// Returns an enumerable collection of directories in the specified directory that match the specified glob pattern.
     /// </summary>
     /// <param name="directory">The <see cref="DirectoryNode"/> instance representing the directory to search.</param>
     /// <param name="pattern">The glob pattern to match against the names of directories.</param>
     /// <param name="exclude">Optional glob pattern to exclude directories.</param>
     /// <returns>
-    /// An enumerable collection of directories in the directory specified by <paramref name="directory"/>
-    /// that match the specified glob pattern.
+    /// An enumerable collection of directories in the specified directory that match the specified glob pattern.
     /// </returns>
     /// <remarks>
     /// Glob pattern:
@@ -204,14 +201,13 @@ public static class DirectoryNodeExtensions
         EnumerateDirectories(directory, [pattern], ToExcludes(exclude));
 
     /// <summary>
-    /// Enumerates directories in a directory that match any of the specified glob patterns.
+    /// Returns an enumerable collection of directories in the specified directory that match any of the specified glob patterns.
     /// </summary>
     /// <param name="directory">The <see cref="DirectoryNode"/> instance representing the directory to search.</param>
     /// <param name="patterns">An array of glob patterns to match against the names of directories.</param>
     /// <param name="excludes">Optional array of glob patterns to exclude directories.</param>
     /// <returns>
-    /// An enumerable collection of directories in the directory specified by <paramref name="directory"/>
-    /// that match the specified glob patterns.
+    /// An enumerable collection of directories in the specified that match any of the specified glob patterns.
     /// </returns>
     /// <remarks>
     /// Glob pattern:
@@ -277,14 +273,13 @@ public static class DirectoryNodeExtensions
     }
 
     /// <summary>
-    /// Enumerates file nodes in a directory that match any of the specified glob pattern.
+    /// Returns an enumerable collection of file nodes in the specified directory that match any of the specified glob pattern.
     /// </summary>
     /// <param name="directory">The <see cref="DirectoryNode"/> instance representing the directory to search.</param>
     /// <param name="pattern">The glob pattern to match against the names of file nodes in path.</param>
     /// <param name="exclude">Optional glob pattern to exclude file nodes.</param>
     /// <returns>
-    /// An enumerable collection of file nodes in the directory specified by <paramref name="directory"/>
-    /// that match the specified glob pattern.
+    /// An enumerable collection of file nodes in the specified directory that match the specified glob pattern.
     /// </returns>
     /// <remarks>
     /// Glob pattern:
@@ -338,14 +333,13 @@ public static class DirectoryNodeExtensions
         EnumerateFileNodes(directory, [pattern], ToExcludes(exclude));
 
     /// <summary>
-    /// Enumerates file nodes in a directory that match any of the specified glob patterns.
+    /// Returns an enumerable collection of file nodes in the specified directory that match any of the specified glob patterns.
     /// </summary>
     /// <param name="directory">The <see cref="DirectoryNode"/> instance representing the directory to search.</param>
     /// <param name="patterns">An array of glob patterns to match against the names of file nodes.</param>
     /// <param name="excludes">Optional array of glob patterns to exclude file nodes.</param>
     /// <returns>
-    /// An enumerable collection of file nodes in the directory specified by <paramref name="directory"/>
-    /// that match the specified glob patterns.
+    /// An enumerable collection of file nodes in the specified directory that match any of the specified glob patterns.
     /// </returns>
     /// <remarks>
     /// Glob pattern:

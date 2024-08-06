@@ -74,14 +74,14 @@ public sealed class FileNode : FileNodeBase
         _file.CreateReadStream();
 
     /// <summary>
-    /// Creates a <see cref="StreamReader" /> with the specified character encoding that reads from the current text file.
+    /// Returns a <see cref="StreamReader" /> with the specified character encoding that reads from the current text file.
     /// </summary>
     /// <param name="encoding">The character encoding to use.</param>
     /// <returns>
     /// A new <see cref="StreamReader"/> with the specified character encoding.
     /// </returns>
     public StreamReader OpenText(Encoding? encoding = null) =>
-        new(OpenRead(), encoding, detectEncodingFromByteOrderMarks: true, bufferSize: -1, leaveOpen: false);
+        _file.OpenText(encoding);
 
     /// <summary>
     /// Returns the <see cref="IFileInfo"/> from the current instance.
