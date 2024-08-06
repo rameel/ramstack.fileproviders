@@ -68,7 +68,7 @@ DirectoryNode directory = provider.GetDirectory("/project");
 foreach (FileNode file in directory.EnumerateFiles(pattern: "**/*.md"))
     RenderMarkdown(file);
 
-// Exclude files in a specific folder
+// Excludes files in a specific folder
 foreach (FileNode file in directory.EnumerateFiles(pattern: "**/*.md", exclude: "vendors/**"))
     RenderMarkdown(file);
 ```
