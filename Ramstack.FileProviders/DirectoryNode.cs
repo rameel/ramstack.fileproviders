@@ -44,7 +44,7 @@ public sealed class DirectoryNode : FileNodeBase
             if (IsRoot)
                 return null;
 
-            var parent = FilePath.GetDirectoryName(FullName)!;
+            var parent = FilePath.GetDirectoryName(FullName);
             var directory = Provider.GetDirectoryContents(parent);
             return new DirectoryNode(Provider, parent, directory);
         }
