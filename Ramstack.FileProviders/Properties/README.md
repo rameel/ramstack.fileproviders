@@ -1,14 +1,3 @@
-<!-- TOC -->
-* [Ramstack.FileProviders](#ramstackfileproviders)
-  * [Getting Started](#getting-started)
-    * [PrefixedFileProvider](#prefixedfileprovider)
-    * [SubFileProvider](#subfileprovider)
-    * [ZipFileProvider](#zipfileprovider)
-  * [Supported versions](#supported-versions)
-  * [Contributions](#contributions)
-  * [License](#license)
-<!-- TOC -->
-
 # Ramstack.FileProviders
 
 Represents a .NET library that provides additional implementations for `Microsoft.Extensions.FileProviders` including:
@@ -25,7 +14,7 @@ in your project, run the following command:
 dotnet add package Ramstack.FileProviders
 ```
 
-### PrefixedFileProvider
+## PrefixedFileProvider
 
 `PrefixedFileProvider` allows you to apply a prefix to the paths of files and directories.
 This is useful when you need to organize files in a virtual hierarchy.
@@ -82,7 +71,7 @@ as if they were originally defined within your project.
 └── wwwroot
 ```
 
-### SubFileProvider
+## SubFileProvider
 `SubFileProvider` lets you limit the view of the file system to a specific subdirectory, effectively creating a sandbox.
 
 Example:
@@ -92,7 +81,7 @@ IFileInfo file = provider.GetFileInfo("/README");
 Console.WriteLine(file.Exists);
 ```
 
-### ZipFileProvider
+## ZipFileProvider
 `ZipFileProvider` enables access to files within ZIP archives as if they were part of the file system.
 
 Example:

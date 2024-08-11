@@ -19,7 +19,7 @@
   <PropertyGroup>
     <RepositoryUrl>https://github.com/rameel/ramstack.fileproviders</RepositoryUrl>
     <Authors>Rameel</Authors>
-    <PackageTags>prefixed-fileprovider;sub-fileprovider;zip-fileprovider;globbing-fileprovider;glob-fileprovider;fileprovider-extensions</PackageTags>
+    <PackageTags>fileprovider-extensions;fileprovider</PackageTags>
     <PackageProjectUrl>https://github.com/rameel/ramstack.fileproviders#readme</PackageProjectUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
