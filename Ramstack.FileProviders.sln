@@ -16,6 +16,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionIt
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ramstack.FileProviders.Tests", "Ramstack.FileProviders.Tests\Ramstack.FileProviders.Tests.csproj", "{768EFD0B-5306-4F5E-9E7C-52F0B10B1E22}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ramstack.FileProviders.Globbing", "Ramstack.FileProviders.Globbing\Ramstack.FileProviders.Globbing.csproj", "{6B694E17-26AF-4C12-983F-9B9DF21BCA5C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ramstack.FileProviders.Extensions", "Ramstack.FileProviders.Extensions\Ramstack.FileProviders.Extensions.csproj", "{D0C69E60-41C4-4FAF-80C3-22D112D87285}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,6 +34,14 @@ Global
 		{768EFD0B-5306-4F5E-9E7C-52F0B10B1E22}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{768EFD0B-5306-4F5E-9E7C-52F0B10B1E22}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{768EFD0B-5306-4F5E-9E7C-52F0B10B1E22}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6B694E17-26AF-4C12-983F-9B9DF21BCA5C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B694E17-26AF-4C12-983F-9B9DF21BCA5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B694E17-26AF-4C12-983F-9B9DF21BCA5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B694E17-26AF-4C12-983F-9B9DF21BCA5C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D0C69E60-41C4-4FAF-80C3-22D112D87285}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D0C69E60-41C4-4FAF-80C3-22D112D87285}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D0C69E60-41C4-4FAF-80C3-22D112D87285}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D0C69E60-41C4-4FAF-80C3-22D112D87285}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

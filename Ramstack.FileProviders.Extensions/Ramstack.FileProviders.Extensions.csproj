@@ -2,17 +2,13 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-    <Description>A .NET library providing additional implementations for Microsoft.Extensions.FileProviders.
-
-Includes primary types:
-Ramstack.FileProviders.PrefixedFileProvider
-Ramstack.FileProviders.SubFileProvider
-Ramstack.FileProviders.ZipFileProvider</Description>
+    <Description>A lightweight .NET library of useful and convenient extensions for Microsoft.Extensions.FileProviders.</Description>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <LangVersion>preview</LangVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Deterministic>true</Deterministic>
+    <RootNamespace>Ramstack.FileProviders</RootNamespace>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -23,7 +19,7 @@ Ramstack.FileProviders.ZipFileProvider</Description>
   <PropertyGroup>
     <RepositoryUrl>https://github.com/rameel/ramstack.fileproviders</RepositoryUrl>
     <Authors>Rameel</Authors>
-    <PackageTags>prefixed-fileprovider;sub-fileprovider;zip-fileprovider;fileprovider</PackageTags>
+    <PackageTags>prefixed-fileprovider;sub-fileprovider;zip-fileprovider;globbing-fileprovider;glob-fileprovider;fileprovider-extensions</PackageTags>
     <PackageProjectUrl>https://github.com/rameel/ramstack.fileproviders#readme</PackageProjectUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -40,10 +36,6 @@ Ramstack.FileProviders.ZipFileProvider</Description>
   </PropertyGroup>
 
   <ItemGroup>
-    <InternalsVisibleTo Include="Ramstack.FileProviders.Tests" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.FileProviders.Abstractions" Version="6.0.0" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0">
       <PrivateAssets>all</PrivateAssets>
@@ -53,6 +45,19 @@ Ramstack.FileProviders.ZipFileProvider</Description>
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Ramstack.Globbing" Version="2.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\Ramstack.FileProviders\Internal\FilePath.cs">
+      <Link>Internal\FilePath.cs</Link>
+    </Compile>
+    <Compile Include="..\Ramstack.FileProviders\Internal\PathTokenizer.cs">
+      <Link>Internal\PathTokenizer.cs</Link>
+    </Compile>
+    <Compile Include="..\Ramstack.FileProviders\Properties\AssemblyInfo.cs">
+      <Link>Properties\AssemblyInfo.cs</Link>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>

@@ -21,6 +21,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Ramstack.FileProviders.Extensions\Ramstack.FileProviders.Extensions.csproj" />
+    <ProjectReference Include="..\Ramstack.FileProviders.Globbing\Ramstack.FileProviders.Globbing.csproj" />
     <ProjectReference Include="..\Ramstack.FileProviders\Ramstack.FileProviders.csproj" />
   </ItemGroup>
 

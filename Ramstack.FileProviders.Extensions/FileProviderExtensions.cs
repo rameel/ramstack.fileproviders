@@ -12,6 +12,29 @@ namespace Ramstack.FileProviders;
 public static partial class FileProviderExtensions
 {
     /// <summary>
+    /// Returns file contents as readonly stream.
+    /// </summary>
+    /// <param name="provider">The <see cref="IFileProvider"/>.</param>
+    /// <param name="path">The path of the file to open.</param>
+    /// <returns>
+    /// The file contents as readonly stream.
+    /// </returns>
+    public static Stream OpenRead(this IFileProvider provider, string path) =>
+        provider.GetFileInfo(path).OpenRead();
+
+    /// <summary>
+    /// Returns a <see cref="StreamReader"/> with the specified character encoding that reads from the current text file.
+    /// </summary>
+    /// <param name="provider">The <see cref="IFileProvider"/>.</param>
+    /// <param name="path">The path of the file to open.</param>
+    /// <param name="encoding">The character encoding to use.</param>
+    /// <returns>
+    /// A new <see cref="StreamReader"/> with the specified character encoding.
+    /// </returns>
+    public static StreamReader OpenText(this IFileProvider provider, string path, Encoding? encoding = null) =>
+        provider.GetFileInfo(path).OpenText(encoding);
+
+    /// <summary>
     /// Returns a directory with the specified path.
     /// </summary>
     /// <param name="provider">The file provider to retrieve the directory from.</param>
@@ -42,27 +65,4 @@ public static partial class FileProviderExtensions
         var file = provider.GetFileInfo(path);
         return new FileNode(provider, path, file);
     }
-
-    /// <summary>
-    /// Returns file contents as readonly stream.
-    /// </summary>
-    /// <param name="provider">The <see cref="IFileProvider"/>.</param>
-    /// <param name="path">The path of the file to open.</param>
-    /// <returns>
-    /// The file contents as readonly stream.
-    /// </returns>
-    public static Stream OpenRead(this IFileProvider provider, string path) =>
-        provider.GetFileInfo(path).OpenRead();
-
-    /// <summary>
-    /// Returns a <see cref="StreamReader"/> with the specified character encoding that reads from the current text file.
-    /// </summary>
-    /// <param name="provider">The <see cref="IFileProvider"/>.</param>
-    /// <param name="path">The path of the file to open.</param>
-    /// <param name="encoding">The character encoding to use.</param>
-    /// <returns>
-    /// A new <see cref="StreamReader"/> with the specified character encoding.
-    /// </returns>
-    public static StreamReader OpenText(this IFileProvider provider, string path, Encoding? encoding = null) =>
-        provider.GetFileInfo(path).OpenText(encoding);
 }
