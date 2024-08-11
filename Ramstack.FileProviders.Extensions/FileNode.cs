@@ -81,7 +81,7 @@ public sealed class FileNode : FileNodeBase
     /// A new <see cref="StreamReader"/> with the specified character encoding.
     /// </returns>
     public StreamReader OpenText(Encoding? encoding = null) =>
-        _file.OpenText(encoding);
+        new(_file.CreateReadStream(), encoding, detectEncodingFromByteOrderMarks: true, bufferSize: -1, leaveOpen: false);
 
     /// <summary>
     /// Returns the <see cref="IFileInfo"/> from the current instance.
@@ -94,6 +94,5 @@ public sealed class FileNode : FileNodeBase
 
     [DoesNotReturn]
     private static void Error_FileExpected() =>
-        throw new ArgumentException(
-            "The specified path refers to a directory, not a file.");
+        throw new ArgumentException("The specified path refers to a directory, not a file.");
 }
