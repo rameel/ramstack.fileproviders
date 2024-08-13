@@ -40,7 +40,7 @@ public sealed class SubFileProvider : IFileProvider, IDisposable
         _provider.GetDirectoryContents(GetFullPath(subpath));
 
     /// <inheritdoc />
-    public IChangeToken Watch(string? filter)
+    public IChangeToken Watch(string filter)
     {
         if (!string.IsNullOrEmpty(filter))
             return _provider.Watch(GetFullPath(filter));
