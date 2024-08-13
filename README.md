@@ -132,8 +132,8 @@ Console.WriteLine(file.Exists);
 Example:
 ```csharp
 IFileProvider provider = new ZipFileProvider("/path/to/archive.zip");
-foreach (FileNode file in provider.EnumerateFiles("/", "**/*.md"))
-    Console.WriteLine(file.FullName);
+foreach (IFileInfo file in provider.GetDirectoryContents("/"))
+    Console.WriteLine(file.Name);
 ```
 
 ### Ramstack.FileProviders.Globbing
@@ -146,7 +146,7 @@ It relies on the [Ramstack.Globbing](https://www.nuget.org/packages/Ramstack.Glo
 Example:
 ```csharp
 IFileProvider provider = new GlobbingFileProvider(innerProvider, patterns: ["**/*.txt", "docs/*.md" ], excludes: ["**/README.md"]);
-foreach (FileNode file in provider.EnumerateFiles("/"))
+foreach (IFileInfo file in provider.GetDirectoryContents("/"))
     Console.WriteLine(file.Name);
 ```
 
@@ -159,6 +159,8 @@ Simply stated, a `FileNode` knows which directory it is located in, and a direct
 its parent directory and list all files within it, recursively.
 
 ```csharp
+using Ramstack.FileProviders;
+
 FileNode file = provider.GetFile("/docs/README");
 
 // Prints the full path of the given file

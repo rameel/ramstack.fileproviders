@@ -87,9 +87,13 @@ Console.WriteLine(file.Exists);
 Example:
 ```csharp
 IFileProvider provider = new ZipFileProvider("/path/to/archive.zip");
-foreach (FileNode file in provider.EnumerateFiles("/", "**/*.md"))
-    Console.WriteLine(file.FullName);
+foreach (IFileInfo file in provider.GetDirectoryContents("/"))
+    Console.WriteLine(file.Name);
 ```
+
+## Related Packages
+- Globbing file provider: [Ramstack.FileProviders.Globbing](https://www.nuget.org/packages/Ramstack.FileProviders.Globbing)
+- `IFileProvider` extensions: [Ramstack.FileProviders.Extensions](https://www.nuget.org/packages/Ramstack.FileProviders.Extensions)
 
 ## Supported versions
 

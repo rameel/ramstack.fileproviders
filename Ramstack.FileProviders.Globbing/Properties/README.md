@@ -10,17 +10,23 @@ in your project, run the following command:
 dotnet add package Ramstack.FileProviders.Globbing
 ```
 
-### GlobbingFileProvider
+## GlobbingFileProvider
 `GlobbingFileProvider` class supports glob pattern matching for file paths, allowing for flexible file selection.
 You can specify patterns for both including and excluding files.
+
 It relies on the [Ramstack.Globbing](https://www.nuget.org/packages/Ramstack.Globbing) package for its globbing capabilities.
 
 Example:
 ```csharp
 IFileProvider provider = new GlobbingFileProvider(innerProvider, patterns: ["**/*.txt", "docs/*.md" ], excludes: ["**/README.md"]);
-foreach (FileNode file in provider.EnumerateFiles("/"))
+foreach (IFileInfo file in provider.GetDirectoryContents("/"))
     Console.WriteLine(file.Name);
 ```
+
+## Related Packages
+- Additional file providers: [Ramstack.FileProviders](https://www.nuget.org/packages/Ramstack.FileProviders)
+- `IFileProvider` extensions: [Ramstack.FileProviders.Extensions](https://www.nuget.org/packages/Ramstack.FileProviders.Extensions)
+
 
 ## Supported versions
 

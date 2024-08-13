@@ -38,6 +38,8 @@ foreach (FileNode file in directory.EnumerateFiles())
 
 Furthermore, the methods for enumerating files (`EnumerateFiles`/`EnumerateDirectories`/`EnumerateFileNodes`)
 allow specifying glob patterns to search for the desired files, as well as patterns to exclude files from the resulting list.
+
+It relies on the [Ramstack.Globbing](https://www.nuget.org/packages/Ramstack.Globbing) package for its globbing capabilities.
 ```csharp
 DirectoryNode directory = provider.GetDirectory("/project");
 
@@ -62,6 +64,11 @@ Console.WriteLine(reader.ReadToEnd());
 foreach (FileNode file in provider.EnumerateFiles("/project", pattern: "**/*.md"))
     RenderMarkdown(file);
 ```
+
+## Related Packages
+- Additional file providers: [Ramstack.FileProviders](https://www.nuget.org/packages/Ramstack.FileProviders)
+- Globbing file provider: [Ramstack.FileProviders.Globbing](https://www.nuget.org/packages/Ramstack.FileProviders.Globbing)
+
 
 ## Supported versions
 
