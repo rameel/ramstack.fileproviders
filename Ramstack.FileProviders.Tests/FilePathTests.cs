@@ -128,7 +128,7 @@ public class FilePathTests
     [TestCase("/dir///dir///", ExpectedResult = "/dir///dir")]
     [TestCase("//dir///dir///", ExpectedResult = "//dir///dir")]
     [TestCase("dir///dir", ExpectedResult = "dir")]
-    public string? GetDirectoryName(string path) =>
+    public string GetDirectoryName(string path) =>
         FilePath.GetDirectoryName(path);
 
     [TestCase("", ExpectedResult = "/")]
