@@ -26,8 +26,12 @@ public sealed class PrefixedFileProvider : IFileProvider, IDisposable
     /// managed by this instance.</param>
     /// <param name="provider">The underlying file provider that manages the files
     /// to which the prefix will be applied.</param>
-    public PrefixedFileProvider(string prefix, IFileProvider provider) =>
+    public PrefixedFileProvider(string prefix, IFileProvider provider)
+    {
+        ArgumentNullException.ThrowIfNull(provider);
+
         (_prefix, _provider) = (FilePath.GetFullPath(prefix), provider);
+    }
 
     /// <inheritdoc />
     public IFileInfo GetFileInfo(string subpath)

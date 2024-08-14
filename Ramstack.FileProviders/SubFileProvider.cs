@@ -27,8 +27,9 @@ public sealed class SubFileProvider : IFileProvider, IDisposable
     /// <param name="provider">The underlying file provider.</param>
     public SubFileProvider(string path, IFileProvider provider)
     {
-        _path = FilePath.GetFullPath(path);
-        _provider = provider;
+        ArgumentNullException.ThrowIfNull(provider);
+
+        (_path, _provider) = (FilePath.GetFullPath(path), provider);
     }
 
     /// <inheritdoc />

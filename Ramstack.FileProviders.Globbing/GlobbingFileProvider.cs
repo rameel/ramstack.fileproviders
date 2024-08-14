@@ -39,6 +39,7 @@ public sealed class GlobbingFileProvider : IFileProvider
     public GlobbingFileProvider(IFileProvider provider, string pattern, string? exclude = null)
     {
         ArgumentNullException.ThrowIfNull(provider);
+        ArgumentNullException.ThrowIfNull(pattern);
 
         _provider = provider;
         _patterns = [pattern];
@@ -54,6 +55,7 @@ public sealed class GlobbingFileProvider : IFileProvider
     public GlobbingFileProvider(IFileProvider provider, string[] patterns, string[]? excludes = null)
     {
         ArgumentNullException.ThrowIfNull(provider);
+        ArgumentNullException.ThrowIfNull(patterns);
 
         _provider = provider;
         _patterns = patterns.ToArray();
