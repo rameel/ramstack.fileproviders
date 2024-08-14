@@ -16,7 +16,7 @@ public sealed class ZipFileProvider : IFileProvider, IDisposable
 {
     private readonly ZipArchive _archive;
     private readonly Dictionary<string, IFileInfo> _directories =
-        new(StringComparer.Ordinal) { ["/"] = new ZipDirectoryInfo("/") };
+        new() { ["/"] = new ZipDirectoryInfo("/") };
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ZipFileProvider"/> class

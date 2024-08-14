@@ -31,14 +31,15 @@ public sealed class GlobbingFileProvider : IFileProvider
     private readonly string[] _excludes;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="GlobbingFileProvider"/> class with a single pattern and optional exclude pattern.
+    /// Initializes a new instance of the <see cref="GlobbingFileProvider"/> class.
     /// </summary>
     /// <param name="provider">The underlying file provider.</param>
     /// <param name="pattern">The pattern to include in the enumeration.</param>
-    /// <param name="exclude">The pattern to exclude from the enumeration (optional).</param>
+    /// <param name="exclude">The optional pattern to exclude from the enumeration.</param>
     public GlobbingFileProvider(IFileProvider provider, string pattern, string? exclude = null)
     {
         ArgumentNullException.ThrowIfNull(provider);
+        ArgumentNullException.ThrowIfNull(pattern);
 
         _provider = provider;
         _patterns = [pattern];
@@ -46,15 +47,15 @@ public sealed class GlobbingFileProvider : IFileProvider
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="GlobbingFileProvider"/> class with multiple patterns
-    /// and optional exclude patterns.
+    /// Initializes a new instance of the <see cref="GlobbingFileProvider"/> class.
     /// </summary>
     /// <param name="provider">The underlying file provider.</param>
     /// <param name="patterns">The patterns to include in the enumeration.</param>
-    /// <param name="excludes">The patterns to exclude from the enumeration (optional).</param>
+    /// <param name="excludes">The optional patterns to exclude from the enumeration.</param>
     public GlobbingFileProvider(IFileProvider provider, string[] patterns, string[]? excludes = null)
     {
         ArgumentNullException.ThrowIfNull(provider);
+        ArgumentNullException.ThrowIfNull(patterns);
 
         _provider = provider;
         _patterns = patterns.ToArray();
@@ -75,13 +76,8 @@ public sealed class GlobbingFileProvider : IFileProvider
     public IDirectoryContents GetDirectoryContents(string subpath)
     {
         subpath = FilePath.GetFullPath(subpath);
-        if (IsExcluded(subpath))
-            return new NotFoundDirectoryContents();
 
         var directory = _provider.GetDirectoryContents(subpath);
-        if (directory.Exists == false)
-            return directory;
-
         return new GlobbingDirectoryContents(this, subpath, directory);
     }
 
@@ -132,7 +128,7 @@ public sealed class GlobbingFileProvider : IFileProvider
         }
 
         /// <inheritdoc />
-        public bool Exists => true;
+        public bool Exists => !_provider.IsExcluded(_directoryPath) && _directory.Exists;
 
         /// <inheritdoc />
         public IEnumerator<IFileInfo> GetEnumerator()
@@ -140,10 +136,10 @@ public sealed class GlobbingFileProvider : IFileProvider
             foreach (var file in _directory)
             {
                 var path = FilePath.Join(_directoryPath, file.Name);
+                if (!_provider.IsExcluded(path))
+                    if (file.IsDirectory || _provider.IsIncluded(path))
+                        yield return file;
 
-                if (!_provider.IsExcluded(path)
-                    && (file.IsDirectory || _provider.IsIncluded(path)))
-                    yield return file;
             }
         }
 
