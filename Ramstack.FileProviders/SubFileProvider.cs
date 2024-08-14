@@ -24,7 +24,7 @@ public sealed class SubFileProvider : IFileProvider, IDisposable
     /// Initializes a new instance of the <see cref="SubFileProvider"/> class.
     /// </summary>
     /// <param name="path">The path under the root directory of the <paramref name="provider"/>.</param>
-    /// <param name="provider">The parent file provider.</param>
+    /// <param name="provider">The underlying file provider.</param>
     public SubFileProvider(string path, IFileProvider provider)
     {
         _path = FilePath.GetFullPath(path);
