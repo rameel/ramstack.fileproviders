@@ -75,13 +75,8 @@ public sealed class GlobbingFileProvider : IFileProvider
     public IDirectoryContents GetDirectoryContents(string subpath)
     {
         subpath = FilePath.GetFullPath(subpath);
-        if (IsExcluded(subpath))
-            return new NotFoundDirectoryContents();
 
         var directory = _provider.GetDirectoryContents(subpath);
-        if (directory.Exists == false)
-            return directory;
-
         return new GlobbingDirectoryContents(this, subpath, directory);
     }
 
@@ -132,7 +127,7 @@ public sealed class GlobbingFileProvider : IFileProvider
         }
 
         /// <inheritdoc />
-        public bool Exists => true;
+        public bool Exists => !_provider.IsExcluded(_directoryPath) && _directory.Exists;
 
         /// <inheritdoc />
         public IEnumerator<IFileInfo> GetEnumerator()
