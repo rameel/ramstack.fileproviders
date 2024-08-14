@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 
 using Microsoft.Extensions.FileProviders;
@@ -15,6 +16,7 @@ namespace Ramstack.FileProviders;
 /// This class provides functionality to handle files and directories that are located under
 /// a specific path within the root directory of the underlying file provider.
 /// </remarks>
+[DebuggerDisplay("{_path,nq}")]
 public sealed class SubFileProvider : IFileProvider, IDisposable
 {
     private readonly IFileProvider _provider;
