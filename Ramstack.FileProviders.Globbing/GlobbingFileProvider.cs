@@ -135,10 +135,10 @@ public sealed class GlobbingFileProvider : IFileProvider
             foreach (var file in _directory)
             {
                 var path = FilePath.Join(_directoryPath, file.Name);
+                if (!_provider.IsExcluded(path))
+                    if (file.IsDirectory || _provider.IsIncluded(path))
+                        yield return file;
 
-                if (!_provider.IsExcluded(path)
-                    && (file.IsDirectory || _provider.IsIncluded(path)))
-                    yield return file;
             }
         }
 
