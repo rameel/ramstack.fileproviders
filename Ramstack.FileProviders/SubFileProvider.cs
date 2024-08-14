@@ -13,7 +13,7 @@ namespace Ramstack.FileProviders;
 /// </summary>
 /// <remarks>
 /// This class provides functionality to handle files and directories that are located under
-/// a specific path within the root directory of the parent file provider.
+/// a specific path within the root directory of the underlying file provider.
 /// </remarks>
 public sealed class SubFileProvider : IFileProvider, IDisposable
 {

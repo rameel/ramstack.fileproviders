@@ -31,11 +31,11 @@ public sealed class GlobbingFileProvider : IFileProvider
     private readonly string[] _excludes;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="GlobbingFileProvider"/> class with a single pattern and optional exclude pattern.
+    /// Initializes a new instance of the <see cref="GlobbingFileProvider"/> class.
     /// </summary>
     /// <param name="provider">The underlying file provider.</param>
     /// <param name="pattern">The pattern to include in the enumeration.</param>
-    /// <param name="exclude">The pattern to exclude from the enumeration (optional).</param>
+    /// <param name="exclude">The optional pattern to exclude from the enumeration.</param>
     public GlobbingFileProvider(IFileProvider provider, string pattern, string? exclude = null)
     {
         ArgumentNullException.ThrowIfNull(provider);
@@ -46,12 +46,11 @@ public sealed class GlobbingFileProvider : IFileProvider
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="GlobbingFileProvider"/> class with multiple patterns
-    /// and optional exclude patterns.
+    /// Initializes a new instance of the <see cref="GlobbingFileProvider"/> class.
     /// </summary>
     /// <param name="provider">The underlying file provider.</param>
     /// <param name="patterns">The patterns to include in the enumeration.</param>
-    /// <param name="excludes">The patterns to exclude from the enumeration (optional).</param>
+    /// <param name="excludes">The optional patterns to exclude from the enumeration.</param>
     public GlobbingFileProvider(IFileProvider provider, string[] patterns, string[]? excludes = null)
     {
         ArgumentNullException.ThrowIfNull(provider);
