@@ -23,7 +23,7 @@ public class ZipFileProviderTests
     [Test]
     public void CheckZipFileProvider()
     {
-        ZipFile.CreateFromDirectory(_storage.Root, _path, CompressionLevel.SmallestSize, false);
+        ZipFile.CreateFromDirectory(_storage.Root, _path, CompressionLevel.SmallestSize, includeBaseDirectory: false);
 
         using var zip = new ZipFileProvider(_path);
 
