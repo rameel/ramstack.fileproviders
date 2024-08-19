@@ -61,7 +61,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Properties\README.md" Link="Properties\README.md">
+    <None Update="README.md">
+      <Link>Properties\README.md</Link>
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
