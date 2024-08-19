@@ -26,4 +26,4 @@ jobs:
         run: dotnet build -c Debug
 
       - name: Test
-        run: dotnet test -c Debug
+        run: dotnet test -c Debug --no-build
