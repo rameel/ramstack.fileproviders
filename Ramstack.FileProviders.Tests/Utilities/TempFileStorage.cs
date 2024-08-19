@@ -1,4 +1,4 @@
-﻿namespace Ramstack.FileProviders.Utilities;
+namespace Ramstack.FileProviders.Utilities;
 
 public sealed class TempFileStorage : IDisposable
 {
