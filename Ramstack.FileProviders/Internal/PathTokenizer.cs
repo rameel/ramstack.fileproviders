@@ -7,7 +7,7 @@ namespace Ramstack.FileProviders.Internal;
 /// <summary>
 /// Tokenizes a file path into its constituent components.
 /// </summary>
-/// <param name="path">The file path to tokenize.</param>
+/// <param name="path">The path of the file to tokenize.</param>
 internal readonly struct PathTokenizer(string path)
 {
     /// <summary>

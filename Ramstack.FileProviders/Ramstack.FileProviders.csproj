@@ -2,12 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-    <Description>A .NET library providing additional implementations for Microsoft.Extensions.FileProviders.
-
-Includes primary types:
-Ramstack.FileProviders.PrefixedFileProvider
-Ramstack.FileProviders.SubFileProvider
-Ramstack.FileProviders.ZipFileProvider</Description>
+    <Description>A .NET library providing additional implementations for Microsoft.Extensions.FileProviders.</Description>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <LangVersion>preview</LangVersion>
