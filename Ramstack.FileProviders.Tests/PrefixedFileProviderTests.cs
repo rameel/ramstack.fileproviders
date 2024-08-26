@@ -32,4 +32,32 @@ public sealed class PrefixedFileProviderTests
         provider.GetFileInfo("/app/assets/js");
         provider.GetFileInfo("/app/assets/js/");
     }
+
+    [Test]
+    public void CheckArtificialDirectoriesAvailability()
+    {
+        var provider = new PrefixedFileProvider("/public/assets/js",
+            new PlainFileProvider([new ContentFileInfo("knockout.js", "")]));
+
+        var nodes = provider.EnumerateFileNodes("/", "**").Select(n => n.FullName);
+        var files = provider.EnumerateFiles("/", "**").Select(n => n.FullName);
+        var directories = provider.EnumerateDirectories("/", "**").Select(n => n.FullName);
+
+        Assert.That(nodes, Is.EquivalentTo(new[] {
+            "/public",
+            "/public/assets",
+            "/public/assets/js",
+            "/public/assets/js/knockout.js"
+        }));
+
+        Assert.That(files, Is.EquivalentTo(new[] {
+            "/public/assets/js/knockout.js"
+        }));
+
+        Assert.That(directories, Is.EquivalentTo(new[] {
+            "/public",
+            "/public/assets",
+            "/public/assets/js"
+        }));
+    }
 }
