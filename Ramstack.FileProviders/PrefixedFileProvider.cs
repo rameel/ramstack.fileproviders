@@ -53,7 +53,10 @@ public sealed class PrefixedFileProvider : IFileProvider, IDisposable
     /// <inheritdoc />
     public IFileInfo GetFileInfo(string subpath)
     {
-        var path = TryGetPath(FilePath.GetFullPath(subpath), _prefix);
+        var path = TryGetPath(
+            FilePath.GetFullPath(subpath),
+            _prefix);
+
         if (path is not null)
             return _provider.GetFileInfo(path);
 
@@ -80,7 +83,10 @@ public sealed class PrefixedFileProvider : IFileProvider, IDisposable
     /// <inheritdoc />
     public IChangeToken Watch(string filter)
     {
-        var path = TryGetPath(FilePath.GetFullPath(filter), _prefix);
+        var path = TryGetPath(
+            FilePath.GetFullPath(filter),
+            _prefix);
+
         if (path is not null)
             return _provider.Watch(path);
 
