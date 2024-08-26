@@ -20,7 +20,7 @@ public sealed class SubFileProviderTests
             new PrefixedFileProvider(
                 "/app/assets/js",
                 new PlainFileProvider(
-                    new IFileInfo[] { new ContentFileInfo("knockout.js", "") })));
+                    [new ContentFileInfo("knockout.js", "")])));
 
         return provider.GetFileInfo(path).Exists;
     }
@@ -33,7 +33,7 @@ public sealed class SubFileProviderTests
             new PrefixedFileProvider(
                 "/app/assets/js",
                 new PlainFileProvider(
-                    new IFileInfo[] { new ContentFileInfo("knockout.js", "") })));
+                    [new ContentFileInfo("knockout.js", "")])));
 
         var exception = Assert.Throws<ArgumentException>(
             () => provider.GetFileInfo("js/../../knockout.js"));

@@ -1,5 +1,3 @@
-using Microsoft.Extensions.FileProviders;
-
 using Ramstack.FileProviders.Utilities;
 
 namespace Ramstack.FileProviders;
@@ -18,7 +16,7 @@ public sealed class PrefixedFileProviderTests
     public bool GetFileInfo(string path)
     {
         var provider = new PrefixedFileProvider("/app/assets/js",
-            new PlainFileProvider(new IFileInfo[] { new ContentFileInfo("knockout.js", "") }));
+            new PlainFileProvider([new ContentFileInfo("knockout.js", "")]));
 
         return provider.GetFileInfo(path).Exists;
     }
@@ -27,7 +25,7 @@ public sealed class PrefixedFileProviderTests
     public void GetFileInfo_PrefixOnly()
     {
         var provider = new PrefixedFileProvider("/app/assets/js",
-            new PlainFileProvider(new IFileInfo[] { new ContentFileInfo("knockout.js", "") }));
+            new PlainFileProvider([new ContentFileInfo("knockout.js", "")]));
 
         provider.GetFileInfo("/app/assets/js");
         provider.GetFileInfo("/app/assets/js/");
