@@ -81,7 +81,7 @@ public sealed class FileNode : FileNodeBase
     /// A new <see cref="StreamReader"/> with the specified character encoding.
     /// </returns>
     public StreamReader OpenText(Encoding? encoding = null) =>
-        new(_file.CreateReadStream(), encoding, detectEncodingFromByteOrderMarks: true, bufferSize: -1, leaveOpen: false);
+        new StreamReader(_file.CreateReadStream(), encoding, detectEncodingFromByteOrderMarks: true, bufferSize: -1, leaveOpen: false);
 
     /// <summary>
     /// Returns the <see cref="IFileInfo"/> from the current instance.
