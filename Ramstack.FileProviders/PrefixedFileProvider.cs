@@ -53,7 +53,7 @@ public sealed class PrefixedFileProvider : IFileProvider, IDisposable
     /// <inheritdoc />
     public IFileInfo GetFileInfo(string subpath)
     {
-        var path = TryGetPath(
+        var path = ResolvePath(
             FilePath.GetFullPath(subpath),
             _prefix);
 
@@ -73,7 +73,7 @@ public sealed class PrefixedFileProvider : IFileProvider, IDisposable
                 if (entry.Path == subpath)
                     return new ArtificialDirectoryContents(entry.DirectoryName);
 
-        var path = TryGetPath(subpath, _prefix);
+        var path = ResolvePath(subpath, _prefix);
         if (path is not null)
             return _provider.GetDirectoryContents(path);
 
@@ -83,7 +83,7 @@ public sealed class PrefixedFileProvider : IFileProvider, IDisposable
     /// <inheritdoc />
     public IChangeToken Watch(string filter)
     {
-        var path = TryGetPath(
+        var path = ResolvePath(
             FilePath.GetFullPath(filter),
             _prefix);
 
@@ -97,7 +97,7 @@ public sealed class PrefixedFileProvider : IFileProvider, IDisposable
     public void Dispose() =>
         (_provider as IDisposable)?.Dispose();
 
-    private static string? TryGetPath(string path, string prefix)
+    private static string? ResolvePath(string path, string prefix)
     {
         Debug.Assert(path == FilePath.GetFullPath(path));
 
