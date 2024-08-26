@@ -28,5 +28,5 @@ public static class FileInfoExtensions
     /// A new <see cref="StreamReader"/> with the specified character encoding.
     /// </returns>
     public static StreamReader OpenText(this IFileInfo file, Encoding? encoding = null) =>
-        new(file.CreateReadStream(), encoding, detectEncodingFromByteOrderMarks: true, bufferSize: -1, leaveOpen: false);
+        new StreamReader(file.CreateReadStream(), encoding, detectEncodingFromByteOrderMarks: true, bufferSize: -1, leaveOpen: false);
 }

@@ -12,6 +12,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionIt
 		Directory.Build.props = Directory.Build.props
 		LICENSE = LICENSE
 		README.md = README.md
+		Directory.Packages.props = Directory.Packages.props
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ramstack.FileProviders.Tests", "Ramstack.FileProviders.Tests\Ramstack.FileProviders.Tests.csproj", "{768EFD0B-5306-4F5E-9E7C-52F0B10B1E22}"

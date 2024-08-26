@@ -114,6 +114,9 @@ public sealed class GlobbingFileProvider : IFileProvider
         private readonly string _directoryPath;
         private readonly IDirectoryContents _directory;
 
+        /// <inheritdoc />
+        public bool Exists => !_provider.IsExcluded(_directoryPath) && _directory.Exists;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="GlobbingDirectoryContents"/> class.
         /// </summary>
@@ -126,9 +129,6 @@ public sealed class GlobbingFileProvider : IFileProvider
             _directoryPath = directoryPath;
             _directory = directory;
         }
-
-        /// <inheritdoc />
-        public bool Exists => !_provider.IsExcluded(_directoryPath) && _directory.Exists;
 
         /// <inheritdoc />
         public IEnumerator<IFileInfo> GetEnumerator()
