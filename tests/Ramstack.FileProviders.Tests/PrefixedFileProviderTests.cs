@@ -6,7 +6,7 @@ using Ramstack.FileProviders.Utilities;
 namespace Ramstack.FileProviders;
 
 [TestFixture]
-public sealed class PrefixedFileProviderTests : FileProviderBaseTests
+public sealed class PrefixedFileProviderTests : AbstractFileProviderTests
 {
     private const string Prefix = "solution/app";
 

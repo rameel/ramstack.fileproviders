@@ -5,7 +5,7 @@ using Ramstack.FileProviders.Utilities;
 namespace Ramstack.FileProviders;
 
 [TestFixture]
-public class GlobbingFileProviderTests : FileProviderBaseTests
+public class GlobbingFileProviderTests : AbstractFileProviderTests
 {
     private readonly TempFileStorage _storage = new TempFileStorage();
 

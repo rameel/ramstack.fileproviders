@@ -7,7 +7,7 @@ using Ramstack.FileProviders.Utilities;
 namespace Ramstack.FileProviders;
 
 [TestFixture]
-public class ZipFileProviderTests : FileProviderBaseTests
+public class ZipFileProviderTests : AbstractFileProviderTests
 {
     private readonly TempFileStorage _storage = new TempFileStorage();
     private readonly string _path = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());

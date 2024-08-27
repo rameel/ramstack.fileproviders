@@ -9,7 +9,7 @@ namespace Ramstack.FileProviders;
 /// <summary>
 /// Represents a base class for the <see cref="IFileProvider"/> tests.
 /// </summary>
-public abstract class FileProviderBaseTests
+public abstract class AbstractFileProviderTests
 {
     [Test]
     public void Structures_ShouldMatch()
