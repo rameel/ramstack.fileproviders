@@ -12,6 +12,6 @@
     <PackageVersion Include="MinVer" Version="5.0.0" />
     <PackageVersion Include="NUnit" Version="4.2.1" />
     <PackageVersion Include="NUnit3TestAdapter" Version="4.6.0" />
-    <PackageVersion Include="Ramstack.Globbing" Version="2.2.0-preview.3" />
+    <PackageVersion Include="Ramstack.Globbing" Version="2.2.0" />
   </ItemGroup>
 </Project>

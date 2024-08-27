@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Primitives;
 
-namespace Ramstack.FileProviders.Utilities;
+namespace Ramstack.FileProviders.Composition.Utilities;
 
 public sealed class TestFileProvider : IFileProvider
 {

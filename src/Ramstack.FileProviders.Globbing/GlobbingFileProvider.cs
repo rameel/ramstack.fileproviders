@@ -13,14 +13,14 @@ namespace Ramstack.FileProviders;
 /// </summary>
 /// <remarks>
 /// The <see cref="GlobbingFileProvider"/> class wraps around another <see cref="IFileProvider"/> and applies glob-based
-/// filtering rules to determine which files to include or exclude. This allows for flexible and powerful file selection
+/// filtering rules to determine, which files to include or exclude. This allows for flexible and powerful file selection
 /// using standard glob patterns.
 /// </remarks>
 /// <example>
 /// <code>
 /// var underlyingProvider = new PhysicalFileProvider("C:\\MyDirectory");
 /// var provider = new GlobbingFileProvider(underlyingProvider, patterns: ["**/*.txt", "docs/*.md"], excludes: ["**/README.md"]);
-/// foreach (var file in  provider.GetDirectoryContents("/"))
+/// foreach (var file in provider.GetDirectoryContents("/"))
 ///     Console.WriteLine(file.Name);
 /// </code>
 /// </example>

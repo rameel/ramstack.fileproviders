@@ -14,7 +14,7 @@ internal readonly struct PathTokenizer(string path)
     /// Returns an enumerator that iterates through the collection.
     /// </summary>
     /// <returns>
-    /// An enumerator that can be used to iterate through the collection.
+    /// An enumerator to iterate through the collection.
     /// </returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public Enumerator GetEnumerator() =>

@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Diagnostics;
 
 using Microsoft.Extensions.FileProviders;
@@ -77,6 +78,19 @@ public sealed class DirectoryNode : FileNodeBase
     internal DirectoryNode(IFileProvider provider, string path, IDirectoryContents directory) : base(provider, path) =>
         _directory = directory;
 
+    /// <inheritdoc />
+    public override IFileInfo ToFileInfo() =>
+        _file ?? new DirectoryFileInfoContents(this);
+
+    /// <summary>
+    /// Returns the <see cref="IDirectoryContents"/> for the current instance.
+    /// </summary>
+    /// <returns>
+    /// The <see cref="IDirectoryContents"/> instance.
+    /// </returns>
+    public IDirectoryContents ToDirectoryContents() =>
+        _directory ?? new DirectoryFileInfoContents(this);
+
     /// <summary>
     /// Returns an enumerable collection of files in the current directory.
     /// </summary>
@@ -129,4 +143,46 @@ public sealed class DirectoryNode : FileNodeBase
                 : new FileNode(Provider, path, fi);
         }
     }
+
+    #region Inner type: DirectoryFileInfoContents
+
+    /// <summary>
+    /// Represents the contents of a directory as an <see cref="IDirectoryContents"/> implementation and provides
+    /// information about a directory as an <see cref="IFileInfo"/>.
+    /// </summary>
+    /// <param name="directory">The directory node representing the directory.</param>
+    private sealed class DirectoryFileInfoContents(DirectoryNode directory) : IFileInfo, IDirectoryContents
+    {
+        /// <inheritdoc cref="IDirectoryContents.Exists" />
+        public bool Exists => directory.Exists;
+
+        /// <inheritdoc />
+        public long Length => -1;
+
+        /// <inheritdoc />
+        public string? PhysicalPath => directory._file?.PhysicalPath;
+
+        /// <inheritdoc />
+        public string Name => directory.Name;
+
+        /// <inheritdoc />
+        public DateTimeOffset LastModified => default;
+
+        /// <inheritdoc />
+        public bool IsDirectory => true;
+
+        /// <inheritdoc />
+        public Stream CreateReadStream() =>
+            throw new NotSupportedException("Cannot create a stream for a directory");
+
+        /// <inheritdoc />
+        public IEnumerator<IFileInfo> GetEnumerator() =>
+            (directory._directory ??= directory.Provider.GetDirectoryContents(directory.FullName)).GetEnumerator();
+
+        /// <inheritdoc />
+        IEnumerator IEnumerable.GetEnumerator() =>
+            GetEnumerator();
+    }
+
+    #endregion
 }
