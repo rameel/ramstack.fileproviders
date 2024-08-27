@@ -41,18 +41,21 @@ public sealed class PrefixedFileProviderTests
         var files = provider.EnumerateFiles("/", "**").Select(n => n.FullName);
         var directories = provider.EnumerateDirectories("/", "**").Select(n => n.FullName);
 
-        Assert.That(nodes, Is.EquivalentTo(new[] {
+        Assert.That(nodes, Is.EquivalentTo(new[]
+        {
             "/public",
             "/public/assets",
             "/public/assets/js",
             "/public/assets/js/knockout.js"
         }));
 
-        Assert.That(files, Is.EquivalentTo(new[] {
+        Assert.That(files, Is.EquivalentTo(new[]
+        {
             "/public/assets/js/knockout.js"
         }));
 
-        Assert.That(directories, Is.EquivalentTo(new[] {
+        Assert.That(directories, Is.EquivalentTo(new[]
+        {
             "/public",
             "/public/assets",
             "/public/assets/js"
