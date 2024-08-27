@@ -10,7 +10,7 @@ namespace Ramstack.FileProviders;
 [TestFixture]
 public class ZipFileProviderTests
 {
-    private readonly TempFileStorage _storage = new();
+    private readonly TempFileStorage _storage = new TempFileStorage();
     private readonly string _path = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
 
     [OneTimeTearDown]

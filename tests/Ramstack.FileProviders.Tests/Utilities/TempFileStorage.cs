@@ -3,7 +3,6 @@ namespace Ramstack.FileProviders.Utilities;
 public sealed class TempFileStorage : IDisposable
 {
     public string Root { get; }
-    public IReadOnlyList<string> FileList { get; }
 
     public TempFileStorage()
     {
@@ -106,7 +105,6 @@ public sealed class TempFileStorage : IDisposable
             File.SetAttributes(hiddenFile, FileAttributes.Hidden);
 
         Root = root;
-        FileList = list;
     }
 
     public void Dispose() =>

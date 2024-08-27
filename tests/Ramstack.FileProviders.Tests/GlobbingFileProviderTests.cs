@@ -7,7 +7,7 @@ namespace Ramstack.FileProviders;
 [TestFixture]
 public class GlobbingFileProviderTests
 {
-    private readonly TempFileStorage _storage = new();
+    private readonly TempFileStorage _storage = new TempFileStorage();
 
     [OneTimeTearDown]
     public void Cleanup() =>

@@ -1,9 +1,8 @@
 ﻿using Microsoft.Extensions.FileProviders;
 
-using Ramstack.FileProviders.Composition;
-using Ramstack.FileProviders.Utilities;
+using Ramstack.FileProviders.Composition.Utilities;
 
-namespace Ramstack.FileProviders;
+namespace Ramstack.FileProviders.Composition;
 
 [TestFixture]
 public sealed class FileProviderComposerTests
