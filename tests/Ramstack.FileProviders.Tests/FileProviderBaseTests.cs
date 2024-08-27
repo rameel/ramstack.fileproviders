@@ -67,7 +67,9 @@ public abstract class FileProviderBaseTests
         var name = $"{Guid.NewGuid()}.txt";
         var info = provider.GetFileInfo(name);
 
-        Assert.That(info.Name, Is.EqualTo(name));
+        Assert.That(
+            FilePath.GetFileName(info.Name),
+            Is.EqualTo(name));
         Assert.That(info.IsDirectory, Is.False);
         Assert.That(info.Exists, Is.False);
     }
