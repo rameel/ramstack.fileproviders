@@ -90,7 +90,7 @@ public sealed class FileNode : FileNodeBase
     /// <returns>
     /// The <see cref="IFileInfo"/> instance.
     /// </returns>
-    [Obsolete()]
+    [Obsolete("This method is obsolete and will be removed in a future release. Use the ToFileInfo method instead.", error: false)]
     [EditorBrowsable(EditorBrowsableState.Never)]
     public IFileInfo GetFileInfo() =>
         _file;
