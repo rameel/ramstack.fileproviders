@@ -21,10 +21,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Ramstack.FileProviders.Composition\Ramstack.FileProviders.Composition.csproj" />
-    <ProjectReference Include="..\Ramstack.FileProviders.Extensions\Ramstack.FileProviders.Extensions.csproj" />
-    <ProjectReference Include="..\Ramstack.FileProviders.Globbing\Ramstack.FileProviders.Globbing.csproj" />
-    <ProjectReference Include="..\Ramstack.FileProviders\Ramstack.FileProviders.csproj" />
+    <ProjectReference Include="..\..\src\Ramstack.FileProviders.Composition\Ramstack.FileProviders.Composition.csproj" />
+    <ProjectReference Include="..\..\src\Ramstack.FileProviders.Extensions\Ramstack.FileProviders.Extensions.csproj" />
+    <ProjectReference Include="..\..\src\Ramstack.FileProviders.Globbing\Ramstack.FileProviders.Globbing.csproj" />
+    <ProjectReference Include="..\..\src\Ramstack.FileProviders\Ramstack.FileProviders.csproj" />
   </ItemGroup>
 
 </Project>
