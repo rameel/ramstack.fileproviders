@@ -40,7 +40,7 @@ internal static class FilePath
     /// <summary>
     /// Returns the file name and extension for the specified path.
     /// </summary>
-    /// <param name="path">The path from which to obtain the file name and extension.</param>
+    /// <param name="path">The path from which to get the file name and extension.</param>
     /// <returns>
     /// The file name and extension for the <paramref name="path"/>.
     /// </returns>
@@ -217,7 +217,7 @@ internal static class FilePath
     /// <summary>
     /// Returns the absolute path for the specified path string.
     /// </summary>
-    /// <param name="path">The file or directory for which to obtain absolute path information.</param>
+    /// <param name="path">The file or directory for which to get absolute path information.</param>
     /// <returns>
     /// The fully qualified location of <paramref name="path"/>.
     /// </returns>
@@ -244,8 +244,8 @@ internal static class FilePath
                 // Unwind back to the last separator
                 index = buffer[..index].LastIndexOf('/');
 
-                // Path.GetFullPath in this case does not throw an exceptiion,
-                // it simply clears out the buffer
+                // Path.GetFullPath in this case does not throw an exception,
+                // it simply clears out the buffer.
                 if (index < 0)
                     Error_InvalidPath();
             }
