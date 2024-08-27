@@ -1,64 +1,20 @@
+using Microsoft.Extensions.FileProviders;
+using Microsoft.Extensions.FileProviders.Physical;
+
 using Ramstack.FileProviders.Utilities;
 
 namespace Ramstack.FileProviders;
 
 [TestFixture]
-public sealed class PrefixedFileProviderTests
+public sealed class PrefixedFileProviderTests : FileProviderBaseTests
 {
-    [TestCase("/app/assets/js/knockout.js", ExpectedResult = true)]
-    [TestCase("app/assets/js/knockout.js", ExpectedResult = true)]
-    [TestCase("app/assets/js/knockout.min.js", ExpectedResult = false)]
-    [TestCase("app/assets/./js/knockout.js", ExpectedResult = true)]
-    [TestCase("app/assets/../assets/js/knockout.js", ExpectedResult = true)]
-    [TestCase("app/assets/../js/knockout.js", ExpectedResult = false)]
-    [TestCase("app/assets/knockout.js", ExpectedResult = false)]
-    [TestCase("app/knockout.js", ExpectedResult = false)]
-    public bool GetFileInfo(string path)
-    {
-        var provider = new PrefixedFileProvider("/app/assets/js",
-            new PlainFileProvider([new ContentFileInfo("knockout.js", "")]));
+    private const string Prefix = "solution/app";
 
-        return provider.GetFileInfo(path).Exists;
-    }
+    private readonly TempFileStorage _storage = new TempFileStorage(Prefix);
 
-    [Test]
-    public void GetFileInfo_PrefixOnly()
-    {
-        var provider = new PrefixedFileProvider("/app/assets/js",
-            new PlainFileProvider([new ContentFileInfo("knockout.js", "")]));
+    protected override IFileProvider GetFileProvider() =>
+        new PrefixedFileProvider(Prefix, new PhysicalFileProvider(_storage.PrefixedPath, ExclusionFilters.None));
 
-        provider.GetFileInfo("/app/assets/js");
-        provider.GetFileInfo("/app/assets/js/");
-    }
-
-    [Test]
-    public void CheckArtificialDirectoriesAvailability()
-    {
-        var provider = new PrefixedFileProvider("/public/assets/js",
-            new PlainFileProvider([new ContentFileInfo("knockout.js", "")]));
-
-        var nodes = provider.EnumerateFileNodes("/", "**").Select(n => n.FullName);
-        var files = provider.EnumerateFiles("/", "**").Select(n => n.FullName);
-        var directories = provider.EnumerateDirectories("/", "**").Select(n => n.FullName);
-
-        Assert.That(nodes, Is.EquivalentTo(new[]
-        {
-            "/public",
-            "/public/assets",
-            "/public/assets/js",
-            "/public/assets/js/knockout.js"
-        }));
-
-        Assert.That(files, Is.EquivalentTo(new[]
-        {
-            "/public/assets/js/knockout.js"
-        }));
-
-        Assert.That(directories, Is.EquivalentTo(new[]
-        {
-            "/public",
-            "/public/assets",
-            "/public/assets/js"
-        }));
-    }
+    protected override DirectoryInfo GetDirectoryInfo() =>
+        new DirectoryInfo(_storage.Root);
 }
