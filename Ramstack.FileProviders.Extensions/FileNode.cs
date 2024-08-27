@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
@@ -84,12 +85,18 @@ public sealed class FileNode : FileNodeBase
         new StreamReader(_file.CreateReadStream(), encoding, detectEncodingFromByteOrderMarks: true, bufferSize: -1, leaveOpen: false);
 
     /// <summary>
-    /// Returns the <see cref="IFileInfo"/> from the current instance.
+    /// Returns the <see cref="IFileInfo"/> for the current instance.
     /// </summary>
     /// <returns>
     /// The <see cref="IFileInfo"/> instance.
     /// </returns>
+    [Obsolete()]
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public IFileInfo GetFileInfo() =>
+        _file;
+
+    /// <inheritdoc />
+    public override IFileInfo ToFileInfo() =>
         _file;
 
     [DoesNotReturn]

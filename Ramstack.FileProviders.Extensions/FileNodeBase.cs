@@ -39,4 +39,12 @@ public abstract class FileNodeBase
     /// <param name="path">The path of the file node within the provider.</param>
     internal FileNodeBase(IFileProvider provider, string path) =>
         (Provider, FullName) = (provider, path);
+
+    /// <summary>
+    /// Returns the <see cref="IFileInfo"/> for the current instance.
+    /// </summary>
+    /// <returns>
+    /// The <see cref="IFileInfo"/> instance.
+    /// </returns>
+    public abstract IFileInfo ToFileInfo();
 }
