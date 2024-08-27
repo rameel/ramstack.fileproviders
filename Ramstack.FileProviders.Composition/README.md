@@ -51,6 +51,11 @@ In this example, the `ComposeProviders` method handles any unnecessary nesting t
 `environment.ContentRootFileProvider` is a `CompositeFileProvider`. This ensures that all file providers merged into a single
 flat structure, avoiding unnecessary indirectness.
 
+## Related Packages
+- [Ramstack.FileProviders](https://www.nuget.org/packages/Ramstack.FileProviders) — Additional file providers.
+- [Ramstack.FileProviders.Globbing](https://www.nuget.org/packages/Ramstack.FileProviders.Globbing) — Wraps the file provider, filtering files using glob patterns.
+- [Ramstack.FileProviders.Extensions](https://www.nuget.org/packages/Ramstack.FileProviders.Extensions) — Useful and convenient extensions for `IFileProvider`.
+
 ## Supported versions
 
 |      | Version |
