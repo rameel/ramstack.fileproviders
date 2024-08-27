@@ -53,6 +53,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="..\Ramstack.FileProviders\Properties\AssemblyInfo.cs">
+      <Link>Properties\AssemblyInfo.cs</Link>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="README.md">
       <Link>Properties\README.md</Link>
       <Pack>True</Pack>
