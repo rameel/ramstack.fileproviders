@@ -129,7 +129,7 @@ public sealed class ZipFileProvider : IFileProvider, IDisposable
         public bool Exists => true;
 
         /// <inheritdoc />
-        public long Length => 0;
+        public long Length => -1;
 
         /// <inheritdoc />
         public string? PhysicalPath => null;

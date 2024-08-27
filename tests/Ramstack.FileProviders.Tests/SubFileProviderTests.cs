@@ -1,41 +1,21 @@
+using Microsoft.Extensions.FileProviders;
+
 using Ramstack.FileProviders.Utilities;
 
 namespace Ramstack.FileProviders;
 
 [TestFixture]
-public sealed class SubFileProviderTests
+public sealed class SubFileProviderTests : FileProviderBaseTests
 {
-    [TestCase("/js/knockout.js", ExpectedResult = true)]
-    [TestCase("js/knockout.js", ExpectedResult = true)]
-    [TestCase("js/knockout.min.js", ExpectedResult = false)]
-    [TestCase("js/./knockout.js", ExpectedResult = true)]
-    [TestCase("js/../js/knockout.js", ExpectedResult = true)]
-    [TestCase("js/legacy/../knockout.js", ExpectedResult = true)]
-    public bool GetFileInfo(string path)
-    {
-        var provider = new SubFileProvider(
-            "/app/assets",
-            new PrefixedFileProvider(
-                "/app/assets/js",
-                new PlainFileProvider(
-                    [new ContentFileInfo("knockout.js", "")])));
+    private readonly TempFileStorage _storage = new TempFileStorage();
 
-        return provider.GetFileInfo(path).Exists;
-    }
+    [OneTimeTearDown]
+    public void Cleanup() =>
+        _storage.Dispose();
 
-    [Test]
-    public void GetFileInfo_InvalidPath()
-    {
-        var provider = new SubFileProvider(
-            "/app/assets",
-            new PrefixedFileProvider(
-                "/app/assets/js",
-                new PlainFileProvider(
-                    [new ContentFileInfo("knockout.js", "")])));
+    protected override IFileProvider GetFileProvider() =>
+        new SubFileProvider("/project/docs", new PhysicalFileProvider(_storage.Root));
 
-        var exception = Assert.Throws<ArgumentException>(
-            () => provider.GetFileInfo("js/../../knockout.js"));
-
-        Assert.That(exception!.Message, Is.EqualTo("Invalid path"));
-    }
+    protected override DirectoryInfo GetDirectoryInfo() =>
+        new DirectoryInfo(Path.Join(_storage.Root, "project", "docs"));
 }
