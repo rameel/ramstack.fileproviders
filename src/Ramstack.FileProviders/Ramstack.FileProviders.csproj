@@ -36,6 +36,7 @@
 
   <ItemGroup>
     <InternalsVisibleTo Include="Ramstack.FileProviders.Tests" />
+    <InternalsVisibleTo Include="Ramstack.FileProviders.Extensions.Tests" />
   </ItemGroup>
 
   <ItemGroup>
