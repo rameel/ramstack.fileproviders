@@ -6,13 +6,13 @@ using Ramstack.FileProviders.Utilities;
 namespace Ramstack.FileProviders;
 
 [TestFixture]
-public sealed class FileProviderTests
+public sealed class FileProviderComposerTests
 {
     [Test]
     public void FlattenFileProvider_ReturnsAsIs_WhenNoComposite()
     {
         var provider = new TestFileProvider();
-        var result = FileProvider.FlattenFileProvider(provider);
+        var result = FileProviderComposer.FlattenProvider(provider);
         Assert.That(result, Is.SameAs(provider));
     }
 
@@ -21,7 +21,7 @@ public sealed class FileProviderTests
     {
         var provider = new CompositeFileProvider(new TestFileProvider(), new TestFileProvider());
 
-        var result = FileProvider.FlattenFileProvider(provider);
+        var result = FileProviderComposer.FlattenProvider(provider);
         Assert.That(result, Is.InstanceOf<CompositeFileProvider>());
     }
 
@@ -30,7 +30,7 @@ public sealed class FileProviderTests
     {
         var provider = new CompositeFileProvider(new TestFileProvider(), new TestFileProvider());
 
-        var result = FileProvider.FlattenFileProvider(provider);
+        var result = FileProviderComposer.FlattenProvider(provider);
         Assert.That(result, Is.SameAs(provider));
     }
 
@@ -45,7 +45,7 @@ public sealed class FileProviderTests
                 new CompositeFileProvider(
                     new TestFileProvider())));
 
-        var result = FileProvider.FlattenFileProvider(provider);
+        var result = FileProviderComposer.FlattenProvider(provider);
 
         Assert.That(result, Is.InstanceOf<CompositeFileProvider>());
         Assert.That(((CompositeFileProvider)result).FileProviders.Count(), Is.EqualTo(4));
@@ -63,7 +63,7 @@ public sealed class FileProviderTests
                 new TestFileProvider()),
             new NullFileProvider());
 
-        var result = FileProvider.FlattenFileProvider(provider);
+        var result = FileProviderComposer.FlattenProvider(provider);
 
         Assert.That(result, Is.InstanceOf<CompositeFileProvider>());
         Assert.That(((CompositeFileProvider)result).FileProviders.Count(), Is.EqualTo(3));
@@ -107,7 +107,7 @@ public sealed class FileProviderTests
                     new NullFileProvider()),
                 new NullFileProvider()));
 
-        var result = FileProvider.FlattenFileProvider(provider);
+        var result = FileProviderComposer.FlattenProvider(provider);
         Assert.That(result, Is.InstanceOf<NullFileProvider>());
     }
 
@@ -148,7 +148,7 @@ public sealed class FileProviderTests
                     new NullFileProvider()),
                 new NullFileProvider()));
 
-        var result = FileProvider.FlattenFileProvider(provider);
+        var result = FileProviderComposer.FlattenProvider(provider);
         Assert.That(result, Is.InstanceOf<TestFileProvider>());
     }
 
@@ -165,7 +165,7 @@ public sealed class FileProviderTests
         var p8 = new TestFileProvider();
         var p9 = new TestFileProvider();
 
-        var provider = FileProvider.CompositeProviders(
+        var provider = FileProviderComposer.ComposeProviders(
             new CompositeFileProvider(
                 new NullFileProvider(),
                 new NullFileProvider(),

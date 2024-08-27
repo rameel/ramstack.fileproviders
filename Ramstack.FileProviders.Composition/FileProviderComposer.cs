@@ -5,7 +5,7 @@ namespace Ramstack.FileProviders.Composition;
 /// <summary>
 /// Provides helper methods for the <see cref="IFileProvider"/>.
 /// </summary>
-public static class FileProvider
+public static class FileProviderComposer
 {
     /// <summary>
     /// Tries to flatten the specified <see cref="IFileProvider"/> into a flat list of file providers.
@@ -18,34 +18,40 @@ public static class FileProvider
     /// <returns>
     /// A <see cref="IFileProvider"/> that represents the flattened version of the specified <see cref="IFileProvider"/>.
     /// </returns>
-    public static IFileProvider FlattenFileProvider(IFileProvider provider)
+    public static IFileProvider FlattenProvider(IFileProvider provider)
     {
         if (provider is CompositeFileProvider composite)
             foreach (var p in composite.FileProviders)
                 if (p is CompositeFileProvider or NullFileProvider)
-                    return CompositeProviders(composite.FileProviders);
+                    return ComposeProviders(composite.FileProviders);
 
         return provider;
     }
 
     /// <summary>
-    /// Returns a provider from the specified list of <see cref="IFileProvider"/> and flattens it into a flat list of file providers.
+    /// Creates a provider from the specified list of <see cref="IFileProvider"/> and flattens it into a flat list of file providers.
     /// </summary>
+    /// <remarks>
+    /// This method returns a <see cref="CompositeFileProvider"/> if more than one provider remains after flattening.
+    /// </remarks>
     /// <param name="providers">The list of <see cref="IFileProvider"/> instances to compose and flatten.</param>
     /// <returns>
     /// A <see cref="IFileProvider"/> that represents the flattened version of the specified list of providers.
     /// </returns>
-    public static IFileProvider CompositeProviders(params IFileProvider[] providers) =>
-        CompositeProviders(providers.AsEnumerable());
+    public static IFileProvider ComposeProviders(params IFileProvider[] providers) =>
+        ComposeProviders(providers.AsEnumerable());
 
     /// <summary>
     /// Creates a provider from the specified list of <see cref="IFileProvider"/> and flattens it into a flat list of file providers.
     /// </summary>
+    /// <remarks>
+    /// This method returns a <see cref="CompositeFileProvider"/> if more than one provider remains after flattening.
+    /// </remarks>
     /// <param name="providers">The list of <see cref="IFileProvider"/> instances to compose and flatten.</param>
     /// <returns>
     /// A <see cref="IFileProvider"/> that represents the flattened version of the specified list of providers.
     /// </returns>
-    public static IFileProvider CompositeProviders(IEnumerable<IFileProvider> providers)
+    public static IFileProvider ComposeProviders(IEnumerable<IFileProvider> providers)
     {
         var queue = new Queue<IFileProvider>();
         var collection = new List<IFileProvider>();
