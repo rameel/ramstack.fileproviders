@@ -47,6 +47,7 @@ public abstract class AbstractFileProviderTests
 
             if (a.IsDirectory)
             {
+                Assert.That(a.Length, Is.EqualTo(-1), $"Directory '{path}' should return -1");
                 CompareDirectories(FilePath.Join(path, a.Name));
             }
             else
@@ -85,6 +86,37 @@ public abstract class AbstractFileProviderTests
         Assert.That(info.Exists, Is.False);
     }
 
+    [Test]
+    public void NavigateAboveRoot_ThrowsException()
+    {
+        using var provider = CreateFileProvider();
+
+        Assert.Throws<ArgumentException>(() => provider.GetDirectoryContents(".."));
+        Assert.Throws<ArgumentException>(() => provider.GetDirectoryContents("/.."));
+        Assert.Throws<ArgumentException>(() => provider.GetDirectoryContents("/././.."));
+        Assert.Throws<ArgumentException>(() => provider.GetFileInfo(".."));
+        Assert.Throws<ArgumentException>(() => provider.GetFileInfo("/.."));
+        Assert.Throws<ArgumentException>(() => provider.GetFileInfo("/././.."));
+
+        Assert.That(
+            provider.EnumerateFileNodes("/", "**").Count(),
+            Is.Not.Zero);
+
+        foreach (var node in provider.EnumerateFileNodes("/", "**"))
+        {
+            foreach (var path in GetPathsAboveRoot(node.FullName))
+            {
+                Assert.Throws<ArgumentException>(() =>
+                {
+                    if (node is DirectoryNode)
+                        provider.GetDirectoryContents(path);
+                    else
+                        provider.GetFileInfo(path);
+                });
+            }
+        }
+    }
+
     /// <summary>
     /// Returns an instance of the file provider.
     /// </summary>
@@ -109,4 +141,21 @@ public abstract class AbstractFileProviderTests
     /// </returns>
     protected DisposableFileProvider CreateFileProvider() =>
         new DisposableFileProvider(GetFileProvider());
+
+    private static IEnumerable<string> GetPathsAboveRoot(string path)
+    {
+        var segments = path.Split('/', StringSplitOptions.RemoveEmptyEntries);
+
+        for (var n = 0; n <= segments.Length; n++)
+        {
+            var prefix = segments.Take(n).ToArray();
+            var suffix = segments.Skip(n).ToArray();
+            var parent = Enumerable.Repeat("..", n + 1).ToArray();
+            var curdir = Enumerable.Repeat(".",  n + 1).ToArray();
+
+            yield return "/" + string.Join("/", prefix.Concat(parent).Concat(suffix));
+            yield return "/" + string.Join("/", prefix.Concat(curdir).Concat(parent).Concat(suffix));
+            yield return "/" + string.Join("/", curdir.Concat(prefix).Concat(parent).Concat(suffix));
+        }
+    }
 }
