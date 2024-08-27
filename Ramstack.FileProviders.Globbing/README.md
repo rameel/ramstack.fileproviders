@@ -24,8 +24,8 @@ foreach (IFileInfo file in provider.GetDirectoryContents("/"))
 ```
 
 ## Related Packages
-- Additional file providers: [Ramstack.FileProviders](https://www.nuget.org/packages/Ramstack.FileProviders)
-- `IFileProvider` extensions: [Ramstack.FileProviders.Extensions](https://www.nuget.org/packages/Ramstack.FileProviders.Extensions)
+- [Ramstack.FileProviders](https://www.nuget.org/packages/Ramstack.FileProviders) — Additional file providers.
+- [Ramstack.FileProviders.Extensions](https://www.nuget.org/packages/Ramstack.FileProviders.Extensions) — Useful and convenient extensions for Microsoft.Extensions.FileProviders.`IFileProvider`.
 
 
 ## Supported versions

@@ -66,8 +66,8 @@ foreach (FileNode file in provider.EnumerateFiles("/project", pattern: "**/*.md"
 ```
 
 ## Related Packages
-- Additional file providers: [Ramstack.FileProviders](https://www.nuget.org/packages/Ramstack.FileProviders)
-- Globbing file provider: [Ramstack.FileProviders.Globbing](https://www.nuget.org/packages/Ramstack.FileProviders.Globbing)
+- [Ramstack.FileProviders](https://www.nuget.org/packages/Ramstack.FileProviders) — Additional file providers.
+- [Ramstack.FileProviders.Globbing](https://www.nuget.org/packages/Ramstack.FileProviders.Globbing) — Wraps the file system, filtering files and directories using glob patterns.
 
 
 ## Supported versions

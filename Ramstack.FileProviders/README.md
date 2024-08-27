@@ -92,8 +92,8 @@ foreach (IFileInfo file in provider.GetDirectoryContents("/"))
 ```
 
 ## Related Packages
-- Globbing file provider: [Ramstack.FileProviders.Globbing](https://www.nuget.org/packages/Ramstack.FileProviders.Globbing)
-- `IFileProvider` extensions: [Ramstack.FileProviders.Extensions](https://www.nuget.org/packages/Ramstack.FileProviders.Extensions)
+- [Ramstack.FileProviders.Extensions](https://www.nuget.org/packages/Ramstack.FileProviders.Extensions) — Useful and convenient extensions for Microsoft.Extensions.FileProviders.`IFileProvider`.
+- [Ramstack.FileProviders.Globbing](https://www.nuget.org/packages/Ramstack.FileProviders.Globbing) — Wraps the file system, filtering files and directories using glob patterns.
 
 ## Supported versions
 
