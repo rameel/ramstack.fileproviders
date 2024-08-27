@@ -5,6 +5,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageVersion Include="Microsoft.Extensions.FileProviders.Abstractions" Version="6.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.FileProviders.Composite" Version="6.0.0" />
     <PackageVersion Include="Microsoft.Extensions.FileProviders.Physical" Version="6.0.0" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.11.0" />
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" />
