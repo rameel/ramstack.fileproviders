@@ -50,11 +50,19 @@ public class ExtensionTests
             Assert.That(info.IsDirectory, Is.EqualTo(node is DirectoryNode));
             Assert.That(info.Name, Is.EqualTo(node.Name));
             Assert.That(info.Exists, Is.True);
+            Assert.That(node.Exists, Is.True);
 
             if (info.IsDirectory)
+            {
                 Assert.That(info.Length, Is.EqualTo(-1));
+            }
             else
+            {
+                var file = (FileNode)node;
+
                 Assert.That(info.Length, Is.GreaterThanOrEqualTo(0));
+                Assert.That(file.Length, Is.EqualTo(info.Length));
+            }
         }
     }
 
@@ -70,6 +78,9 @@ public class ExtensionTests
             Assert.That(info.Name, Is.EqualTo(file.Name));
             Assert.That(info.Length, Is.GreaterThanOrEqualTo(0));
             Assert.That(info.Exists, Is.True);
+
+            Assert.That(file.Length, Is.EqualTo(info.Length));
+            Assert.That(file.Exists, Is.True);
         }
     }
 
@@ -83,8 +94,10 @@ public class ExtensionTests
             Assert.That(info, Is.Not.Null);
             Assert.That(info.IsDirectory, Is.True);
             Assert.That(info.Name, Is.EqualTo(directory.Name));
-            Assert.That(directory.Exists, Is.True);
+            Assert.That(info.Exists, Is.True);
             Assert.That(info.Length, Is.EqualTo(-1));
+
+            Assert.That(directory.Exists, Is.True);
         }
     }
 
@@ -97,13 +110,20 @@ public class ExtensionTests
 
             Assert.That(directory, Is.Not.Null);
             Assert.That(directory.Exists, Is.True);
+            Assert.That(dir.Exists, Is.True);
 
-            var list = directory.OrderBy(f => f.Name).ToArray();
-            var expected = dir.EnumerateFileNodes().OrderBy(f => f.Name).ToArray();
+            var infos = directory.OrderBy(f => f.Name).ToArray();
+            var nodes = dir.EnumerateFileNodes().OrderBy(f => f.Name).ToArray();
 
             Assert.That(
-                list.Select(f => f.Name),
-                Is.EquivalentTo(expected.Select(f => f.Name)));
+                infos.Select(f => f.Name),
+                Is.EquivalentTo(nodes.Select(f => f.Name)));
+
+            foreach (var (info, node) in infos.Zip(nodes))
+            {
+                Assert.That(node is DirectoryNode, Is.EqualTo(info.IsDirectory));
+                Assert.That(node is FileNode, Is.Not.EqualTo(info.IsDirectory));
+            }
         }
     }
 }
