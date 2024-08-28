@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-    <Description>A .NET library implementing a Microsoft.Extensions.FileProviders that filters files based on glob patterns.</Description>
+    <Description>A .NET library implementing a IFileProvider that filters files using include and/or exclude glob patterns.</Description>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <LangVersion>preview</LangVersion>
