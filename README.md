@@ -50,7 +50,7 @@ dotnet add package Ramstack.FileProviders
 ```
 
 ### Ramstack.FileProviders.Globbing
-Represents a .NET library implementing an `IFileProvider` that filters files using include and/or exclude glob patterns
+Provides an implementation of the `IFileProvider` that filters files using include and/or exclude glob patterns
 for flexible file visibility control.
 
 To install the `Ramstack.FileProviders.Globbing` [NuGet package](https://www.nuget.org/packages/Ramstack.FileProviders.Globbing) in your project,
