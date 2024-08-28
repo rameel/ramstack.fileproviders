@@ -136,6 +136,7 @@ as if they were originally defined within your project.
 ```
 
 #### SubFileProvider
+
 `SubFileProvider` lets you limit the view of the file system to a specific subdirectory, effectively creating a sandbox.
 
 Example:
@@ -146,6 +147,7 @@ Console.WriteLine(file.Exists);
 ```
 
 #### ZipFileProvider
+
 `ZipFileProvider` enables access to files within ZIP archives as if they were part of the file system.
 
 Example:
@@ -171,7 +173,7 @@ foreach (IFileInfo file in provider.GetDirectoryContents("/"))
 
 ### Ramstack.FileProviders.Extensions
 
-The library provides useful extensions for `IFileProvider`, bringing its capabilities and experience closer to what's being
+Provides useful extensions for `IFileProvider`, bringing its capabilities and experience closer to what's being
 provided by `DirectoryInfo` and `FileInfo` classes.
 
 Simply stated, a `FileNode` knows which directory it is located in, and a directory represented by the `DirectoryNode` class can access
@@ -226,7 +228,10 @@ foreach (FileNode file in provider.EnumerateFiles("/project", pattern: "**/*.md"
 
 ### Ramstack.FileProviders.Composition
 
+Provides a helper class `FileProviderComposer` for flattening and composing `IFileProvider` instances.
+
 #### Flattening Providers
+
 The `FlattenProvider` method attempts to flatten a given `IFileProvider` into a single list of file providers.
 
 This is especially useful when dealing with nested `CompositeFileProvider` instances, which might have been created during
@@ -244,6 +249,7 @@ builder.Environment.ContentRootFileProvider = FileProviderComposer.FlattenProvid
 ```
 
 #### Composing Providers
+
 The `ComposeProviders` method combines a list of `IFileProvider` instances into a single `IFileProvider`.
 During this process, all encountered `CompositeFileProvider` instances recursively flattened and merged into a single level.
 This eliminates unnecessary indirectness and streamline the file provider hierarchy.
