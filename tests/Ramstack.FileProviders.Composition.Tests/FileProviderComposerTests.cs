@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.FileProviders;
-
-using Ramstack.FileProviders.Composition.Utilities;
+using Microsoft.Extensions.Primitives;
 
 namespace Ramstack.FileProviders.Composition;
 
@@ -210,5 +209,17 @@ public sealed class FileProviderComposerTests
 
         Assert.That(provider, Is.InstanceOf<CompositeFileProvider>());
         Assert.That(composite.FileProviders, Is.EquivalentTo(providers));
+    }
+
+    private sealed class TestFileProvider : IFileProvider
+    {
+        public IFileInfo GetFileInfo(string subpath) =>
+            new NotFoundFileInfo(subpath);
+
+        public IDirectoryContents GetDirectoryContents(string subpath) =>
+            NotFoundDirectoryContents.Singleton;
+
+        public IChangeToken Watch(string? filter) =>
+            NullChangeToken.Singleton;
     }
 }
