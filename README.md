@@ -15,7 +15,7 @@
     * [Ramstack.FileProviders.Composition](#ramstackfileproviderscomposition-1)
       * [Flattening Providers](#flattening-providers)
       * [Composing Providers](#composing-providers)
-  * [Projects](#projects-1)
+  * [NuGet Packages](#nuget-packages)
   * [Supported versions](#supported-versions)
   * [Contributions](#contributions)
   * [License](#license)
@@ -268,7 +268,7 @@ In this example, the `ComposeProviders` method handles any unnecessary nesting t
 flat structure, avoiding unnecessary indirectness.
 
 
-## Projects
+## NuGet Packages
 - [Ramstack.FileProviders.Extensions](https://www.nuget.org/packages/Ramstack.FileProviders.Extensions) — Useful and convenient extensions for `IFileProvider`, bringing its capabilities and experience closer to what's provided by the `DirectoryInfo` and `FileInfo` classes.
 - [Ramstack.FileProviders](https://www.nuget.org/packages/Ramstack.FileProviders) — Additional file providers, including `ZipFileProvider`, `PrefixedFileProvider`, and `SubFileProvider`.
 - [Ramstack.FileProviders.Globbing](https://www.nuget.org/packages/Ramstack.FileProviders.Globbing) — A file provider that filters files using include and/or exclude glob patterns. Include patterns make only matching files visible, while exclude patterns hide specific files. Both include and exclude patterns can be combined for flexible file visibility control.
