@@ -1,9 +1,10 @@
 <!-- TOC -->
 * [Ramstack.FileProviders](#ramstackfileproviders)
   * [Projects](#projects)
+    * [Ramstack.FileProviders.Extensions](#ramstackfileprovidersextensions)
     * [Ramstack.FileProviders](#ramstackfileproviders-1)
     * [Ramstack.FileProviders.Globbing](#ramstackfileprovidersglobbing)
-    * [Ramstack.FileProviders.Extensions](#ramstackfileprovidersextensions)
+    * [Ramstack.FileProviders.Composition](#ramstackfileproviderscomposition)
   * [Overview](#overview)
     * [Ramstack.FileProviders](#ramstackfileproviders-2)
       * [PrefixedFileProvider](#prefixedfileprovider)
@@ -11,6 +12,10 @@
       * [ZipFileProvider](#zipfileprovider)
     * [Ramstack.FileProviders.Globbing](#ramstackfileprovidersglobbing-1)
     * [Ramstack.FileProviders.Extensions](#ramstackfileprovidersextensions-1)
+    * [Ramstack.FileProviders.Composition](#ramstackfileproviderscomposition-1)
+      * [Flattening Providers](#flattening-providers)
+      * [Composing Providers](#composing-providers)
+  * [Projects](#projects-1)
   * [Supported versions](#supported-versions)
   * [Contributions](#contributions)
   * [License](#license)
@@ -23,30 +28,44 @@ building upon `Microsoft.Extensions.FileProviders`.
 
 ## Projects
 
-This repository contains three main projects:
+This repository contains projects:
+
+### Ramstack.FileProviders.Extensions
+Offers useful and convenient extensions for `IFileProviders`, bringing its capabilities and experience
+closer to what's provided by the `DirectoryInfo` and `FileInfo` standard classes.
+
+To install the `Ramstack.FileProviders.Extensions` [NuGet package](https://www.nuget.org/packages/Ramstack.FileProviders.Extensions) in your project,
+run the following command:
+```console
+dotnet add package Ramstack.FileProviders.Extensions
+```
 
 ### Ramstack.FileProviders
 Provides additional implementations of `IFileProvider` including `PrefixedFileProvider`, `SubFileProvider`, and `ZipFileProvider`.
 
-To install the `Ramstack.FileProviders` [NuGet package](https://www.nuget.org/packages/Ramstack.FileProviders) in your project, run the following command:
+To install the `Ramstack.FileProviders` [NuGet package](https://www.nuget.org/packages/Ramstack.FileProviders) in your project,
+run the following command:
 ```console
 dotnet add package Ramstack.FileProviders
 ```
 
 ### Ramstack.FileProviders.Globbing
-Represents a .NET library implementing an `IFileProvider` that applies glob-based filtering rules to determine which files to include or exclude.
+Represents a .NET library implementing an `IFileProvider` that filters files using include and/or exclude glob patterns
+for flexible file visibility control.
 
-To install the `Ramstack.FileProviders.Globbing` [NuGet package](https://www.nuget.org/packages/Ramstack.FileProviders.Globbing) in your project, run the following command:
+To install the `Ramstack.FileProviders.Globbing` [NuGet package](https://www.nuget.org/packages/Ramstack.FileProviders.Globbing) in your project,
+run the following command:
 ```console
 dotnet add package Ramstack.FileProviders.Globbing
 ```
 
-### Ramstack.FileProviders.Extensions
-Offers useful and convenient extensions for `Microsoft.Extensions.FileProviders`.
+### Ramstack.FileProviders.Composition
+Provides a helper class for flattening and composing `IFileProvider` instances.
 
-To install the `Ramstack.FileProviders.Extensions` [NuGet package](https://www.nuget.org/packages/Ramstack.FileProviders.Extensions) in your project, run the following command:
+To install the `Ramstack.FileProviders.Composition` [NuGet package](https://www.nuget.org/packages/Ramstack.FileProviders.Composition) in your project,
+run the following command:
 ```console
-dotnet add package Ramstack.FileProviders.Extensions
+dotnet add package Ramstack.FileProviders.Composition
 ```
 
 ## Overview
@@ -138,8 +157,8 @@ foreach (IFileInfo file in provider.GetDirectoryContents("/"))
 
 ### Ramstack.FileProviders.Globbing
 
-`GlobbingFileProvider` class supports glob pattern matching for file paths, allowing for flexible file selection. You can specify patterns
-for both including and excluding files.
+`GlobbingFileProvider` class filters files using include and/or exclude glob patterns. Include patterns make only matching files visible,
+while exclude patterns hide specific files. Both include and exclude patterns can be combined for flexible file visibility control.
 
 It relies on the [Ramstack.Globbing](https://www.nuget.org/packages/Ramstack.Globbing) package for its globbing capabilities.
 
@@ -204,6 +223,50 @@ Console.WriteLine(reader.ReadToEnd());
 foreach (FileNode file in provider.EnumerateFiles("/project", pattern: "**/*.md"))
     RenderMarkdown(file);
 ```
+
+### Ramstack.FileProviders.Composition
+
+#### Flattening Providers
+The `FlattenProvider` method attempts to flatten a given `IFileProvider` into a single list of file providers.
+
+This is especially useful when dealing with nested `CompositeFileProvider` instances, which might have been created during
+different stages of a pipeline or configuration. Flattening helps in removing unnecessary indirectness and improving efficiency
+by consolidating all file providers into a single level.
+
+```csharp
+var builder = WebApplication.CreateBuilder(args);
+
+// Application pipeline configuration
+...
+
+builder.Environment.ContentRootFileProvider = FileProviderComposer.FlattenProvider(
+    builder.Environment.ContentRootFileProvider);
+```
+
+#### Composing Providers
+The `ComposeProviders` method combines a list of `IFileProvider` instances into a single `IFileProvider`.
+During this process, all encountered `CompositeFileProvider` instances recursively flattened and merged into a single level.
+This eliminates unnecessary indirectness and streamline the file provider hierarchy.
+
+```csharp
+string packagesPath = Path.Combine(environment.ContentRootPath, "../Packages");
+string themesPath   = Path.Combine(environment.ContentRootPath, "../Themes");
+
+environment.ContentRootFileProvider = FileProviderComposer.ComposeProviders(
+    // Inject external Modules directory
+    new PrefixedFileProvider("/Packages", new PhysicalFileProvider(packagesPath)),
+
+    // Inject external Themes directory
+    new PrefixedFileProvider("/Themes", new PhysicalFileProvider(themesPath)),
+
+    // Current provider
+    environment.ContentRootFileProvider);
+```
+
+In this example, the `ComposeProviders` method handles any unnecessary nesting that might occur, including when the current
+`environment.ContentRootFileProvider` is a `CompositeFileProvider`. This ensures that all file providers merged into a single
+flat structure, avoiding unnecessary indirectness.
+
 
 ## Projects
 - [Ramstack.FileProviders.Extensions](https://www.nuget.org/packages/Ramstack.FileProviders.Extensions) — Useful and convenient extensions for `IFileProvider`, bringing its capabilities and experience closer to what's provided by the `DirectoryInfo` and `FileInfo` classes.

@@ -1,6 +1,7 @@
 # Ramstack.FileProviders.Globbing
 
-Represents a .NET library implementing an `IFileProvider` that applies glob-based filtering rules to determine which files to include or exclude.
+Represents a .NET library implementing an `IFileProvider` that filters files using include and/or exclude glob patterns
+for flexible file visibility control.
 
 ## Getting Started
 
@@ -11,8 +12,8 @@ dotnet add package Ramstack.FileProviders.Globbing
 ```
 
 ## GlobbingFileProvider
-`GlobbingFileProvider` class supports glob pattern matching for file paths, allowing for flexible file selection.
-You can specify patterns for both including and excluding files.
+`GlobbingFileProvider` class filters files using include and/or exclude glob patterns. Include patterns make only matching files visible,
+while exclude patterns hide specific files. Both include and exclude patterns can be combined for flexible file visibility control.
 
 It relies on the [Ramstack.Globbing](https://www.nuget.org/packages/Ramstack.Globbing) package for its globbing capabilities.
 
