@@ -55,8 +55,8 @@ public class FilePathTests
     [TestCase("", ExpectedResult = false)]
     [TestCase(" ", ExpectedResult = false)]
     [TestCase(" /", ExpectedResult = false)]
-    public bool IsFullyNormalized(string path) =>
-        FilePath.IsFullyNormalized(path);
+    public bool IsNormalized(string path) =>
+        FilePath.IsNormalized(path);
 
     [TestCase("", ExpectedResult = "/")]
     [TestCase(".", ExpectedResult = "/")]
@@ -69,13 +69,13 @@ public class FilePathTests
     [TestCase("/home/../home/user//documents", ExpectedResult = "/home/user/documents")]
     [TestCase("/home/../home/user/../../home/config/documents", ExpectedResult = "/home/config/documents")]
     [TestCase("/home/../home/user/./.././.././home/config/documents", ExpectedResult = "/home/config/documents")]
-    public string GetFullPath(string path) =>
-        FilePath.GetFullPath(path);
+    public string Normalize(string path) =>
+        FilePath.Normalize(path);
 
     [TestCase("..")]
     [TestCase("/home/../..")]
-    public void GetFullPath_Error(string path) =>
-        Assert.Throws<ArgumentException>(() => FilePath.GetFullPath(path));
+    public void Normalize_Error(string path) =>
+        Assert.Throws<ArgumentException>(() => FilePath.Normalize(path));
 
     [TestCase("/home/user/documents", ExpectedResult = false)]
     [TestCase("/././././home/user/documents", ExpectedResult = false)]

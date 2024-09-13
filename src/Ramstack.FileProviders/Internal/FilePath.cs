@@ -87,7 +87,7 @@ internal static class FilePath
     /// <see langword="true" /> if the path in a normalized form;
     /// otherwise, <see langword="false" />.
     /// </returns>
-    public static bool IsFullyNormalized(string path)
+    public static bool IsNormalized(string path)
     {
         if (path is ['/', ..])
         {
@@ -136,9 +136,9 @@ internal static class FilePath
     /// <returns>
     /// The fully qualified location of <paramref name="path"/>.
     /// </returns>
-    public static string GetFullPath(string path)
+    public static string Normalize(string path)
     {
-        if (IsFullyNormalized(path))
+        if (IsNormalized(path))
             return path;
 
         char[]? rented = null;

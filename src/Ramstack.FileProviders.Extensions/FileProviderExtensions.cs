@@ -44,7 +44,7 @@ public static partial class FileProviderExtensions
     /// </returns>
     public static DirectoryNode GetDirectory(this IFileProvider provider, string path)
     {
-        path = FilePath.GetFullPath(path);
+        path = FilePath.Normalize(path);
 
         var directory = provider.GetDirectoryContents(path);
         return new DirectoryNode(provider, path, directory);
@@ -60,7 +60,7 @@ public static partial class FileProviderExtensions
     /// </returns>
     public static FileNode GetFile(this IFileProvider provider, string path)
     {
-        path = FilePath.GetFullPath(path);
+        path = FilePath.Normalize(path);
 
         var file = provider.GetFileInfo(path);
         return new FileNode(provider, path, file);

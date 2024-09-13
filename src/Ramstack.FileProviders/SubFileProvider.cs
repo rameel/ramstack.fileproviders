@@ -30,7 +30,7 @@ public sealed class SubFileProvider : IFileProvider, IDisposable
     public SubFileProvider(string path, IFileProvider provider)
     {
         ArgumentNullException.ThrowIfNull(provider);
-        (_path, _provider) = (FilePath.GetFullPath(path), provider);
+        (_path, _provider) = (FilePath.Normalize(path), provider);
     }
 
     /// <inheritdoc />

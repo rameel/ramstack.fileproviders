@@ -69,7 +69,7 @@ public sealed class ZipFileProvider : IFileProvider, IDisposable
         _archive.Dispose();
 
     private IFileInfo? Find(string path) =>
-        _directories.GetValueOrDefault(FilePath.GetFullPath(path));
+        _directories.GetValueOrDefault(FilePath.Normalize(path));
 
     /// <summary>
     /// Initializes the current provider by populating it with entries from the underlying ZIP archive.
@@ -87,7 +87,7 @@ public sealed class ZipFileProvider : IFileProvider, IDisposable
             if (entry.FullName.EndsWith('/'))
                 continue;
 
-            var path = FilePath.GetFullPath(entry.FullName);
+            var path = FilePath.Normalize(entry.FullName);
             var directory = GetDirectory(FilePath.GetDirectoryName(path));
             var file = new ZipFileInfo(entry);
 
