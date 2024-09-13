@@ -87,7 +87,7 @@ public sealed class ZipFileProvider : IFileProvider, IDisposable
             if (entry.FullName.EndsWith('/'))
                 continue;
 
-            var path = FilePath.Normalize(entry.FullName);
+            var path = FilePath.GetFullPath(entry.FullName);
             var directory = GetDirectory(FilePath.GetDirectoryName(path));
             var file = new ZipFileInfo(entry);
 
