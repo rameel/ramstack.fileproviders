@@ -35,17 +35,17 @@ public sealed class SubFileProvider : IFileProvider, IDisposable
 
     /// <inheritdoc />
     public IFileInfo GetFileInfo(string subpath) =>
-        _provider.GetFileInfo(GetFullPath(subpath));
+        _provider.GetFileInfo(ResolvePath(subpath));
 
     /// <inheritdoc />
     public IDirectoryContents GetDirectoryContents(string subpath) =>
-        _provider.GetDirectoryContents(GetFullPath(subpath));
+        _provider.GetDirectoryContents(ResolvePath(subpath));
 
     /// <inheritdoc />
     public IChangeToken Watch(string filter)
     {
         if (!string.IsNullOrEmpty(filter))
-            return _provider.Watch(GetFullPath(filter));
+            return _provider.Watch(ResolvePath(filter));
 
         return NullChangeToken.Singleton;
     }
@@ -54,7 +54,7 @@ public sealed class SubFileProvider : IFileProvider, IDisposable
     public void Dispose() =>
         (_provider as IDisposable)?.Dispose();
 
-    private string GetFullPath(string subpath)
+    private string ResolvePath(string subpath)
     {
         if (subpath.Length == 0 || subpath == "/")
             return _path;
