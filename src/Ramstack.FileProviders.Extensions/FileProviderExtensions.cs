@@ -35,10 +35,45 @@ public static partial class FileProviderExtensions
         provider.GetFileInfo(path).OpenText(encoding);
 
     /// <summary>
+    /// Reads all the text in the file with the specified encoding.
+    /// </summary>
+    /// <param name="provider">The <see cref="IFileProvider"/>.</param>
+    /// <param name="path">The path of the file to read from.</param>
+    /// <param name="encoding">The encoding applied to the contents.</param>
+    /// <returns>
+    /// A string containing all text in the file.
+    /// </returns>
+    public static string ReadAllText(this IFileProvider provider, string path, Encoding? encoding = null) =>
+        provider.GetFileInfo(path).ReadAllText(encoding);
+
+    /// <summary>
+    /// Reads all lines of the file with the specified encoding.
+    /// </summary>
+    /// <param name="provider">The <see cref="IFileProvider"/>.</param>
+    /// <param name="path">The path of the file to read from.</param>
+    /// <param name="encoding">The encoding applied to the contents.</param>
+    /// <returns>
+    /// A string array containing all lines of the file.
+    /// </returns>
+    public static string[] ReadAllLines(this IFileProvider provider, string path, Encoding? encoding = null) =>
+        provider.GetFileInfo(path).ReadAllLines(encoding);
+
+    /// <summary>
+    /// Reads the entire contents of the current file into a byte array.
+    /// </summary>
+    /// <param name="provider">The <see cref="IFileProvider"/>.</param>
+    /// <param name="path">The path of the file to read from.</param>
+    /// <returns>
+    /// A byte array containing the contents of the file.
+    /// </returns>
+    public static byte[] ReadAllBytes(this IFileProvider provider, string path) =>
+        provider.GetFileInfo(path).ReadAllBytes();
+
+    /// <summary>
     /// Asynchronously reads all the text in the current file with the specified encoding.
     /// </summary>
     /// <param name="provider">The <see cref="IFileProvider"/>.</param>
-    /// <param name="path">The path of the file to open.</param>
+    /// <param name="path">The path of the file to read from.</param>
     /// <param name="cancellationToken">An optional cancellation token to cancel the operation.</param>
     /// <returns>
     /// A <see cref="ValueTask{TResult}"/> representing the asynchronous operation,
@@ -51,7 +86,7 @@ public static partial class FileProviderExtensions
     /// Asynchronously reads all the text in the current file with the specified encoding.
     /// </summary>
     /// <param name="provider">The <see cref="IFileProvider"/>.</param>
-    /// <param name="path">The path of the file to open.</param>
+    /// <param name="path">The path of the file to read from.</param>
     /// <param name="encoding">The encoding applied to the contents.</param>
     /// <param name="cancellationToken">An optional cancellation token to cancel the operation.</param>
     /// <returns>
@@ -65,7 +100,7 @@ public static partial class FileProviderExtensions
     /// Asynchronously reads all lines of the current file.
     /// </summary>
     /// <param name="provider">The <see cref="IFileProvider"/>.</param>
-    /// <param name="path">The path of the file to open.</param>
+    /// <param name="path">The path of the file to read from.</param>
     /// <param name="cancellationToken">An optional cancellation token to cancel the operation.</param>
     /// <returns>
     /// A <see cref="ValueTask{TResult}"/> representing the asynchronous operation,
@@ -78,21 +113,21 @@ public static partial class FileProviderExtensions
     /// Asynchronously reads all lines of the current file with the specified encoding.
     /// </summary>
     /// <param name="provider">The <see cref="IFileProvider"/>.</param>
-    /// <param name="path">The path of the file to open.</param>
+    /// <param name="path">The path of the file to read from.</param>
     /// <param name="encoding">The encoding applied to the contents.</param>
     /// <param name="cancellationToken">An optional cancellation token to cancel the operation.</param>
     /// <returns>
     /// A <see cref="ValueTask{TResult}"/> representing the asynchronous operation,
     /// containing an array of all lines in the current file.
     /// </returns>
-    public static ValueTask<string[]> ReadAllLinesAsync(this IFileProvider provider, string path, Encoding encoding, CancellationToken cancellationToken = default) =>
+    public static ValueTask<string[]> ReadAllLinesAsync(this IFileProvider provider, string path, Encoding? encoding, CancellationToken cancellationToken = default) =>
         provider.GetFileInfo(path).ReadAllLinesAsync(encoding, cancellationToken);
 
     /// <summary>
     /// Asynchronously reads the entire contents of the current file into a byte array.
     /// </summary>
     /// <param name="provider">The <see cref="IFileProvider"/>.</param>
-    /// <param name="path">The path of the file to open.</param>
+    /// <param name="path">The path of the file to read from.</param>
     /// <param name="cancellationToken">An optional cancellation token to cancel the operation.</param>
     /// <returns>
     /// A <see cref="ValueTask{TResult}"/> representing the asynchronous operation,

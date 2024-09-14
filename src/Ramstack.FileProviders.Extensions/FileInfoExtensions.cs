@@ -32,6 +32,106 @@ public static class FileInfoExtensions
         new StreamReader(file.CreateReadStream(), encoding, detectEncodingFromByteOrderMarks: true, bufferSize: -1, leaveOpen: false);
 
     /// <summary>
+    /// Reads all the text in the file with the specified encoding.
+    /// </summary>
+    /// <param name="file">The file from which to read the entire text content.</param>
+    /// <param name="encoding">The encoding applied to the contents.</param>
+    /// <returns>
+    /// A string containing all text in the file.
+    /// </returns>
+    public static string ReadAllText(this IFileInfo file, Encoding? encoding = null)
+    {
+        using var reader = file.OpenText(encoding);
+        return reader.ReadToEnd();
+    }
+
+    /// <summary>
+    /// Reads all lines of the file with the specified encoding.
+    /// </summary>
+    /// <param name="file">The file to read from.</param>
+    /// <param name="encoding">The encoding applied to the contents.</param>
+    /// <returns>
+    /// A string array containing all lines of the file.
+    /// </returns>
+    public static string[] ReadAllLines(this IFileInfo file, Encoding? encoding = null)
+    {
+        var stream = file.OpenRead();
+        using var reader = new StreamReader(stream, encoding!);
+
+        var list = new List<string>();
+        while (reader.ReadLine() is { } line)
+            list.Add(line);
+
+        return list.ToArray();
+    }
+
+    /// <summary>
+    /// Reads the entire contents of the current file into a byte array.
+    /// </summary>
+    /// <param name="file">The file to read from.</param>
+    /// <returns>
+    /// A byte array containing the contents of the file.
+    /// </returns>
+    public static byte[] ReadAllBytes(this IFileInfo file)
+    {
+        // ReSharper disable once UseAwaitUsing
+        using var stream = file.OpenRead();
+
+        var length = GetStreamLength(stream);
+        if (length > Array.MaxLength)
+            throw new IOException("The file is too large.");
+
+        // https://github.com/dotnet/runtime/blob/5535e31a712343a63f5d7d796cd874e563e5ac14/src/libraries/System.Private.CoreLib/src/System/IO/File.cs#L660
+        // Some file systems (e.g. procfs on Linux) return 0 for length even when there's content
+        // Thus we need to assume 0 doesn't mean empty.
+        return length <= 0
+            ? ReadAllBytesUnknownLengthImpl(stream)
+            : ReadAllBytesImpl(stream);
+
+        static byte[] ReadAllBytesImpl(Stream stream)
+        {
+            var bytes = new byte[stream.Length];
+            var index = 0;
+            do
+            {
+                var count = stream.Read(bytes.AsSpan(index));
+                if (count == 0)
+                    Error_EndOfStream();
+
+                index += count;
+            }
+            while (index < bytes.Length);
+
+            return bytes;
+        }
+
+        static byte[] ReadAllBytesUnknownLengthImpl(Stream stream)
+        {
+            var bytes = ArrayPool<byte>.Shared.Rent(512);
+            var index = 0;
+
+            try
+            {
+                while (true)
+                {
+                    if (index == bytes.Length)
+                        bytes = ResizeBuffer(bytes);
+
+                    var count = stream.Read(bytes.AsSpan(index));
+                    if (count == 0)
+                        return bytes.AsSpan(0, index).ToArray();
+
+                    index += count;
+                }
+            }
+            finally
+            {
+                ArrayPool<byte>.Shared.Return(bytes);
+            }
+        }
+    }
+
+    /// <summary>
     /// Asynchronously reads all the text in the current file with the specified encoding.
     /// </summary>
     /// <param name="file">The file from which to read the entire text content.</param>
@@ -111,10 +211,10 @@ public static class FileInfoExtensions
     /// A <see cref="ValueTask{TResult}"/> representing the asynchronous operation,
     /// containing an array of all lines in the current file.
     /// </returns>
-    public static async ValueTask<string[]> ReadAllLinesAsync(this IFileInfo file, Encoding encoding, CancellationToken cancellationToken = default)
+    public static async ValueTask<string[]> ReadAllLinesAsync(this IFileInfo file, Encoding? encoding, CancellationToken cancellationToken = default)
     {
         var stream = file.OpenRead();
-        using var reader = new StreamReader(stream, encoding);
+        using var reader = new StreamReader(stream, encoding!);
 
         var list = new List<string>();
         while (await reader.ReadLineAsync().ConfigureAwait(false) is { } line)
@@ -144,6 +244,9 @@ public static class FileInfoExtensions
         if (length > Array.MaxLength)
             throw new IOException("The file is too large.");
 
+        // https://github.com/dotnet/runtime/blob/5535e31a712343a63f5d7d796cd874e563e5ac14/src/libraries/System.Private.CoreLib/src/System/IO/File.cs#L660
+        // Some file systems (e.g. procfs on Linux) return 0 for length even when there's content.
+        // Thus we need to assume 0 doesn't mean empty.
         var task = length <= 0
             ? ReadAllBytesUnknownLengthImplAsync(stream, cancellationToken)
             : ReadAllBytesImplAsync(stream, cancellationToken);
@@ -158,7 +261,7 @@ public static class FileInfoExtensions
             {
                 var count = await stream.ReadAsync(bytes.AsMemory(index), cancellationToken).ConfigureAwait(false);
                 if (count == 0)
-                    Error();
+                    Error_EndOfStream();
 
                 index += count;
             }
@@ -193,40 +296,40 @@ public static class FileInfoExtensions
             {
                 ArrayPool<byte>.Shared.Return(bytes);
             }
-
-            static byte[] ResizeBuffer(byte[] bytes)
-            {
-                var length = (uint)bytes.Length * 2;
-                if (length > (uint)Array.MaxLength)
-                    length = (uint)Math.Max(Array.MaxLength, bytes.Length + 1);
-
-                var tmp = ArrayPool<byte>.Shared.Rent((int)length);
-                Buffer.BlockCopy(bytes, 0, tmp, 0, bytes.Length);
-
-                var rented = bytes;
-                bytes = tmp;
-
-                ArrayPool<byte>.Shared.Return(rented);
-                return bytes;
-            }
         }
-
-        static long GetStreamLength(Stream stream)
-        {
-            try
-            {
-                if (stream.CanSeek)
-                    return stream.Length;
-            }
-            catch
-            {
-                // skip
-            }
-
-            return 0;
-        }
-
-        static void Error() =>
-            throw new EndOfStreamException();
     }
+
+    private static byte[] ResizeBuffer(byte[] bytes)
+    {
+        var length = (uint)bytes.Length * 2;
+        if (length > (uint)Array.MaxLength)
+            length = (uint)Math.Max(Array.MaxLength, bytes.Length + 1);
+
+        var tmp = ArrayPool<byte>.Shared.Rent((int)length);
+        Buffer.BlockCopy(bytes, 0, tmp, 0, bytes.Length);
+
+        var rented = bytes;
+        bytes = tmp;
+
+        ArrayPool<byte>.Shared.Return(rented);
+        return bytes;
+    }
+
+    private static long GetStreamLength(Stream stream)
+    {
+        try
+        {
+            if (stream.CanSeek)
+                return stream.Length;
+        }
+        catch
+        {
+            // skip
+        }
+
+        return 0;
+    }
+
+    private static void Error_EndOfStream() =>
+        throw new EndOfStreamException();
 }

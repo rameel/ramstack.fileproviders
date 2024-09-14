@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.FileProviders;
+﻿using System.Diagnostics.CodeAnalysis;
+
+using Microsoft.Extensions.FileProviders;
 
 namespace Ramstack.FileProviders;
 
@@ -26,34 +28,42 @@ public class FileInfoExtensionsTests
         Directory.Delete(_path, recursive: true);
 
     [Test]
-    public async Task File_ReadAllText()
+    public async Task ReadAllText()
     {
         var provider = new PhysicalFileProvider(_path);
 
-        var text = await provider.ReadAllTextAsync(FileName);
+        var text1 = await provider.ReadAllTextAsync(FileName);
+        var text2 = provider.ReadAllText(FileName);
         var expected = await File.ReadAllTextAsync(Path.Join(_path, FileName));
 
-        Assert.That(text, Is.EqualTo(expected));
+        Assert.That(text1, Is.EqualTo(expected));
+        Assert.That(text2, Is.EqualTo(expected));
     }
 
     [Test]
-    public async Task File_ReadAllLines()
+    public async Task ReadAllLines()
     {
         var provider = new PhysicalFileProvider(_path);
 
-        var list = await provider.ReadAllLinesAsync(FileName);
+        var list1 = await provider.ReadAllLinesAsync(FileName);
+        var list2 = provider.ReadAllLines(FileName);
         var expected = await File.ReadAllLinesAsync(Path.Join(_path, FileName));
-        Assert.That(list, Is.EquivalentTo(expected));
+
+        Assert.That(list1, Is.EquivalentTo(expected));
+        Assert.That(list2, Is.EquivalentTo(expected));
     }
 
     [Test]
-    public async Task File_ReadAllBytes()
+    [SuppressMessage("ReSharper", "MethodHasAsyncOverload")]
+    public async Task ReadAllBytes()
     {
         var provider = new PhysicalFileProvider(_path);
 
-        var data = await provider.ReadAllBytesAsync(FileName);
+        var data1 = await provider.ReadAllBytesAsync(FileName);
+        var data2 = provider.ReadAllBytes(FileName);
         var expected = await File.ReadAllBytesAsync(Path.Join(_path, FileName));
 
-        Assert.That(data.SequenceEqual(expected), Is.True);
+        Assert.That(data1.SequenceEqual(expected), Is.True);
+        Assert.That(data2.SequenceEqual(expected), Is.True);
     }
 }
