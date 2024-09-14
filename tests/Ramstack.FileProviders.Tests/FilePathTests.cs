@@ -5,39 +5,72 @@ namespace Ramstack.FileProviders;
 [TestFixture]
 public class FilePathTests
 {
-    [TestCase("", ExpectedResult = "")]
-    [TestCase(".", ExpectedResult = ".")]
-    [TestCase("/", ExpectedResult = "")]
-    [TestCase("/.", ExpectedResult = ".")]
-    [TestCase("file.txt", ExpectedResult = ".txt")]
-    [TestCase("/path/to/file.txt", ExpectedResult = ".txt")]
-    [TestCase("/path/to/.hidden", ExpectedResult = ".hidden")]
-    [TestCase("/path/to/file", ExpectedResult = "")]
-    [TestCase("/path.with.dots/to/file.txt", ExpectedResult = ".txt")]
-    [TestCase("/path/with.dots/file.", ExpectedResult = ".")]
-    [TestCase("/path.with.dots/to/.hidden.ext", ExpectedResult = ".ext")]
-    [TestCase("file.with.multiple.dots.ext", ExpectedResult = ".ext")]
-    [TestCase("/path/to/file.with.multiple.dots.ext", ExpectedResult = ".ext")]
-    [TestCase("/.hidden", ExpectedResult = ".hidden")]
-    public string GetExtension(string path) =>
-        FilePath.GetExtension(path);
+    [TestCase("", "")]
+    [TestCase(".", "")]
+    [TestCase("/", "")]
+    [TestCase("/.", "")]
+    [TestCase("file.txt", ".txt")]
+    [TestCase("/path/to/file.txt", ".txt")]
+    [TestCase("/path/to/.hidden", ".hidden")]
+    [TestCase("/path/to/file", "")]
+    [TestCase("/path.with.dots/to/file.txt", ".txt")]
+    [TestCase("/path/with.dots/file.", "")]
+    [TestCase("/path.with.dots/to/.hidden.ext", ".ext")]
+    [TestCase("file.with.multiple.dots.ext", ".ext")]
+    [TestCase("/path/to/file.with.multiple.dots.ext", ".ext")]
+    [TestCase("/.hidden", ".hidden")]
+    public void GetExtension(string path, string expected)
+    {
+        foreach (var p in GetPathVariations(path))
+            Assert.That(FilePath.GetExtension(p), Is.EqualTo(expected));
+    }
 
-    [TestCase("", ExpectedResult = "")]
-    [TestCase(".", ExpectedResult = ".")]
-    [TestCase(".hidden", ExpectedResult = ".hidden")]
-    [TestCase("file.txt", ExpectedResult = "file.txt")]
-    [TestCase("/path/to/file.txt", ExpectedResult = "file.txt")]
-    [TestCase("/path/to/.hidden", ExpectedResult = ".hidden")]
-    [TestCase("/path/to/file", ExpectedResult = "file")]
-    [TestCase("/path/with.dots/file.txt", ExpectedResult = "file.txt")]
-    [TestCase("/path/with.dots/file.", ExpectedResult = "file.")]
-    [TestCase("/path/to/file.with.multiple.dots.ext", ExpectedResult = "file.with.multiple.dots.ext")]
-    [TestCase("/path/to/.hidden.ext", ExpectedResult = ".hidden.ext")]
-    [TestCase("/.hidden", ExpectedResult = ".hidden")]
-    [TestCase("/path/to/", ExpectedResult = "")]
-    [TestCase("/path/to/directory/", ExpectedResult = "")]
-    public string GetFileName(string path) =>
-        FilePath.GetFileName(path);
+    [TestCase("", "")]
+    [TestCase(".", ".")]
+    [TestCase(".hidden", ".hidden")]
+    [TestCase("file.txt", "file.txt")]
+    [TestCase("/path/to/file.txt", "file.txt")]
+    [TestCase("/path/to/.hidden", ".hidden")]
+    [TestCase("/path/to/file", "file")]
+    [TestCase("/path/with.dots/file.txt", "file.txt")]
+    [TestCase("/path/with.dots/file.", "file.")]
+    [TestCase("/path/to/file.with.multiple.dots.ext", "file.with.multiple.dots.ext")]
+    [TestCase("/path/to/.hidden.ext", ".hidden.ext")]
+    [TestCase("/.hidden", ".hidden")]
+    [TestCase("/path/to/", "")]
+    [TestCase("/path/to/directory/", "")]
+    public void GetFileName(string path, string expected)
+    {
+        foreach (var p in GetPathVariations(path))
+            Assert.That(FilePath.GetFileName(p), Is.EqualTo(expected));
+    }
+
+    [TestCase("", "")]
+    [TestCase("/", "")]
+    [TestCase("/dir", "/")]
+    [TestCase("/dir/file", "/dir")]
+    [TestCase("/dir/dir/", "/dir/dir")]
+    [TestCase("dir/dir", "dir")]
+    [TestCase("dir/dir/", "dir/dir")]
+    [TestCase("//", "")]
+    [TestCase("///", "")]
+    [TestCase("//dir", "/")]
+    [TestCase("///dir", "/")]
+    [TestCase("////dir", "/")]
+    [TestCase("/dir///dir", "/dir")]
+    [TestCase("/dir///dir///", "/dir///dir")]
+    [TestCase("//dir///dir///", "//dir///dir")]
+    [TestCase("dir///dir", "dir")]
+    public void GetDirectoryName(string path, string expected)
+    {
+        foreach (var p in GetPathVariations(path))
+        {
+            if (p.Contains('\\') && expected != "/")
+                expected = expected.Replace("/", "\\");
+
+            Assert.That(FilePath.GetDirectoryName(p), Is.EqualTo(expected));
+        }
+    }
 
     [TestCase("/", ExpectedResult = true)]
     [TestCase("/a/b/c", ExpectedResult = true)]
@@ -58,59 +91,50 @@ public class FilePathTests
     public bool IsNormalized(string path) =>
         FilePath.IsNormalized(path);
 
-    [TestCase("", ExpectedResult = "/")]
-    [TestCase(".", ExpectedResult = "/")]
-    [TestCase(".", ExpectedResult = "/")]
-    [TestCase("/home/", ExpectedResult = "/home")]
-    [TestCase("/home/..folder1/.folder2/file", ExpectedResult = "/home/..folder1/.folder2/file")]
-    [TestCase("/home/././", ExpectedResult = "/home")]
-    [TestCase("/././././/home/user/documents", ExpectedResult = "/home/user/documents")]
-    [TestCase("/home/./user/./././/documents", ExpectedResult = "/home/user/documents")]
-    [TestCase("/home/../home/user//documents", ExpectedResult = "/home/user/documents")]
-    [TestCase("/home/../home/user/../../home/config/documents", ExpectedResult = "/home/config/documents")]
-    [TestCase("/home/../home/user/./.././.././home/config/documents", ExpectedResult = "/home/config/documents")]
-    public string Normalize(string path) =>
-        FilePath.Normalize(path);
+    [TestCase("", "/")]
+    [TestCase(".", "/")]
+    [TestCase(".", "/")]
+    [TestCase("/home/", "/home")]
+    [TestCase("/home/..folder1/.folder2/file", "/home/..folder1/.folder2/file")]
+    [TestCase("/home/././", "/home")]
+    [TestCase("/././././/home/user/documents", "/home/user/documents")]
+    [TestCase("/home/./user/./././/documents", "/home/user/documents")]
+    [TestCase("/home/../home/user//documents", "/home/user/documents")]
+    [TestCase("/home/../home/user/../../home/config/documents", "/home/config/documents")]
+    [TestCase("/home/../home/user/./.././.././home/config/documents", "/home/config/documents")]
+    public void Normalize(string path, string expected)
+    {
+        foreach (var p in GetPathVariations(path))
+            Assert.That(FilePath.Normalize(p),Is.EqualTo(expected));
+    }
 
     [TestCase("..")]
     [TestCase("/home/../..")]
     public void Normalize_Error(string path) =>
         Assert.Throws<ArgumentException>(() => FilePath.Normalize(path));
 
-    [TestCase("/home/user/documents", ExpectedResult = false)]
-    [TestCase("/././././home/user/documents", ExpectedResult = false)]
-    [TestCase("/home/../documents", ExpectedResult = false)]
-    [TestCase("/home/.././././././documents", ExpectedResult = false)]
-    [TestCase("/home/../../documents", ExpectedResult = true)]
-    [TestCase("/home/../..", ExpectedResult = true)]
-    [TestCase("/../documents", ExpectedResult = true)]
-    [TestCase("/home/user/documents/..", ExpectedResult = false)]
-    [TestCase("/home/user/documents/../..", ExpectedResult = false)]
-    [TestCase("/home/user/documents/../../..", ExpectedResult = false)]
-    [TestCase("/home/user/documents/../../../..", ExpectedResult = true)]
-    [TestCase("//home//user//documents//..//..////..///..", ExpectedResult = true)]
-    [TestCase("/..", ExpectedResult = true)]
-    [TestCase("/../", ExpectedResult = true)]
-    [TestCase("/", ExpectedResult = false)]
-    [TestCase("", ExpectedResult = false)]
-    public bool IsNavigatesAboveRoot(string path) =>
-        FilePath.IsNavigatesAboveRoot(path);
+    [TestCase("/home/user/documents", false)]
+    [TestCase("/././././home/user/documents", false)]
+    [TestCase("/home/../documents", false)]
+    [TestCase("/home/.././././././documents", false)]
+    [TestCase("/home/../../documents", true)]
+    [TestCase("/home/../..", true)]
+    [TestCase("/../documents", true)]
+    [TestCase("/home/user/documents/..", false)]
+    [TestCase("/home/user/documents/../..", false)]
+    [TestCase("/home/user/documents/../../..", false)]
+    [TestCase("/home/user/documents/../../../..", true)]
+    [TestCase("//home//user//documents//..//..////..///..", true)]
+    [TestCase("/..", true)]
+    [TestCase("/../", true)]
+    [TestCase("/", false)]
+    [TestCase("", false)]
+    public void IsNavigatesAboveRoot(string path, bool expected)
+    {
+        foreach (var p in GetPathVariations(path))
+            Assert.That(FilePath.IsNavigatesAboveRoot(p), Is.EqualTo(expected));
+    }
 
-    [TestCase("/", ExpectedResult = "")]
-    [TestCase("/dir", ExpectedResult = "/")]
-    [TestCase("/dir/file", ExpectedResult = "/dir")]
-    [TestCase("/dir/dir/", ExpectedResult = "/dir/dir")]
-    [TestCase("dir/dir", ExpectedResult = "dir")]
-    [TestCase("dir/dir/", ExpectedResult = "dir/dir")]
-    [TestCase("//", ExpectedResult = "")]
-    [TestCase("///", ExpectedResult = "")]
-    [TestCase("//dir", ExpectedResult = "/")]
-    [TestCase("///dir", ExpectedResult = "/")]
-    [TestCase("////dir", ExpectedResult = "/")]
-    [TestCase("/dir///dir", ExpectedResult = "/dir")]
-    [TestCase("/dir///dir///", ExpectedResult = "/dir///dir")]
-    [TestCase("//dir///dir///", ExpectedResult = "//dir///dir")]
-    [TestCase("dir///dir", ExpectedResult = "dir")]
-    public string GetDirectoryName(string path) =>
-        FilePath.GetDirectoryName(path);
+    private static string[] GetPathVariations(string path) =>
+        [path, path.Replace('/', '\\')];
 }
