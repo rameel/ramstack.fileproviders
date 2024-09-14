@@ -35,6 +35,73 @@ public static partial class FileProviderExtensions
         provider.GetFileInfo(path).OpenText(encoding);
 
     /// <summary>
+    /// Asynchronously reads all the text in the current file with the specified encoding.
+    /// </summary>
+    /// <param name="provider">The <see cref="IFileProvider"/>.</param>
+    /// <param name="path">The path of the file to open.</param>
+    /// <param name="cancellationToken">An optional cancellation token to cancel the operation.</param>
+    /// <returns>
+    /// A <see cref="ValueTask{TResult}"/> representing the asynchronous operation,
+    /// containing the full text from the current file.
+    /// </returns>
+    public static ValueTask<string> ReadAllTextAsync(this IFileProvider provider, string path, CancellationToken cancellationToken = default) =>
+        provider.GetFileInfo(path).ReadAllTextAsync(cancellationToken);
+
+    /// <summary>
+    /// Asynchronously reads all the text in the current file with the specified encoding.
+    /// </summary>
+    /// <param name="provider">The <see cref="IFileProvider"/>.</param>
+    /// <param name="path">The path of the file to open.</param>
+    /// <param name="encoding">The encoding applied to the contents.</param>
+    /// <param name="cancellationToken">An optional cancellation token to cancel the operation.</param>
+    /// <returns>
+    /// A <see cref="ValueTask{TResult}"/> representing the asynchronous operation,
+    /// containing the full text from the current file.
+    /// </returns>
+    public static ValueTask<string> ReadAllTextAsync(this IFileProvider provider, string path, Encoding? encoding, CancellationToken cancellationToken = default) =>
+        provider.GetFileInfo(path).ReadAllTextAsync(encoding, cancellationToken);
+
+    /// <summary>
+    /// Asynchronously reads all lines of the current file.
+    /// </summary>
+    /// <param name="provider">The <see cref="IFileProvider"/>.</param>
+    /// <param name="path">The path of the file to open.</param>
+    /// <param name="cancellationToken">An optional cancellation token to cancel the operation.</param>
+    /// <returns>
+    /// A <see cref="ValueTask{TResult}"/> representing the asynchronous operation,
+    /// containing an array of all lines in the current file.
+    /// </returns>
+    public static ValueTask<string[]> ReadAllLinesAsync(this IFileProvider provider, string path, CancellationToken cancellationToken = default) =>
+        provider.GetFileInfo(path).ReadAllLinesAsync(cancellationToken);
+
+    /// <summary>
+    /// Asynchronously reads all lines of the current file with the specified encoding.
+    /// </summary>
+    /// <param name="provider">The <see cref="IFileProvider"/>.</param>
+    /// <param name="path">The path of the file to open.</param>
+    /// <param name="encoding">The encoding applied to the contents.</param>
+    /// <param name="cancellationToken">An optional cancellation token to cancel the operation.</param>
+    /// <returns>
+    /// A <see cref="ValueTask{TResult}"/> representing the asynchronous operation,
+    /// containing an array of all lines in the current file.
+    /// </returns>
+    public static ValueTask<string[]> ReadAllLinesAsync(this IFileProvider provider, string path, Encoding encoding, CancellationToken cancellationToken = default) =>
+        provider.GetFileInfo(path).ReadAllLinesAsync(encoding, cancellationToken);
+
+    /// <summary>
+    /// Asynchronously reads the entire contents of the current file into a byte array.
+    /// </summary>
+    /// <param name="provider">The <see cref="IFileProvider"/>.</param>
+    /// <param name="path">The path of the file to open.</param>
+    /// <param name="cancellationToken">An optional cancellation token to cancel the operation.</param>
+    /// <returns>
+    /// A <see cref="ValueTask{TResult}"/> representing the asynchronous operation,
+    /// containing an array of the file's bytes.
+    /// </returns>
+    public static ValueTask<byte[]> ReadAllBytesAsync(this IFileProvider provider, string path, CancellationToken cancellationToken = default) =>
+        provider.GetFileInfo(path).ReadAllBytesAsync(cancellationToken);
+
+    /// <summary>
     /// Returns a directory with the specified path.
     /// </summary>
     /// <param name="provider">The file provider to retrieve the directory from.</param>
