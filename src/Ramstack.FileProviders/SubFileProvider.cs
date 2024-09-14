@@ -67,5 +67,5 @@ public sealed class SubFileProvider : IFileProvider, IDisposable
 
     [DoesNotReturn]
     private static void Error_InvalidPath() =>
-        throw new ArgumentException("Invalid path");
+        throw new ArgumentException("Invalid path.");
 }
