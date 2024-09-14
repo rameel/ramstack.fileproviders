@@ -31,7 +31,7 @@ public class ExtensionTests
         var expected = Directory
             .GetFileSystemEntries(_storage.Root, "*", SearchOption.AllDirectories)
             .Select(p =>
-                FilePath.GetFullPath(
+                FilePath.Normalize(
                     Path.GetRelativePath(_storage.Root, p)))
             .OrderBy(f => f)
             .ToArray();

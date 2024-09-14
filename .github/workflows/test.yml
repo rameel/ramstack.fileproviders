@@ -6,24 +6,27 @@ on:
 
 jobs:
   build-and-test:
-
-    name: build-and-test-${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
+    name: "Test projects, ${{ matrix.os.name }}"
+    runs-on: ${{ matrix.os.id }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest]
+        os:
+          - id: windows-latest
+            name: Windows
+          - id: ubuntu-latest
+            name: Ubuntu
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup .NET
+      - name: Install .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 8.0.x
 
-      - name: Build
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build Solution
         run: dotnet build -c Debug
 
-      - name: Test
+      - name: Test Projects
         run: dotnet test -c Debug --no-build

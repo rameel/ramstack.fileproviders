@@ -2,35 +2,59 @@ using System.Buffers;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 
+using Microsoft.Extensions.FileProviders;
+
 namespace Ramstack.FileProviders.Internal;
 
 /// <summary>
-/// Provides path helper methods.
+/// Provides utility methods for working with virtual paths.
 /// </summary>
+/// <remarks>
+/// <para>
+///   For compatibility across different implementations of <see cref="IFileProvider"/>
+///   and operating systems, directory separators are unified to use both
+///   backslashes and forward slashes ("/" and "\").
+///   <strong>This approach will be reviewed once a better solution is found.</strong>
+/// </para>
+/// <para>
+///   When normalizing paths by using the method <see cref="Normalize" />,
+///   backslashes ("\") will be replaced with forward slashes ("/") forcibly.
+/// </para>
+/// </remarks>
 internal static class FilePath
 {
     /// <summary>
     /// The threshold size in characters for using stack allocation.
     /// </summary>
-    private const int StackallocThreshold = 160;
+    private const int StackallocThreshold = 256;
 
     /// <summary>
-    /// Gets the extension part of the specified path string, including the leading dot <c>.</c>
-    /// even if it is the entire file name, or an empty string if no extension is present.
+    /// Returns an extension (including the period ".") of the specified path string.
     /// </summary>
     /// <param name="path">The path string from which to get the extension.</param>
     /// <returns>
-    /// The extension of the specified path, including the period <c>.</c>,
+    /// The extension of the specified path (including the period "."),
     /// or an empty string if no extension is present.
     /// </returns>
+    /// <remarks>
+    /// <see cref="Path.GetExtension(string)"/> returns an empty string ("")
+    /// if the extension consists solely of a period (e.g., "file."), which differs from
+    /// <see cref="FileSystemInfo.Extension"/>, which returns "." in this case.
+    /// This method follows the behavior of <see cref="Path.GetExtension(string)"/>.
+    /// </remarks>
     public static string GetExtension(string path)
     {
         for (var i = path.Length - 1; i >= 0; i--)
         {
             if (path[i] == '.')
-                return path.AsSpan(i).ToString();
+            {
+                if (i == path.Length - 1)
+                    break;
 
-            if (path[i] == '/')
+                return path[i..];
+            }
+
+            if (path[i] == '/' || path[i] == '\\')
                 break;
         }
 
@@ -46,9 +70,10 @@ internal static class FilePath
     /// </returns>
     public static string GetFileName(string path)
     {
+        _ = path.Length;
         var p = path.AsSpan();
 
-        var start = p.LastIndexOf('/');
+        var start = p.LastIndexOfAny('/', '\\');
         return start >= 0
             ? p.Slice(start + 1).ToString()
             : path;
@@ -63,80 +88,23 @@ internal static class FilePath
     /// </returns>
     public static string GetDirectoryName(string path)
     {
-        var index = path.AsSpan().LastIndexOf('/');
-        if (index < 0)
+        _ = path.Length;
+
+        var lastIndex = path.AsSpan().LastIndexOfAny('/', '\\');
+        var index = lastIndex;
+
+        // Process consecutive separators
+        while ((uint)index - 1 < (uint)path.Length && (path[index - 1] == '/' || path[index - 1] == '\\'))
+            index--;
+
+        // Path consists of separators only
+        if (index != 0 && (uint)index < (uint)path.Length)
+            return path[..index];
+
+        if (lastIndex + 1 == path.Length)
             return "";
 
-        var p = index;
-        while (p - 1 >= 0 && path[p - 1] == '/')
-            p--;
-
-        return p switch
-        {
-            0 when index + 1 == path.Length => "",
-            0 => "/",
-            _ => path[..p]
-        };
-    }
-
-    /// <summary>
-    /// Normalizes the specified path with adding the leading slash and removing the trailing slash.
-    /// </summary>
-    /// <param name="path">The path to normalize.</param>
-    /// <returns>
-    /// The normalized path.
-    /// </returns>
-    public static string Normalize(string path)
-    {
-        if (!IsNormalized(path))
-            path = NormalizeImpl(path);
-
-        return path;
-
-        static string NormalizeImpl(string path)
-        {
-            char[]? rented = null;
-
-            var buffer = path.Length + 1 <= StackallocThreshold
-                ? stackalloc char[StackallocThreshold]
-                : rented = ArrayPool<char>.Shared.Rent(path.Length + 1);
-
-            buffer[0] = '/';
-            var index = 1;
-            var slash = true;
-
-            for (var i = 0; i < path.Length; i++)
-            {
-                var c = path[i];
-                if (c == '/' || c == '\\')
-                {
-                    if (slash)
-                        continue;
-
-                    c = '/';
-                    slash = true;
-                }
-                else
-                {
-                    slash = false;
-                }
-
-                buffer[index] = c;
-                index++;
-            }
-
-            while (index > 1 && buffer[index - 1] == '/')
-                index--;
-
-            var result = index > 1
-                ? buffer[..index].ToString()
-                : "/";
-
-            if (rented is not null)
-                ArrayPool<char>.Shared.Return(rented);
-
-            return result;
-        }
+        return "/";
     }
 
     /// <summary>
@@ -149,31 +117,8 @@ internal static class FilePath
     /// </returns>
     public static bool IsNormalized(string path)
     {
-        if (path.Length == 0 || string.IsNullOrWhiteSpace(path))
-            return false;
+        _ = path.Length;
 
-        if (path[0] != '/')
-            return false;
-
-        if (path.Length > 1 && path.EndsWith('/'))
-            return false;
-
-        if (path.AsSpan().Contains('\\'))
-            return false;
-
-        return path.AsSpan().IndexOf("//") < 0;
-    }
-
-    /// <summary>
-    /// Determines if the specified path in a normalized form.
-    /// </summary>
-    /// <param name="path">The path to test.</param>
-    /// <returns>
-    /// <see langword="true" /> if the path in a normalized form;
-    /// otherwise, <see langword="false" />.
-    /// </returns>
-    public static bool IsFullyNormalized(string path)
-    {
         if (path is ['/', ..])
         {
             var prior = path[0];
@@ -215,15 +160,25 @@ internal static class FilePath
     }
 
     /// <summary>
-    /// Returns the absolute path for the specified path string.
+    /// Normalizes the specified path by resolving relative segments and applying formatting.
     /// </summary>
-    /// <param name="path">The file or directory for which to get absolute path information.</param>
+    /// <param name="path">The file or directory path to normalize.</param>
     /// <returns>
-    /// The fully qualified location of <paramref name="path"/>.
+    /// The fully normalized and absolute form of <paramref name="path"/>.
     /// </returns>
-    public static string GetFullPath(string path)
+    /// <remarks>
+    /// The normalization process includes the following steps:
+    /// <list type="bullet">
+    ///   <item><description>Resolves relative segments (e.g., ".", "..").</description></item>
+    ///   <item><description>Removes consecutive slashes.</description></item>
+    ///   <item><description>Replaces backslashes with forward slashes.</description></item>
+    ///   <item><description>Ensures the path starts with a leading slash.</description></item>
+    ///   <item><description>Removes any trailing slash.</description></item>
+    /// </list>
+    /// </remarks>
+    public static string Normalize(string path)
     {
-        if (IsFullyNormalized(path))
+        if (IsNormalized(path))
             return path;
 
         char[]? rented = null;

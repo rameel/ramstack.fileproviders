@@ -32,7 +32,7 @@ public sealed class PrefixedFileProvider : IFileProvider, IDisposable
     {
         ArgumentNullException.ThrowIfNull(provider);
 
-        prefix = FilePath.GetFullPath(prefix);
+        prefix = FilePath.Normalize(prefix);
         (_prefix, _provider, _directories) = (prefix, provider, CreateArtificialDirectories(prefix));
 
         static (string Path, string DirectoryName)[] CreateArtificialDirectories(string path)
@@ -53,10 +53,7 @@ public sealed class PrefixedFileProvider : IFileProvider, IDisposable
     /// <inheritdoc />
     public IFileInfo GetFileInfo(string subpath)
     {
-        var path = ResolvePath(
-            FilePath.GetFullPath(subpath),
-            _prefix);
-
+        var path = ResolvePath(FilePath.Normalize(subpath), _prefix);
         if (path is not null)
             return _provider.GetFileInfo(path);
 
@@ -66,7 +63,7 @@ public sealed class PrefixedFileProvider : IFileProvider, IDisposable
     /// <inheritdoc />
     public IDirectoryContents GetDirectoryContents(string subpath)
     {
-        subpath = FilePath.GetFullPath(subpath);
+        subpath = FilePath.Normalize(subpath);
 
         if (subpath.Length < _prefix.Length)
             foreach (ref var entry in _directories.AsSpan())
@@ -83,10 +80,7 @@ public sealed class PrefixedFileProvider : IFileProvider, IDisposable
     /// <inheritdoc />
     public IChangeToken Watch(string filter)
     {
-        var path = ResolvePath(
-            FilePath.GetFullPath(filter),
-            _prefix);
-
+        var path = ResolvePath(FilePath.Normalize(filter), _prefix);
         if (path is not null)
             return _provider.Watch(path);
 
@@ -99,7 +93,7 @@ public sealed class PrefixedFileProvider : IFileProvider, IDisposable
 
     private static string? ResolvePath(string path, string prefix)
     {
-        Debug.Assert(path == FilePath.GetFullPath(path));
+        Debug.Assert(path == FilePath.Normalize(path));
 
         if (path == prefix)
             return "/";

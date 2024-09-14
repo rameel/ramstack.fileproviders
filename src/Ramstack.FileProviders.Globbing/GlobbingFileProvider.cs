@@ -65,7 +65,7 @@ public sealed class GlobbingFileProvider : IFileProvider
     /// <inheritdoc />
     public IFileInfo GetFileInfo(string subpath)
     {
-        subpath = FilePath.GetFullPath(subpath);
+        subpath = FilePath.Normalize(subpath);
         if (!IsExcluded(subpath) && IsIncluded(subpath))
             return _provider.GetFileInfo(subpath);
 
@@ -75,7 +75,7 @@ public sealed class GlobbingFileProvider : IFileProvider
     /// <inheritdoc />
     public IDirectoryContents GetDirectoryContents(string subpath)
     {
-        subpath = FilePath.GetFullPath(subpath);
+        subpath = FilePath.Normalize(subpath);
 
         var directory = _provider.GetDirectoryContents(subpath);
         return new GlobbingDirectoryContents(this, subpath, directory);
