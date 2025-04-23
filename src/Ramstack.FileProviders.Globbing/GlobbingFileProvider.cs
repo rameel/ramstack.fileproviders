@@ -58,8 +58,8 @@ public sealed class GlobbingFileProvider : IFileProvider
         ArgumentNullException.ThrowIfNull(patterns);
 
         _provider = provider;
-        _patterns = patterns.ToArray();
-        _excludes = excludes?.ToArray() ?? [];
+        _patterns = [..patterns];
+        _excludes = [..excludes ?? []];
     }
 
     /// <inheritdoc />
@@ -139,7 +139,6 @@ public sealed class GlobbingFileProvider : IFileProvider
                 if (!_provider.IsExcluded(path))
                     if (file.IsDirectory || _provider.IsIncluded(path))
                         yield return file;
-
             }
         }
 
