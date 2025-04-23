@@ -35,8 +35,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <InternalsVisibleTo Include="Ramstack.FileProviders.Tests" />
-    <InternalsVisibleTo Include="Ramstack.FileProviders.Extensions.Tests" />
+    <Compile Include="..\Ramstack.FileProviders.Extensions\FilePath.cs">
+      <Link>Internal\FilePath.cs</Link>
+    </Compile>
+    <Compile Include="..\Ramstack.FileProviders.Extensions\PathTokenizer.cs">
+      <Link>Internal\PathTokenizer.cs</Link>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>

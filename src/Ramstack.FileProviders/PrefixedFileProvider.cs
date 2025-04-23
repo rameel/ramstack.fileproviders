@@ -4,8 +4,6 @@ using System.Diagnostics;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Primitives;
 
-using Ramstack.FileProviders.Internal;
-
 namespace Ramstack.FileProviders;
 
 /// <summary>

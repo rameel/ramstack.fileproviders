@@ -9,6 +9,7 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Deterministic>true</Deterministic>
     <RootNamespace>Ramstack.FileProviders</RootNamespace>
+    <DefineConstants>EXPOSE_FILEPATH</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -49,12 +50,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="..\Ramstack.FileProviders\Internal\FilePath.cs">
-      <Link>Internal\FilePath.cs</Link>
-    </Compile>
-    <Compile Include="..\Ramstack.FileProviders\Internal\PathTokenizer.cs">
-      <Link>Internal\PathTokenizer.cs</Link>
-    </Compile>
     <Compile Include="..\Ramstack.FileProviders\Properties\AssemblyInfo.cs">
       <Link>Properties\AssemblyInfo.cs</Link>
     </Compile>

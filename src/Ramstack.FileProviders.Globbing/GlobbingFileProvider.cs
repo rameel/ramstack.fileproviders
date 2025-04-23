@@ -3,7 +3,6 @@ using System.Collections;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Primitives;
 
-using Ramstack.FileProviders.Internal;
 using Ramstack.Globbing;
 
 namespace Ramstack.FileProviders;

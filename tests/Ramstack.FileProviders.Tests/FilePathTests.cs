@@ -1,5 +1,3 @@
-using Ramstack.FileProviders.Internal;
-
 namespace Ramstack.FileProviders;
 
 [TestFixture]

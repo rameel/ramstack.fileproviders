@@ -1,6 +1,6 @@
 using System.Runtime.CompilerServices;
 
-namespace Ramstack.FileProviders.Internal;
+namespace Ramstack.FileProviders;
 
 /// <summary>
 /// Tokenizes a file path into its constituent components.
@@ -43,6 +43,7 @@ internal readonly struct PathTokenizer(string path)
         /// Initializes a new instance of the <see cref="Enumerator"/> structure.
         /// </summary>
         /// <param name="path">The file path to tokenize.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal Enumerator(string path) =>
             (_path, _count) = (path, -1);
 
