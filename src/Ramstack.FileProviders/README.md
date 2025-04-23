@@ -98,9 +98,9 @@ foreach (IFileInfo file in provider.GetDirectoryContents("/"))
 
 ## Supported versions
 
-|      | Version |
-|------|---------|
-| .NET | 6, 7, 8 |
+|      | Version    |
+|------|------------|
+| .NET | 6, 7, 8, 9 |
 
 ## Contributions
 

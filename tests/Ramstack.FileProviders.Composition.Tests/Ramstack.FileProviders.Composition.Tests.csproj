@@ -9,6 +9,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Using Include="System.ComponentModel" />
+    <Using Include="System.Diagnostics" />
+    <Using Include="System.Diagnostics.CodeAnalysis" />
+    <Using Include="Microsoft.Extensions.FileProviders" />
+    <Using Include="Microsoft.Extensions.Primitives" />
     <Using Include="NUnit" />
     <Using Include="NUnit.Framework" />
   </ItemGroup>

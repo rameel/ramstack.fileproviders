@@ -1,8 +1,6 @@
 using System.Buffers;
 
-using Microsoft.Extensions.FileProviders;
-
-namespace Ramstack.FileProviders.Internal;
+namespace Ramstack.FileProviders;
 
 /// <summary>
 /// Provides utility methods for working with virtual paths.
@@ -19,7 +17,12 @@ namespace Ramstack.FileProviders.Internal;
 ///   backslashes ("\") will be replaced with forward slashes ("/") forcibly.
 /// </para>
 /// </remarks>
-internal static class FilePath
+#if EXPOSE_FILEPATH
+public
+#else
+internal
+#endif
+    static class FilePath
 {
     /// <summary>
     /// The threshold size in characters for using stack allocation.

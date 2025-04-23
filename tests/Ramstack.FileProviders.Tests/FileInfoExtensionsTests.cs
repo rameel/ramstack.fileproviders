@@ -1,8 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-using Microsoft.Extensions.FileProviders;
-
-namespace Ramstack.FileProviders;
+﻿namespace Ramstack.FileProviders;
 
 [TestFixture]
 public class FileInfoExtensionsTests

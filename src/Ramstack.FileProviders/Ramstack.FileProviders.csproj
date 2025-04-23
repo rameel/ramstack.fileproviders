@@ -35,8 +35,20 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <InternalsVisibleTo Include="Ramstack.FileProviders.Tests" />
-    <InternalsVisibleTo Include="Ramstack.FileProviders.Extensions.Tests" />
+    <Using Include="System.ComponentModel" />
+    <Using Include="System.Diagnostics" />
+    <Using Include="System.Diagnostics.CodeAnalysis" />
+    <Using Include="Microsoft.Extensions.FileProviders" />
+    <Using Include="Microsoft.Extensions.Primitives" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\Ramstack.FileProviders.Extensions\FilePath.cs">
+      <Link>Internal\FilePath.cs</Link>
+    </Compile>
+    <Compile Include="..\Ramstack.FileProviders.Extensions\PathTokenizer.cs">
+      <Link>Internal\PathTokenizer.cs</Link>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>

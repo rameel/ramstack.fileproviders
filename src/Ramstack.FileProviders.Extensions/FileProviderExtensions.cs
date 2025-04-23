@@ -1,9 +1,5 @@
 using System.Text;
 
-using Microsoft.Extensions.FileProviders;
-
-using Ramstack.FileProviders.Internal;
-
 namespace Ramstack.FileProviders;
 
 /// <summary>

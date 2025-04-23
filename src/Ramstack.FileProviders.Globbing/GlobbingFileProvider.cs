@@ -1,9 +1,3 @@
-using System.Collections;
-
-using Microsoft.Extensions.FileProviders;
-using Microsoft.Extensions.Primitives;
-
-using Ramstack.FileProviders.Internal;
 using Ramstack.Globbing;
 
 namespace Ramstack.FileProviders;
@@ -143,7 +137,7 @@ public sealed class GlobbingFileProvider : IFileProvider
         }
 
         /// <inheritdoc />
-        IEnumerator IEnumerable.GetEnumerator() =>
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() =>
             GetEnumerator();
     }
 

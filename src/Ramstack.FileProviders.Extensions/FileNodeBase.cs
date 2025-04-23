@@ -1,9 +1,3 @@
-using System.Diagnostics;
-
-using Microsoft.Extensions.FileProviders;
-
-using Ramstack.FileProviders.Internal;
-
 namespace Ramstack.FileProviders;
 
 /// <summary>

@@ -1,7 +1,5 @@
 using System.IO.Compression;
 
-using Microsoft.Extensions.FileProviders;
-
 using Ramstack.FileProviders.Utilities;
 
 namespace Ramstack.FileProviders;

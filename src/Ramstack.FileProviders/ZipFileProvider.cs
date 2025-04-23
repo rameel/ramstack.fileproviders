@@ -1,11 +1,4 @@
-using System.Collections;
-using System.Diagnostics;
 using System.IO.Compression;
-
-using Microsoft.Extensions.FileProviders;
-using Microsoft.Extensions.Primitives;
-
-using Ramstack.FileProviders.Internal;
 
 namespace Ramstack.FileProviders;
 
@@ -152,7 +145,7 @@ public sealed class ZipFileProvider : IFileProvider, IDisposable
             _files.AsEnumerable().GetEnumerator();
 
         /// <inheritdoc />
-        IEnumerator IEnumerable.GetEnumerator() =>
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() =>
             GetEnumerator();
 
         /// <summary>

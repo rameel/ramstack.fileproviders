@@ -1,7 +1,4 @@
-﻿using Microsoft.Extensions.FileProviders;
-using Microsoft.Extensions.Primitives;
-
-namespace Ramstack.FileProviders.Composition;
+﻿namespace Ramstack.FileProviders.Composition;
 
 [TestFixture]
 public sealed class FileProviderComposerTests

@@ -1,8 +1,6 @@
 using System.Buffers;
 using System.Text;
 
-using Microsoft.Extensions.FileProviders;
-
 namespace Ramstack.FileProviders;
 
 /// <summary>

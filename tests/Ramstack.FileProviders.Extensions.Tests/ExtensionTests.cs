@@ -1,8 +1,4 @@
-﻿using Microsoft.Extensions.FileProviders;
-using Microsoft.Extensions.FileProviders.Physical;
-
-using Ramstack.FileProviders.Internal;
-using Ramstack.FileProviders.Utilities;
+﻿using Ramstack.FileProviders.Utilities;
 
 namespace Ramstack.FileProviders;
 

@@ -1,6 +1,3 @@
-using Microsoft.Extensions.FileProviders;
-using Microsoft.Extensions.Primitives;
-
 namespace Ramstack.FileProviders.Utilities;
 
 public sealed class DisposableFileProvider(IFileProvider provider) : IFileProvider, IDisposable
