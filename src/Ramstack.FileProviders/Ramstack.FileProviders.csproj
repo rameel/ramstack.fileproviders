@@ -35,6 +35,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Using Include="System.ComponentModel" />
+    <Using Include="System.Diagnostics" />
+    <Using Include="System.Diagnostics.CodeAnalysis" />
+    <Using Include="Microsoft.Extensions.FileProviders" />
+    <Using Include="Microsoft.Extensions.Primitives" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Include="..\Ramstack.FileProviders.Extensions\FilePath.cs">
       <Link>Internal\FilePath.cs</Link>
     </Compile>

@@ -1,9 +1,3 @@
-using System.Collections;
-using System.Diagnostics;
-
-using Microsoft.Extensions.FileProviders;
-using Microsoft.Extensions.Primitives;
-
 namespace Ramstack.FileProviders;
 
 /// <summary>
@@ -121,7 +115,7 @@ public sealed class PrefixedFileProvider : IFileProvider, IDisposable
         }
 
         /// <inheritdoc />
-        IEnumerator IEnumerable.GetEnumerator() =>
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() =>
             GetEnumerator();
     }
 

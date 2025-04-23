@@ -1,8 +1,3 @@
-using System.Diagnostics;
-
-using Microsoft.Extensions.FileProviders;
-using Microsoft.Extensions.Primitives;
-
 namespace Ramstack.FileProviders;
 
 /// <summary>

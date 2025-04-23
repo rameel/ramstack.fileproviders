@@ -1,8 +1,3 @@
-using System.Collections;
-using System.Diagnostics;
-
-using Microsoft.Extensions.FileProviders;
-
 namespace Ramstack.FileProviders;
 
 /// <summary>
@@ -178,7 +173,7 @@ public sealed class DirectoryNode : FileNodeBase
             (directory._directory ??= directory.Provider.GetDirectoryContents(directory.FullName)).GetEnumerator();
 
         /// <inheritdoc />
-        IEnumerator IEnumerable.GetEnumerator() =>
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() =>
             GetEnumerator();
     }
 

@@ -56,6 +56,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Using Include="System.ComponentModel" />
+    <Using Include="System.Diagnostics" />
+    <Using Include="System.Diagnostics.CodeAnalysis" />
+    <Using Include="Microsoft.Extensions.FileProviders" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="README.md">
       <Link>Properties\README.md</Link>
       <Pack>True</Pack>

@@ -1,5 +1,3 @@
-using Microsoft.Extensions.FileProviders;
-
 namespace Ramstack.FileProviders;
 
 partial class FileProviderExtensions
