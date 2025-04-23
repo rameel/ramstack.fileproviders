@@ -73,9 +73,9 @@ foreach (FileNode file in provider.EnumerateFiles("/project", pattern: "**/*.md"
 
 ## Supported versions
 
-|      | Version |
-|------|---------|
-| .NET | 6, 7, 8 |
+|      | Version    |
+|------|------------|
+| .NET | 6, 7, 8, 9 |
 
 ## Contributions
 

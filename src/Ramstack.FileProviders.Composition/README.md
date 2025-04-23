@@ -58,9 +58,9 @@ flat structure, avoiding unnecessary indirectness.
 
 ## Supported versions
 
-|      | Version |
-|------|---------|
-| .NET | 6, 7, 8 |
+|      | Version    |
+|------|------------|
+| .NET | 6, 7, 8, 9 |
 
 ## Contributions
 
