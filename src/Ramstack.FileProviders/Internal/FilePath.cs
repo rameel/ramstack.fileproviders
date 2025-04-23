@@ -131,7 +131,7 @@ internal static class FilePath
 
                 if (ch == '.' && prior == '/')
                 {
-                    if ((uint)j + 1 >= path.Length)
+                    if ((uint)j + 1 >= (uint)path.Length)
                         return false;
 
                     var nch = path[j + 1];
@@ -140,7 +140,7 @@ internal static class FilePath
 
                     if (nch == '.')
                     {
-                        if ((uint)j + 2 >= path.Length)
+                        if ((uint)j + 2 >= (uint)path.Length)
                             return false;
 
                         var sch = path[j + 2];
