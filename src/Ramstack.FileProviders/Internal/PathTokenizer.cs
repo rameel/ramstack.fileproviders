@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
 namespace Ramstack.FileProviders.Internal;
@@ -52,22 +51,18 @@ internal readonly struct PathTokenizer(string path)
         /// </summary>
         public ReadOnlySpan<char> Current
         {
-            get
-            {
-                Debug.Assert(_path.AsSpan(_start, _count).Length >= 0);
-
-                //
-                // Using AsSpan(_start) followed by slicing is more efficient
-                // than AsSpan(_start, _count) because:
-                // 1) MoveNext already validated _start bounds
-                // 2) We only need to check _count <= length (simpler than checking start+count)
-                //
-                // The alternative AsSpan(start, count) does a combined bounds check
-                // which the JIT can't optimize away:
-                // (ulong)(uint)_start + (ulong)(uint)_count <= (ulong)(uint)Length
-                //
-                return _path.AsSpan(_start)[.._count];
-            }
+            //
+            // Using AsSpan(_start) followed by slicing is more efficient
+            // than AsSpan(_start, _count) because:
+            // 1) MoveNext already validated _start bounds
+            // 2) We only need to check _count <= length (simpler than checking start+count)
+            //
+            // The alternative AsSpan(start, count) does a combined bounds check
+            // which the JIT can't optimize away:
+            // (ulong)(uint)_start + (ulong)(uint)_count <= (ulong)(uint)Length
+            //
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get => _path.AsSpan(_start)[.._count];
         }
 
         /// <summary>
