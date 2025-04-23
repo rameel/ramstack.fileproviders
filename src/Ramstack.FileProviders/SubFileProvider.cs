@@ -1,5 +1,4 @@
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Primitives;
@@ -56,16 +55,10 @@ public sealed class SubFileProvider : IFileProvider, IDisposable
 
     private string ResolvePath(string subpath)
     {
+        subpath = FilePath.Normalize(subpath);
         if (subpath.Length == 0 || subpath == "/")
             return _path;
 
-        if (FilePath.IsNavigatesAboveRoot(subpath))
-            Error_InvalidPath();
-
         return FilePath.Join(_path, subpath);
     }
-
-    [DoesNotReturn]
-    private static void Error_InvalidPath() =>
-        throw new ArgumentException("Invalid path.");
 }

@@ -102,37 +102,15 @@ public class FilePathTests
     [TestCase("/home/../home/user//documents", "/home/user/documents")]
     [TestCase("/home/../home/user/../../home/config/documents", "/home/config/documents")]
     [TestCase("/home/../home/user/./.././.././home/config/documents", "/home/config/documents")]
+    [TestCase("..", "/")]
+    [TestCase("../..", "/")]
+    [TestCase("../../../", "/")]
+    [TestCase("/home/../..", "/")]
+    [TestCase("/home/../../..", "/")]
     public void Normalize(string path, string expected)
     {
         foreach (var p in GetPathVariations(path))
             Assert.That(FilePath.Normalize(p),Is.EqualTo(expected));
-    }
-
-    [TestCase("..")]
-    [TestCase("/home/../..")]
-    public void Normalize_Error(string path) =>
-        Assert.Throws<ArgumentException>(() => FilePath.Normalize(path));
-
-    [TestCase("/home/user/documents", false)]
-    [TestCase("/././././home/user/documents", false)]
-    [TestCase("/home/../documents", false)]
-    [TestCase("/home/.././././././documents", false)]
-    [TestCase("/home/../../documents", true)]
-    [TestCase("/home/../..", true)]
-    [TestCase("/../documents", true)]
-    [TestCase("/home/user/documents/..", false)]
-    [TestCase("/home/user/documents/../..", false)]
-    [TestCase("/home/user/documents/../../..", false)]
-    [TestCase("/home/user/documents/../../../..", true)]
-    [TestCase("//home//user//documents//..//..////..///..", true)]
-    [TestCase("/..", true)]
-    [TestCase("/../", true)]
-    [TestCase("/", false)]
-    [TestCase("", false)]
-    public void IsNavigatesAboveRoot(string path, bool expected)
-    {
-        foreach (var p in GetPathVariations(path))
-            Assert.That(FilePath.IsNavigatesAboveRoot(p), Is.EqualTo(expected));
     }
 
     private static string[] GetPathVariations(string path) =>
