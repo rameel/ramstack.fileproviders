@@ -134,17 +134,15 @@ internal static class FilePath
                     if ((uint)j + 1 >= (uint)path.Length)
                         return false;
 
-                    var nch = path[j + 1];
-                    if (nch is '/' or '\\')
+                    if (path[j + 1] is '/' or '\\')
                         return false;
 
-                    if (nch == '.')
+                    if (path[j + 1] == '.')
                     {
                         if ((uint)j + 2 >= (uint)path.Length)
                             return false;
 
-                        var sch = path[j + 2];
-                        if (sch is '/' or '\\')
+                        if (path[j + 2] is '/' or '\\')
                             return false;
                     }
                 }
