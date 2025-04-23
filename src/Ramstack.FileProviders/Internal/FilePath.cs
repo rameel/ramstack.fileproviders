@@ -1,6 +1,4 @@
 using System.Buffers;
-using System.Diagnostics.CodeAnalysis;
-using System.Runtime.CompilerServices;
 
 using Microsoft.Extensions.FileProviders;
 
@@ -44,6 +42,26 @@ internal static class FilePath
     /// </remarks>
     public static string GetExtension(string path)
     {
+        _ = path.Length;
+        return GetExtension(path.AsSpan()).ToString();
+    }
+
+    /// <summary>
+    /// Returns an extension (including the period ".") of the specified path string.
+    /// </summary>
+    /// <param name="path">The path string from which to get the extension.</param>
+    /// <returns>
+    /// The extension of the specified path (including the period "."),
+    /// or an empty string if no extension is present.
+    /// </returns>
+    /// <remarks>
+    /// <see cref="Path.GetExtension(ReadOnlySpan{char})"/> returns an empty string ("")
+    /// if the extension consists solely of a period (e.g., "file."), which differs from
+    /// <see cref="FileSystemInfo.Extension"/>, which returns "." in this case.
+    /// This method follows the behavior of <see cref="Path.GetExtension(ReadOnlySpan{char})"/>.
+    /// </remarks>
+    public static ReadOnlySpan<char> GetExtension(ReadOnlySpan<char> path)
+    {
         for (var i = path.Length - 1; i >= 0; i--)
         {
             if (path[i] == '.')
@@ -51,14 +69,14 @@ internal static class FilePath
                 if (i == path.Length - 1)
                     break;
 
-                return path[i..];
+                return path.Slice(i);
             }
 
             if (path[i] == '/' || path[i] == '\\')
                 break;
         }
 
-        return "";
+        return default;
     }
 
     /// <summary>
@@ -70,12 +88,28 @@ internal static class FilePath
     /// </returns>
     public static string GetFileName(string path)
     {
-        _ = path.Length;
-        var p = path.AsSpan();
+        var length = path.Length;
 
-        var start = p.LastIndexOfAny('/', '\\');
-        return start >= 0
-            ? p.Slice(start + 1).ToString()
+        var fileName = GetFileName(path.AsSpan());
+        if (fileName.Length != length)
+            return fileName.ToString();
+
+        return path;
+    }
+
+    /// <summary>
+    /// Returns the file name and extension for the specified path.
+    /// </summary>
+    /// <param name="path">The path from which to get the file name and extension.</param>
+    /// <returns>
+    /// The file name and extension for the <paramref name="path"/>.
+    /// </returns>
+    public static ReadOnlySpan<char> GetFileName(ReadOnlySpan<char> path)
+    {
+        var index = path.LastIndexOfAny('/', '\\');
+
+        return index >= 0
+            ? path.Slice(index + 1)
             : path;
     }
 
@@ -90,21 +124,32 @@ internal static class FilePath
     {
         _ = path.Length;
 
-        var lastIndex = path.AsSpan().LastIndexOfAny('/', '\\');
-        var index = lastIndex;
+        var offset = GetDirectoryNameOffset(path);
 
-        // Process consecutive separators
-        while ((uint)index - 1 < (uint)path.Length && (path[index - 1] == '/' || path[index - 1] == '\\'))
-            index--;
+        if (offset > 0 && (uint)offset < (uint)path.Length)
+            return path[..offset];
 
-        // Path consists of separators only
-        if (index != 0 && (uint)index < (uint)path.Length)
-            return path[..index];
+        if (offset == 0)
+            return "/";
 
-        if (lastIndex + 1 == path.Length)
-            return "";
+        return "";
+    }
 
-        return "/";
+    /// <summary>
+    /// Returns the directory portion for the specified path.
+    /// </summary>
+    /// <param name="path">The path to retrieve the directory portion from.</param>
+    /// <returns>
+    /// Directory portion for <paramref name="path"/>, or an empty string if path denotes a root directory.
+    /// </returns>
+    public static ReadOnlySpan<char> GetDirectoryName(ReadOnlySpan<char> path)
+    {
+        var offset = GetDirectoryNameOffset(path);
+
+        if (offset > 0 && (uint)offset < (uint)path.Length)
+            return path[..offset];
+
+        return offset == 0 ? "/" : "";
     }
 
     /// <summary>
@@ -115,10 +160,8 @@ internal static class FilePath
     /// <see langword="true" /> if the path in a normalized form;
     /// otherwise, <see langword="false" />.
     /// </returns>
-    public static bool IsNormalized(string path)
+    public static bool IsNormalized(ReadOnlySpan<char> path)
     {
-        _ = path.Length;
-
         if (path is ['/', ..])
         {
             var prior = path[0];
@@ -221,37 +264,6 @@ internal static class FilePath
     }
 
     /// <summary>
-    /// Determines whether the path navigates above the root.
-    /// </summary>
-    /// <param name="path">The path to test.</param>
-    /// <returns>
-    /// <see langword="true" /> if path navigates above the root;
-    /// otherwise, <see langword="false" />.
-    /// </returns>
-    public static bool IsNavigatesAboveRoot(string path)
-    {
-        var depth = 0;
-
-        if (path.Length != 0)
-        {
-            foreach (var s in PathTokenizer.Tokenize(path))
-            {
-                // ReSharper disable once RedundantIfElseBlock
-                // ReSharper disable once RedundantJumpStatement
-
-                if (s.Length == 0 || s is ['.'])
-                    continue;
-                else if (s is not ['.', '.'])
-                    depth++;
-                else if (--depth < 0)
-                    break;
-            }
-        }
-
-        return depth < 0;
-    }
-
-    /// <summary>
     /// Concatenates two paths into a single path.
     /// </summary>
     /// <param name="path1">The path to join.</param>
@@ -274,6 +286,28 @@ internal static class FilePath
     }
 
     /// <summary>
+    /// Concatenates two paths into a single path.
+    /// </summary>
+    /// <param name="path1">The path to join.</param>
+    /// <param name="path2">The path to join.</param>
+    /// <returns>
+    /// The concatenated path.
+    /// </returns>
+    public static string Join(ReadOnlySpan<char> path1, ReadOnlySpan<char> path2)
+    {
+        if (path1.Length == 0)
+            return path2.ToString();
+
+        if (path2.Length == 0)
+            return path1.ToString();
+
+        if (HasTrailingSlash(path1) || HasLeadingSlash(path2))
+            return string.Concat(path1, path2);
+
+        return string.Concat(path1, "/", path2);
+    }
+
+    /// <summary>
     /// Determines whether the specified path string starts with a directory separator.
     /// </summary>
     /// <param name="path">The path to test.</param>
@@ -281,7 +315,6 @@ internal static class FilePath
     /// <see langword="true" /> if the path has a leading directory separator;
     /// otherwise, <see langword="false" />.
     /// </returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool HasLeadingSlash(string path) =>
         path.StartsWith('/') || path.StartsWith('\\');
 
@@ -293,11 +326,62 @@ internal static class FilePath
     /// <see langword="true" /> if the path has a trailing directory separator;
     /// otherwise, <see langword="false" />.
     /// </returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool HasTrailingSlash(string path) =>
         path.EndsWith('/') || path.EndsWith('\\');
 
-    [DoesNotReturn]
-    private static void Error_InvalidPath() =>
-        throw new ArgumentException("Invalid path");
+    /// <summary>
+    /// Determines whether the specified path string starts with a directory separator.
+    /// </summary>
+    /// <param name="path">The path to test.</param>
+    /// <returns>
+    /// <see langword="true" /> if the path has a leading directory separator;
+    /// otherwise, <see langword="false" />.
+    /// </returns>
+    public static bool HasLeadingSlash(ReadOnlySpan<char> path)
+    {
+        if (path.Length != 0)
+        {
+            var ch = path[0];
+            if (ch == '/' || ch == '\\')
+                return true;
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Determines whether the specified path string ends in a directory separator.
+    /// </summary>
+    /// <param name="path">The path to test.</param>
+    /// <returns>
+    /// <see langword="true" /> if the path has a trailing directory separator;
+    /// otherwise, <see langword="false" />.
+    /// </returns>
+    public static bool HasTrailingSlash(ReadOnlySpan<char> path)
+    {
+        if (path.Length != 0)
+        {
+            var ch = path[^1];
+            if (ch == '/' || ch == '\\')
+                return true;
+        }
+
+        return false;
+    }
+
+    private static int GetDirectoryNameOffset(ReadOnlySpan<char> path)
+    {
+        var lastIndex = path.LastIndexOfAny('/', '\\');
+        var index = lastIndex;
+
+        // Process consecutive separators
+        while ((uint)index - 1 < (uint)path.Length && (path[index - 1] == '/' || path[index - 1] == '\\'))
+            index--;
+
+        // Case where the path consists of separators only
+        if (index == 0 && lastIndex + 1 == path.Length)
+            index = -1;
+
+        return index;
+    }
 }
