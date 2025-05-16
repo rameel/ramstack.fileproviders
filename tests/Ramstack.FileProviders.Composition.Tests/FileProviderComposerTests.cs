@@ -4,7 +4,7 @@
 public sealed class FileProviderComposerTests
 {
     [Test]
-    public void FlattenFileProvider_ReturnsAsIs_WhenNoComposite()
+    public void Flatten_ReturnsAsIs_WhenNoComposite()
     {
         var provider = new TestFileProvider();
         var result = FileProviderComposer.FlattenProvider(provider);
@@ -12,7 +12,7 @@ public sealed class FileProviderComposerTests
     }
 
     [Test]
-    public void FlattenFileProvider_ReturnsCompositeProvider_WhenNeedComposite()
+    public void Flatten_ReturnsCompositeProvider_WhenNeedComposite()
     {
         var provider = new CompositeFileProvider(new TestFileProvider(), new TestFileProvider());
 
@@ -21,7 +21,7 @@ public sealed class FileProviderComposerTests
     }
 
     [Test]
-    public void FlattenFileProvider_ReturnsAsIs_WhenAlreadyFlat()
+    public void Flatten_ReturnsAsIs_WhenAlreadyFlat()
     {
         var provider = new CompositeFileProvider(new TestFileProvider(), new TestFileProvider());
 
@@ -30,7 +30,7 @@ public sealed class FileProviderComposerTests
     }
 
     [Test]
-    public void FlattenFileProvider_ReturnsCompositeProvider_Flattened()
+    public void Flatten_ReturnsCompositeProvider_Flattened()
     {
         var provider = new CompositeFileProvider(
             new TestFileProvider(),
@@ -48,7 +48,7 @@ public sealed class FileProviderComposerTests
     }
 
     [Test]
-    public void FlattenFileProvider_RemovesNullFileProvider()
+    public void Flatten_RemovesNullFileProvider()
     {
         var provider = new CompositeFileProvider(
             new TestFileProvider(),
@@ -66,7 +66,7 @@ public sealed class FileProviderComposerTests
     }
 
     [Test]
-    public void FlattenFileProvider_ReturnsNullFileProvider_WhenNothingReturn()
+    public void Flatten_ReturnsNullFileProvider_WhenNothingReturn()
     {
         var provider = new CompositeFileProvider(
             new CompositeFileProvider(
@@ -107,7 +107,7 @@ public sealed class FileProviderComposerTests
     }
 
     [Test]
-    public void FlattenFileProvider_ReturnsSingleProvider_WhenRemainOneProvider()
+    public void Flatten_ReturnsSingleProvider_WhenRemainOneProvider()
     {
         var provider = new CompositeFileProvider(
             new CompositeFileProvider(
@@ -148,7 +148,7 @@ public sealed class FileProviderComposerTests
     }
 
     [Test]
-    public void FlattenFileProvider_MaintainOrder_WhenComposite()
+    public void Flatten_MaintainOrder_WhenComposite()
     {
         var p1 = new TestFileProvider();
         var p2 = new TestFileProvider();
