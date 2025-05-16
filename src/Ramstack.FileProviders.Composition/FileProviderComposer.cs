@@ -20,10 +20,24 @@ public static class FileProviderComposer
     /// </returns>
     public static IFileProvider FlattenProvider(IFileProvider provider)
     {
-        if (provider is CompositeFileProvider composite)
-            foreach (var p in composite.FileProviders)
+        while (provider is CompositeFileProvider composite)
+        {
+            var providers = composite.FileProviders as IFileProvider[] ?? composite.FileProviders.ToArray();
+            if (providers.Length == 0)
+                return new NullFileProvider();
+
+            if (providers.Length == 1)
+            {
+                provider = providers[0];
+                continue;
+            }
+
+            foreach (var p in providers)
                 if (p is CompositeFileProvider or NullFileProvider)
-                    return ComposeProviders(composite.FileProviders);
+                    return ComposeProviders(providers);
+
+            break;
+        }
 
         return provider;
     }

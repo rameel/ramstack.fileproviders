@@ -208,6 +208,20 @@ public sealed class FileProviderComposerTests
         Assert.That(composite.FileProviders, Is.EquivalentTo(providers));
     }
 
+    [Test]
+    public void Flatten_ReturnsSingleProvider_WhenCompositeContainsOnlyOne()
+    {
+        var provider = new CompositeFileProvider(new TestFileProvider()).Flatten();
+        Assert.That(provider, Is.InstanceOf<TestFileProvider>());
+    }
+
+    [Test]
+    public void Flatten_EmptyComposite_ReturnsNullProvider()
+    {
+        var provider = new CompositeFileProvider().Flatten();
+        Assert.That(provider, Is.InstanceOf<NullFileProvider>());
+    }
+
     private sealed class TestFileProvider : IFileProvider
     {
         public IFileInfo GetFileInfo(string subpath) =>
