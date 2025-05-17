@@ -15,6 +15,7 @@
     * [Ramstack.FileProviders.Composition](#ramstackfileproviderscomposition-1)
       * [Flattening Providers](#flattening-providers)
       * [Composing Providers](#composing-providers)
+      * [Flattening Change Tokens](#flattening-change-tokens)
   * [NuGet Packages](#nuget-packages)
   * [Supported versions](#supported-versions)
   * [Contributions](#contributions)
@@ -272,6 +273,16 @@ environment.ContentRootFileProvider = FileProviderComposer.ComposeProviders(
 In this example, the `ComposeProviders` method handles any unnecessary nesting that might occur, including when the current
 `environment.ContentRootFileProvider` is a `CompositeFileProvider`. This ensures that all file providers merged into a single
 flat structure, avoiding unnecessary indirectness.
+
+#### Flattening Change Tokens
+The `Flatten` extension method optimizes the structure of change token hierarchies by flattening nested `CompositeChangeToken` instances
+and, most importantly, automatically filters out `NullChangeToken` instances from the hierarchy. Unlike standard `CompositeChangeToken`
+behavior, which retains and processes `NullChangeToken` instances unnecessarily, this utility removes them completely,
+resulting in improved performance and simplified change notification chains.
+
+```csharp
+var changeToken = compositeFileProvider.Watch("**/*.json").Flatten();
+```
 
 
 ## NuGet Packages
