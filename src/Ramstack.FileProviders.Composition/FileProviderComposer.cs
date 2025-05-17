@@ -16,6 +16,20 @@ public static class FileProviderComposer
     /// </remarks>
     /// <param name="provider">The <see cref="IFileProvider"/> to flatten.</param>
     /// <returns>
+    /// An <see cref="IFileProvider"/> representing the flattened version from the specified <see cref="IFileProvider"/>.
+    /// </returns>
+    public static IFileProvider Flatten(this IFileProvider provider) =>
+        FlattenProvider(provider);
+
+    /// <summary>
+    /// Tries to flatten the specified <see cref="IFileProvider"/> into a flat list of file providers.
+    /// </summary>
+    /// <remarks>
+    /// If the <paramref name="provider"/> is not a <see cref="CompositeFileProvider"/>,
+    /// the same instance of the <paramref name="provider"/> is returned.
+    /// </remarks>
+    /// <param name="provider">The <see cref="IFileProvider"/> to flatten.</param>
+    /// <returns>
     /// A <see cref="IFileProvider"/> that represents the flattened version of the specified <see cref="IFileProvider"/>.
     /// </returns>
     public static IFileProvider FlattenProvider(IFileProvider provider)
