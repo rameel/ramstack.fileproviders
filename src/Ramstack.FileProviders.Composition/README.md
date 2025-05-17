@@ -48,8 +48,18 @@ environment.ContentRootFileProvider = FileProviderComposer.ComposeProviders(
 ```
 
 In this example, the `ComposeProviders` method handles any unnecessary nesting that might occur, including when the current
-`environment.ContentRootFileProvider` is a `CompositeFileProvider`. This ensures that all file providers merged into a single
+`environment.ContentRootFileProvider` is a `CompositeFileProvider`. This ensures that all file providers are merged into a single
 flat structure, avoiding unnecessary indirectness.
+
+## Flattening Change Tokens
+The `Flatten` extension method optimizes the structure of change token hierarchies by flattening nested `CompositeChangeToken` instances
+and, most importantly, automatically filters out `NullChangeToken` instances from the hierarchy. Unlike standard `CompositeChangeToken`
+behavior, which retains and processes `NullChangeToken` instances unnecessarily, this utility removes them completely,
+resulting in improved performance and simplified change notification chains.
+
+```csharp
+var changeToken = compositeFileProvider.Watch("**/*.json").Flatten();
+```
 
 ## Related Packages
 - [Ramstack.FileProviders.Extensions](https://www.nuget.org/packages/Ramstack.FileProviders.Extensions) — Useful and convenient extensions for `IFileProvider`, bringing its capabilities and experience closer to what's provided by the `DirectoryInfo` and `FileInfo` classes.
