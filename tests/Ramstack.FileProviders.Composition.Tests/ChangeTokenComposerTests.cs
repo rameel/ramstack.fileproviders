@@ -33,7 +33,7 @@ public sealed class ChangeTokenComposerTests
     [Test]
     public void Flatten_ReturnsCompositeChangeToken_Flattened()
     {
-        var provider = CreateCompositeChangeToken(
+        var changeToken = CreateCompositeChangeToken(
             new TestChangeToken(),
             CreateCompositeChangeToken(
                 new TestChangeToken(),
@@ -41,7 +41,7 @@ public sealed class ChangeTokenComposerTests
                 CreateCompositeChangeToken(
                     new TestChangeToken())));
 
-        var result = ChangeTokenComposer.FlattenChangeToken(provider);
+        var result = ChangeTokenComposer.FlattenChangeToken(changeToken);
 
         Assert.That(result, Is.InstanceOf<CompositeChangeToken>());
         Assert.That(((CompositeChangeToken)result).ChangeTokens.Count, Is.EqualTo(4));
@@ -51,7 +51,7 @@ public sealed class ChangeTokenComposerTests
     [Test]
     public void Flatten_RemovesNullChangeToken()
     {
-        var provider = CreateCompositeChangeToken(
+        var changeToken = CreateCompositeChangeToken(
             new TestChangeToken(),
             CreateCompositeChangeToken(
                 new TestChangeToken(),
@@ -59,7 +59,7 @@ public sealed class ChangeTokenComposerTests
                 new TestChangeToken()),
             NullChangeToken.Singleton);
 
-        var result = ChangeTokenComposer.FlattenChangeToken(provider);
+        var result = ChangeTokenComposer.FlattenChangeToken(changeToken);
 
         Assert.That(result, Is.InstanceOf<CompositeChangeToken>());
         Assert.That(((CompositeChangeToken)result).ChangeTokens.Count, Is.EqualTo(3));
@@ -69,7 +69,7 @@ public sealed class ChangeTokenComposerTests
     [Test]
     public void Flatten_ReturnsNullChangeToken_WhenNothingReturn()
     {
-        var provider = CreateCompositeChangeToken(
+        var changeToken = CreateCompositeChangeToken(
             CreateCompositeChangeToken(
                 NullChangeToken.Singleton,
                 NullChangeToken.Singleton,
@@ -103,7 +103,7 @@ public sealed class ChangeTokenComposerTests
                     NullChangeToken.Singleton),
                 NullChangeToken.Singleton));
 
-        var result = ChangeTokenComposer.FlattenChangeToken(provider);
+        var result = ChangeTokenComposer.FlattenChangeToken(changeToken);
         Assert.That(result, Is.InstanceOf<NullChangeToken>());
         Assert.That(result, Is.SameAs(NullChangeToken.Singleton));
     }
@@ -111,7 +111,7 @@ public sealed class ChangeTokenComposerTests
     [Test]
     public void Flatten_ReturnsSingleToken_WhenRemainOneToken()
     {
-        var provider = CreateCompositeChangeToken(
+        var changeToken = CreateCompositeChangeToken(
             CreateCompositeChangeToken(
                 NullChangeToken.Singleton,
                 NullChangeToken.Singleton,
@@ -145,7 +145,7 @@ public sealed class ChangeTokenComposerTests
                     NullChangeToken.Singleton),
                 NullChangeToken.Singleton));
 
-        var result = ChangeTokenComposer.FlattenChangeToken(provider);
+        var result = ChangeTokenComposer.FlattenChangeToken(changeToken);
         Assert.That(result, Is.InstanceOf<TestChangeToken>());
     }
 
@@ -213,8 +213,14 @@ public sealed class ChangeTokenComposerTests
     [Test]
     public void Flatten_ReturnsSingleToken_WhenCompositeContainsOnlyOne()
     {
-        var changeToken = CreateCompositeChangeToken(new TestChangeToken()).Flatten();
-        Assert.That(changeToken, Is.InstanceOf<TestChangeToken>());
+        var changeToken =
+            CreateCompositeChangeToken(
+                CreateCompositeChangeToken(
+                    CreateCompositeChangeToken(
+                        CreateCompositeChangeToken(
+                            new TestChangeToken()))));
+
+        Assert.That(changeToken.Flatten(), Is.InstanceOf<TestChangeToken>());
     }
 
     [Test]
