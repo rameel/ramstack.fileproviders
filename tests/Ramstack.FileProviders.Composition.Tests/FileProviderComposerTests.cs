@@ -211,8 +211,13 @@ public sealed class FileProviderComposerTests
     [Test]
     public void Flatten_ReturnsSingleProvider_WhenCompositeContainsOnlyOne()
     {
-        var provider = new CompositeFileProvider(new TestFileProvider()).Flatten();
-        Assert.That(provider, Is.InstanceOf<TestFileProvider>());
+        var provider =
+            new CompositeFileProvider(
+                new CompositeFileProvider(
+                    new CompositeFileProvider(
+                        new TestFileProvider())));
+
+        Assert.That(provider.Flatten(), Is.InstanceOf<TestFileProvider>());
     }
 
     [Test]
