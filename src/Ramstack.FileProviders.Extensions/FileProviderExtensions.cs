@@ -135,8 +135,8 @@ public static partial class FileProviderExtensions
     /// <summary>
     /// Returns a directory with the specified path.
     /// </summary>
-    /// <param name="provider">The file provider to retrieve the directory from.</param>
-    /// <param name="path">The local path that identifies the directory.</param>
+    /// <param name="provider">The <see cref="IFileProvider"/>.</param>
+    /// <param name="path">The path that identifies the directory.</param>
     /// <returns>
     /// The <see cref="DirectoryNode"/> representing the desired directory.
     /// </returns>
@@ -151,8 +151,8 @@ public static partial class FileProviderExtensions
     /// <summary>
     /// Returns a file with the specified path.
     /// </summary>
-    /// <param name="provider">The file provider to retrieve the file from.</param>
-    /// <param name="path">The local path that identifies the file.</param>
+    /// <param name="provider">The <see cref="IFileProvider"/>.</param>
+    /// <param name="path">The path that identifies the file.</param>
     /// <returns>
     /// The <see cref="FileNode"/> representing the desired file.
     /// </returns>

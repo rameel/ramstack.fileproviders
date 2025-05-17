@@ -71,8 +71,8 @@ public sealed class ZipFileProvider : IFileProvider, IDisposable
     {
         foreach (var entry in archive.Entries)
         {
-            // Skip directories
-            // Directory entries are represented by a trailing slash in their names
+            // Skip directories.
+            // Directory entries are represented by a trailing slash in their names.
             //
             // Since we cannot rely on all archivers to represent directory entries within the archive,
             // it's simpler to assume their absence and disregard entries ending with a forward slash '/'
