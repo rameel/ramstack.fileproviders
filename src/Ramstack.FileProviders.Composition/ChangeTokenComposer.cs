@@ -47,8 +47,8 @@ public static class ChangeTokenComposer
                 continue;
             }
 
-            foreach (var t in changeTokens)
-                if (t is CompositeChangeToken or NullChangeToken)
+            for (int i = 0, count = changeTokens.Count; i < count; i++)
+                if (changeTokens[i] is CompositeChangeToken or NullChangeToken)
                     return ComposeChangeTokens(changeTokens);
 
             break;
@@ -93,8 +93,9 @@ public static class ChangeTokenComposer
             {
                 if (current is CompositeChangeToken composite)
                 {
-                    foreach (var t in composite.ChangeTokens)
-                        queue.Enqueue(t);
+                    var list = composite.ChangeTokens;
+                    for (int i = 0, count = list.Count; i < count; i++)
+                        queue.Enqueue(composite.ChangeTokens[i]);
                 }
                 else if (current is not NullChangeToken)
                 {
