@@ -1,3 +1,5 @@
+using Ramstack.Globbing;
+
 namespace Ramstack.FileProviders;
 
 /// <summary>
@@ -22,6 +24,7 @@ public sealed class PrefixedFileProvider : IFileProvider, IDisposable
     /// to which the prefix will be applied.</param>
     public PrefixedFileProvider(string prefix, IFileProvider provider)
     {
+        ArgumentNullException.ThrowIfNull(prefix);
         ArgumentNullException.ThrowIfNull(provider);
 
         prefix = FilePath.Normalize(prefix);
@@ -45,7 +48,9 @@ public sealed class PrefixedFileProvider : IFileProvider, IDisposable
     /// <inheritdoc />
     public IFileInfo GetFileInfo(string subpath)
     {
-        var path = ResolvePath(FilePath.Normalize(subpath), _prefix);
+        subpath = FilePath.Normalize(subpath);
+
+        var path = ResolvePath(_prefix, subpath);
         if (path is not null)
             return _provider.GetFileInfo(path);
 
@@ -62,7 +67,7 @@ public sealed class PrefixedFileProvider : IFileProvider, IDisposable
                 if (entry.Path == subpath)
                     return new ArtificialDirectoryContents(entry.DirectoryName);
 
-        var path = ResolvePath(subpath, _prefix);
+        var path = ResolvePath(_prefix, subpath);
         if (path is not null)
             return _provider.GetDirectoryContents(path);
 
@@ -72,9 +77,15 @@ public sealed class PrefixedFileProvider : IFileProvider, IDisposable
     /// <inheritdoc />
     public IChangeToken Watch(string filter)
     {
-        var path = ResolvePath(FilePath.Normalize(filter), _prefix);
+        filter = FilePath.Normalize(filter);
+
+        var path = ResolvePath(_prefix, filter);
         if (path is not null)
             return _provider.Watch(path);
+
+        var pattern = ResolveGlobFilter(_prefix, filter);
+        if (pattern is not null)
+            return _provider.Watch(pattern);
 
         return NullChangeToken.Singleton;
     }
@@ -83,16 +94,93 @@ public sealed class PrefixedFileProvider : IFileProvider, IDisposable
     public void Dispose() =>
         (_provider as IDisposable)?.Dispose();
 
-    private static string? ResolvePath(string path, string prefix)
+    private static string? ResolvePath(string prefix, string path)
     {
         Debug.Assert(path == FilePath.Normalize(path));
 
         if (path == prefix)
             return "/";
 
-        if (path.StartsWith(prefix, StringComparison.Ordinal) && path[prefix.Length] == '/')
-            return path[prefix.Length..];
+        if (path.StartsWith(prefix, StringComparison.Ordinal))
+            if ((uint)prefix.Length < (uint)path.Length)
+                if (path[prefix.Length] == '/')
+                    return path[prefix.Length..];
 
+        return null;
+    }
+
+    /// <summary>
+    /// Attempts to resolve a glob filter relative to a virtual path prefix,
+    /// removing any prefix segments that match corresponding parts of the filter.
+    /// </summary>
+    /// <param name="prefix">The virtual path prefix representing the base of the current provider.</param>
+    /// <param name="filter">The incoming glob filter that may include glob patterns.</param>
+    /// <returns>
+    /// A normalized filter value that can be safely passed to the wrapped file provider
+    /// or <see langword="null" /> if the filter cannot be applied.
+    /// </returns>
+    /// <remarks>
+    /// The goal is to determine whether a specified glob filter
+    /// (e.g., "/modules/*/{assets,css,js}/**/*.{css,js}") applies to this provider, which is
+    /// virtually mounted at a specific prefix path (e.g., "/modules/profile/assets").
+    /// </remarks>
+    private static string? ResolveGlobFilter(string prefix, string filter)
+    {
+        Debug.Assert(prefix == FilePath.Normalize(prefix));
+        Debug.Assert(filter == FilePath.Normalize(filter));
+
+        var prefixSegments = new PathTokenizer(prefix).GetEnumerator();
+        var filterSegments = new PathTokenizer(filter).GetEnumerator();
+
+        var list = new List<string>();
+
+        while (prefixSegments.MoveNext() && filterSegments.MoveNext())
+        {
+            var fs = filterSegments.Current;
+
+            // The globstar '**' matches any number of remaining segments, including none
+            if (fs is "**")
+            {
+                // Add '**' and all remaining filter segments to the result.
+                do
+                {
+                    var segment = filterSegments.Current.ToString();
+                    list.Add(segment);
+                }
+                while (filterSegments.MoveNext());
+
+                return string.Join("/", list);
+            }
+
+            if (fs is "*")
+            {
+                // '*' matches any prefix segment, continue matching.
+                continue;
+            }
+
+            if (Matcher.IsMatch(prefixSegments.Current, fs, MatchFlags.Unix))
+            {
+                // Segment matches the prefix segment, continue matching.
+                continue;
+            }
+
+            // Segment doesn't match the prefix at all.
+            // This means the filter cannot be applied to the underlying provider.
+            return null;
+        }
+
+        if (!prefixSegments.MoveNext())
+        {
+            // All prefix segments have been matched and consumed successfully.
+            // Append all remaining filter segments.
+            while (filterSegments.MoveNext())
+                list.Add(filterSegments.Current.ToString());
+
+            return string.Join("/", list);
+        }
+
+        // Not all prefix segments were matched.
+        // This means the filter cannot be applied to the underlying provider.
         return null;
     }
 
