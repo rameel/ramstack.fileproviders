@@ -1,3 +1,10 @@
+# Ramstack.FileProviders
+[![NuGet](https://img.shields.io/nuget/v/Ramstack.FileProviders.svg)](https://nuget.org/packages/Ramstack.FileProviders)
+[![MIT](https://img.shields.io/github/license/rameel/ramstack.fileproviders)](https://github.com/rameel/ramstack.fileproviders/blob/main/LICENSE)
+
+`Ramstack.FileProviders` is a collection of lightweight .NET libraries that enhance file handling capabilities in .NET applications,
+building upon `Microsoft.Extensions.FileProviders`.
+
 <!-- TOC -->
 * [Ramstack.FileProviders](#ramstackfileproviders)
   * [Projects](#projects)
@@ -22,10 +29,6 @@
   * [License](#license)
 <!-- TOC -->
 
-# Ramstack.FileProviders
-
-`Ramstack.FileProviders` is a collection of lightweight .NET libraries that enhance file handling capabilities in .NET applications,
-building upon `Microsoft.Extensions.FileProviders`.
 
 ## Projects
 

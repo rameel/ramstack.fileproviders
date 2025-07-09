@@ -104,7 +104,7 @@ public sealed class PrefixedFileProvider : IFileProvider, IDisposable
         if (path.StartsWith(prefix, StringComparison.Ordinal))
             if ((uint)prefix.Length < (uint)path.Length)
                 if (path[prefix.Length] == '/')
-                    return path[prefix.Length..];
+                    return new string(path.AsSpan(prefix.Length));
 
         return null;
     }
