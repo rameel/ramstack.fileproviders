@@ -71,8 +71,14 @@ public sealed class GlobbingFileProvider : IFileProvider
     {
         subpath = FilePath.Normalize(subpath);
 
-        var directory = _provider.GetDirectoryContents(subpath);
-        return new GlobbingDirectoryContents(this, subpath, directory);
+        if (!IsExcluded(subpath))
+        {
+            var directory = _provider.GetDirectoryContents(subpath);
+            if (directory is not NotFoundDirectoryContents)
+                return new GlobbingDirectoryContents(this, subpath, directory);
+        }
+
+        return NotFoundDirectoryContents.Singleton;
     }
 
     /// <inheritdoc />
@@ -109,7 +115,7 @@ public sealed class GlobbingFileProvider : IFileProvider
         private readonly IDirectoryContents _directory;
 
         /// <inheritdoc />
-        public bool Exists => !_provider.IsExcluded(_directoryPath) && _directory.Exists;
+        public bool Exists => _directory.Exists;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GlobbingDirectoryContents"/> class.
