@@ -23,7 +23,7 @@ public sealed class FileNode : FileNodeBase
     public string DirectoryName => FilePath.GetDirectoryName(FullName);
 
     /// <summary>
-    /// Gets the last write time of the current file.
+    /// Gets the last modified time of the current file.
     /// </summary>
     public DateTimeOffset LastWriteTime => _file.LastModified;
 
