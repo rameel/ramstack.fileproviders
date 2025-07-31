@@ -121,7 +121,7 @@ internal
     /// </summary>
     /// <param name="path">The path to retrieve the directory portion from.</param>
     /// <returns>
-    /// Directory portion for <paramref name="path"/>, or an empty string if path denotes a root directory.
+    /// Directory portion for <paramref name="path"/>, or an empty string if the path denotes a root directory.
     /// </returns>
     public static string GetDirectoryName(string path)
     {
@@ -143,7 +143,7 @@ internal
     /// </summary>
     /// <param name="path">The path to retrieve the directory portion from.</param>
     /// <returns>
-    /// Directory portion for <paramref name="path"/>, or an empty string if path denotes a root directory.
+    /// Directory portion for <paramref name="path"/>, or an empty string if the path denotes a root directory.
     /// </returns>
     public static ReadOnlySpan<char> GetDirectoryName(ReadOnlySpan<char> path)
     {

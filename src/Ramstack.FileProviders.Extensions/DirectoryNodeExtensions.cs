@@ -277,7 +277,7 @@ public static class DirectoryNodeExtensions
     /// that match the given glob pattern.
     /// </summary>
     /// <param name="directory">The <see cref="DirectoryNode"/> instance representing the directory to search.</param>
-    /// <param name="pattern">The glob pattern to match against the names of file nodes in path.</param>
+    /// <param name="pattern">The glob pattern to match against the names of file nodes in the path.</param>
     /// <param name="exclude">Optional glob pattern to exclude file nodes.</param>
     /// <returns>
     /// An enumerable collection of file nodes in the specified directory that match the given glob pattern.
