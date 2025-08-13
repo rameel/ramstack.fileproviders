@@ -2,19 +2,11 @@ namespace Ramstack.FileProviders.Utilities;
 
 public sealed class TempFileStorage : IDisposable
 {
-    public string Root { get; }
-    public string PrefixedPath { get; }
+    public string Root { get; } = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
 
-    public TempFileStorage(string prefix = "")
+    public TempFileStorage()
     {
-        var root = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
-        var path = prefix.Length != 0
-            ? Path.GetFullPath(Path.Join(root, prefix))
-            : root;
-
-        Root = root;
-        PrefixedPath = path;
-
+        var path = Root;
         var list = new[]
         {
             "project/docs/user_manual.pdf",
@@ -53,10 +45,6 @@ public sealed class TempFileStorage : IDisposable
             "project/data/temp/temp_file1.tmp",
             "project/data/temp/temp_file2.tmp",
             "project/data/temp/ac/b2/34/2d/7e/temp_file2.tmp",
-            "project/data/temp/hidden-folder/temp_1.tmp",
-            "project/data/temp/hidden-folder/temp_2.tmp",
-            "project/data/temp/hidden/temp_hidden3.dat",
-            "project/data/temp/hidden/temp_hidden4.dat",
 
             "project/scripts/setup.p1",
             "project/scripts/deploy.ps1",
@@ -78,13 +66,13 @@ public sealed class TempFileStorage : IDisposable
             "project/assets/images/backgrounds/light.jpg",
             "project/assets/images/backgrounds/dark.jpeg",
 
-            "project/assets/fonts/opensans.ttf",
-            "project/assets/fonts/roboto.ttf",
+            "project/assets/fonts/Arial.ttf",
+            "project/assets/fonts/Roboto.ttf",
             "project/assets/styles/main.css",
             "project/assets/styles/print.css",
 
             "project/packages/Ramstack.Globbing.2.1.0/lib/net60/Ramstack.Globbing.dll",
-            "project/packages/Ramstack.Globbing.2.1.0/Ramstack.Globbing.2.1.0.nupkg",
+            "project/packages/Ramstack.Globbing.2.1.0/Ramstack.Globbing.2.1.0.zip",
 
             "project/.gitignore",
             "project/.editorconfig",
@@ -106,12 +94,29 @@ public sealed class TempFileStorage : IDisposable
 
         foreach (var f in list)
             File.WriteAllText(f, $"Automatically generated on {DateTime.Now:s}\n\nId:{Guid.NewGuid()}");
+    }
 
-        var hiddenFolder = directories.First(p => p.Contains("hidden-folder"));
-        File.SetAttributes(hiddenFolder, FileAttributes.Hidden);
+    public TempFileStorage(TempFileStorage storage)
+    {
+        CopyDirectory(storage.Root, Root);
 
-        foreach (var hiddenFile in list.Where(p => p.Contains("temp_hidden")))
-            File.SetAttributes(hiddenFile, FileAttributes.Hidden);
+        static void CopyDirectory(string sourcePath, string destinationPath)
+        {
+            Directory.CreateDirectory(destinationPath);
+
+            foreach (var sourceFileName in Directory.GetFiles(sourcePath))
+            {
+                var name = Path.GetFileName(sourceFileName);
+                var destFileName = Path.Join(destinationPath, name);
+                File.Copy(sourceFileName, destFileName);
+            }
+
+            foreach (var directoryPath in Directory.GetDirectories(sourcePath))
+            {
+                var destination = Path.Join(destinationPath, Path.GetFileName(directoryPath));
+                CopyDirectory(directoryPath, destination);
+            }
+        }
     }
 
     public void Dispose() =>

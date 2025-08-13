@@ -12,8 +12,10 @@ public sealed class SubFileProviderTests : AbstractFileProviderTests
         _storage.Dispose();
 
     protected override IFileProvider GetFileProvider() =>
-        new SubFileProvider("/project/docs", new PhysicalFileProvider(_storage.Root));
+        new SubFileProvider("/bin/app",
+            new PrefixedFileProvider("/bin/app",
+                new PhysicalFileProvider(_storage.Root)));
 
     protected override DirectoryInfo GetDirectoryInfo() =>
-        new DirectoryInfo(Path.Join(_storage.Root, "project", "docs"));
+        new DirectoryInfo(Path.Join(_storage.Root));
 }

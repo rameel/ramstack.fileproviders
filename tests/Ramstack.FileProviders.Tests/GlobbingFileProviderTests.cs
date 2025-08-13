@@ -5,33 +5,44 @@ namespace Ramstack.FileProviders;
 [TestFixture]
 public class GlobbingFileProviderTests : AbstractFileProviderTests
 {
-    private readonly TempFileStorage _storage = new TempFileStorage();
+    private readonly TempFileStorage _storage1;
+    private readonly TempFileStorage _storage2;
+
+    public GlobbingFileProviderTests()
+    {
+        _storage1 = new TempFileStorage();
+        _storage2 = new TempFileStorage(_storage1);
+    }
 
     [OneTimeSetUp]
     public void Setup()
     {
-        var path = Path.Join(_storage.Root, "project");
-        var directory = new DirectoryInfo(path);
+        var directory = new DirectoryInfo(
+            Path.Join(_storage1.Root, "project"));
 
         foreach (var di in directory.GetDirectories("*", SearchOption.TopDirectoryOnly))
-            if (di.Name != "docs")
+            if (di.Name != "assets")
                 di.Delete(recursive: true);
 
         foreach (var fi in directory.GetFiles("*", SearchOption.TopDirectoryOnly))
-            fi.Delete();
-
-        File.Delete(Path.Join(_storage.Root, "project/docs/troubleshooting/common_issues.txt"));
+            if (fi.Name != "README.md")
+                fi.Delete();
     }
 
     [OneTimeTearDown]
-    public void Cleanup() =>
-        _storage.Dispose();
+    public void Cleanup()
+    {
+        _storage1.Dispose();
+        _storage2.Dispose();
+    }
 
     [Test]
     public void ExcludedDirectory_HasNoFileNodes()
     {
-        using var storage = new TempFileStorage();
-        var fs = new GlobbingFileProvider(new PhysicalFileProvider(storage.Root), "**", exclude: "/project/src/**");
+        var provider = new GlobbingFileProvider(
+            new PhysicalFileProvider(_storage2.Root),
+            pattern: "**",
+            exclude: "/project/src/**");
 
         var directories = new[]
         {
@@ -45,15 +56,15 @@ public class GlobbingFileProviderTests : AbstractFileProviderTests
 
         foreach (var path in directories)
         {
-            var directory = fs.GetDirectory(path);
+            var directory = provider.GetDirectoryContents(path);
 
             Assert.That(
                 directory.Exists,
                 Is.False);
 
             Assert.That(
-                directory.EnumerateFileNodes("**").Count(),
-                Is.Zero);
+                directory.Any(),
+                Is.False);
         }
 
         var files = new[]
@@ -73,17 +84,19 @@ public class GlobbingFileProviderTests : AbstractFileProviderTests
 
         foreach (var path in files)
         {
-            var file = fs.GetFile(path);
+            var file = provider.GetFileInfo(path);
             Assert.That(file.Exists, Is.False);
         }
     }
 
     protected override IFileProvider GetFileProvider()
     {
-        var provider = new PhysicalFileProvider(_storage.Root);
-        return new GlobbingFileProvider(provider, "project/docs/**", exclude: "**/*.txt");
+        var provider = new PhysicalFileProvider(_storage2.Root);
+        return new GlobbingFileProvider(provider,
+            patterns: ["project/assets/**", "project/README.md", "project/global.json"],
+            excludes: ["project/*.json"]);
     }
 
     protected override DirectoryInfo GetDirectoryInfo() =>
-        new DirectoryInfo(_storage.Root);
+        new DirectoryInfo(_storage1.Root);
 }
