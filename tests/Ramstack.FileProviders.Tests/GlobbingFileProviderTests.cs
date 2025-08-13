@@ -37,6 +37,47 @@ public class GlobbingFileProviderTests : AbstractFileProviderTests
     }
 
     [Test]
+    public void Glob_MatchStructures()
+    {
+        using var provider = CreateFileProvider();
+
+        Assert.That(
+            provider
+                .EnumerateDirectories("/", "**")
+                .OrderBy(f => f.FullName)
+                .Select(f => f.FullName)
+                .ToArray(),
+            Is.EquivalentTo(
+            [
+                "/project",
+                "/project/assets",
+                "/project/assets/fonts",
+                "/project/assets/images",
+                "/project/assets/images/backgrounds",
+                "/project/assets/styles"
+            ]));
+
+        Assert.That(
+            provider
+                .EnumerateFiles("/", "**")
+                .OrderBy(f => f.FullName)
+                .Select(f => f.FullName)
+                .ToArray(),
+            Is.EquivalentTo(
+            [
+                "/project/assets/fonts/Arial.ttf",
+                "/project/assets/fonts/Roboto.ttf",
+                "/project/assets/images/backgrounds/dark.jpeg",
+                "/project/assets/images/backgrounds/light.jpg",
+                "/project/assets/images/icon.svg",
+                "/project/assets/images/logo.png",
+                "/project/assets/styles/main.css",
+                "/project/assets/styles/print.css",
+                "/project/README.md"
+            ]));
+    }
+
+    [Test]
     public void ExcludedDirectory_HasNoFileNodes()
     {
         var provider = new GlobbingFileProvider(

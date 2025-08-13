@@ -1,4 +1,4 @@
-using Ramstack.Globbing;
+using Ramstack.FileProviders.Internal;
 
 namespace Ramstack.FileProviders;
 
@@ -60,10 +60,9 @@ public sealed class GlobbingFileProvider : IFileProvider
     public IFileInfo GetFileInfo(string subpath)
     {
         subpath = FilePath.Normalize(subpath);
-        if (!IsExcluded(subpath) && IsIncluded(subpath))
-            return _provider.GetFileInfo(subpath);
-
-        return new NotFoundFileInfo(subpath);
+        return IsFileIncluded(subpath)
+            ? _provider.GetFileInfo(subpath)
+            : new NotFoundFileInfo(subpath);
     }
 
     /// <inheritdoc />
@@ -71,7 +70,7 @@ public sealed class GlobbingFileProvider : IFileProvider
     {
         subpath = FilePath.Normalize(subpath);
 
-        if (!IsExcluded(subpath))
+        if (IsDirectoryIncluded(subpath))
         {
             var directory = _provider.GetDirectoryContents(subpath);
             if (directory is not NotFoundDirectoryContents)
@@ -85,23 +84,26 @@ public sealed class GlobbingFileProvider : IFileProvider
     public IChangeToken Watch(string filter) =>
         _provider.Watch(filter);
 
-    private bool IsIncluded(string path)
-    {
-        foreach (var pattern in _patterns)
-            if (Matcher.IsMatch(path, pattern, MatchFlags.Unix))
-                return true;
+    /// <summary>
+    /// Determines if a file is included based on the specified patterns and exclusions.
+    /// </summary>
+    /// <param name="path">The path of the file.</param>
+    /// <returns>
+    /// <see langword="true" /> if the file is included;
+    /// otherwise, <see langword="false" />.
+    /// </returns>
+    internal bool IsFileIncluded(string path) =>
+        !PathHelper.IsMatch(path, _excludes) && PathHelper.IsMatch(path, _patterns);
 
-        return false;
-    }
-
-    private bool IsExcluded(string path)
-    {
-        foreach (var pattern in _excludes)
-            if (Matcher.IsMatch(path, pattern, MatchFlags.Unix))
-                return true;
-
-        return false;
-    }
+    /// <summary>
+    /// Determines if a directory is included based on the specified exclusions.
+    /// </summary>
+    /// <param name="path">The path of the directory.</param>
+    /// <returns>
+    /// <see langword="true" /> if the directory is included; otherwise, <see langword="false" />.
+    /// </returns>
+    private bool IsDirectoryIncluded(string path) =>
+        path == "/" || !PathHelper.IsMatch(path, _excludes) && PathHelper.IsPartialMatch(path, _patterns);
 
     #region Inner type: GlobbingDirectoryContents
 
@@ -136,9 +138,8 @@ public sealed class GlobbingFileProvider : IFileProvider
             foreach (var file in _directory)
             {
                 var path = FilePath.Join(_directoryPath, file.Name);
-                if (!_provider.IsExcluded(path))
-                    if (file.IsDirectory || _provider.IsIncluded(path))
-                        yield return file;
+                if (file.IsDirectory ? _provider.IsDirectoryIncluded(path) : _provider.IsFileIncluded(path))
+                    yield return file;
             }
         }
 
