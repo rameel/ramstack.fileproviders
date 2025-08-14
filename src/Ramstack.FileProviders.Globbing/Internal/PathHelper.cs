@@ -61,7 +61,7 @@ internal static class PathHelper
     /// <returns>
     /// The number of segments in the path.
     /// </returns>
-    public static int CountPathSegments(scoped ReadOnlySpan<char> path)
+    private static int CountPathSegments(scoped ReadOnlySpan<char> path)
     {
         var count = 0;
         var iterator = new PathSegmentIterator();
@@ -93,7 +93,7 @@ internal static class PathHelper
     /// <returns>
     /// A <see cref="ReadOnlySpan{T}"/> representing the partial pattern.
     /// </returns>
-    public static ReadOnlySpan<char> GetPartialPattern(string pattern, int depth)
+    private static ReadOnlySpan<char> GetPartialPattern(string pattern, int depth)
     {
         Debug.Assert(depth >= 1);
 

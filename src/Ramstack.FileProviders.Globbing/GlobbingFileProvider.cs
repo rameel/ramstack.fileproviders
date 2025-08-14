@@ -92,7 +92,7 @@ public sealed class GlobbingFileProvider : IFileProvider
     /// <see langword="true" /> if the file is included;
     /// otherwise, <see langword="false" />.
     /// </returns>
-    internal bool IsFileIncluded(string path) =>
+    private bool IsFileIncluded(string path) =>
         !PathHelper.IsMatch(path, _excludes) && PathHelper.IsMatch(path, _patterns);
 
     /// <summary>
