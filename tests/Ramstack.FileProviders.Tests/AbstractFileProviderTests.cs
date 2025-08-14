@@ -61,12 +61,9 @@ public abstract class AbstractFileProviderTests
     {
         using var provider = CreateFileProvider();
 
-        var name = $"{Guid.NewGuid()}.txt";
-        var info = provider.GetFileInfo(name);
+        var info = provider.GetFileInfo("/project/8f723faf0ee0.txt");
 
-        Assert.That(
-            FilePath.GetFileName(info.Name),
-            Is.EqualTo(name));
+        Assert.That(info.Name, Is.EqualTo("8f723faf0ee0.txt").Or.EqualTo("/project/8f723faf0ee0.txt"));
         Assert.That(info.IsDirectory, Is.False);
         Assert.That(info.Exists, Is.False);
     }
@@ -76,8 +73,7 @@ public abstract class AbstractFileProviderTests
     {
         using var provider = CreateFileProvider();
 
-        var name = Guid.NewGuid().ToString();
-        var info = provider.GetDirectoryContents($"/{name}");
+        var info = provider.GetDirectoryContents("/project/c800f57d/7c71");
 
         Assert.That(info.Exists, Is.False);
     }

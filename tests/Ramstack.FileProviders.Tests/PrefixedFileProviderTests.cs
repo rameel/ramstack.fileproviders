@@ -12,12 +12,12 @@ public sealed class PrefixedFileProviderTests : AbstractFileProviderTests
             .GetMethod("ResolveGlobFilter", BindingFlags.Static | BindingFlags.NonPublic)!
             .CreateDelegate<Func<string, string, string?>>();
 
-    private const string Prefix = "solution/app";
-
-    private readonly TempFileStorage _storage = new TempFileStorage(Prefix);
+    private readonly TempFileStorage _storage = new TempFileStorage();
 
     protected override IFileProvider GetFileProvider() =>
-        new PrefixedFileProvider(Prefix, new PhysicalFileProvider(_storage.PrefixedPath, ExclusionFilters.None));
+        new PrefixedFileProvider("/project",
+            new PhysicalFileProvider(
+                Path.Join(_storage.Root, "project")));
 
     protected override DirectoryInfo GetDirectoryInfo() =>
         new DirectoryInfo(_storage.Root);

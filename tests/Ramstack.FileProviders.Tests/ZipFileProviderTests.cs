@@ -8,7 +8,11 @@ namespace Ramstack.FileProviders;
 public class ZipFileProviderTests : AbstractFileProviderTests
 {
     private readonly TempFileStorage _storage = new TempFileStorage();
-    private readonly string _path = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+    private readonly string _path =
+        Path.Combine(
+            Path.GetTempPath(),
+            Path.GetRandomFileName()
+            ) + ".zip";
 
     [OneTimeSetUp]
     public void Setup()
