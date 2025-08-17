@@ -1,4 +1,4 @@
-﻿using Ramstack.FileProviders.Utilities;
+using Ramstack.FileProviders.Utilities;
 
 namespace Ramstack.FileProviders;
 

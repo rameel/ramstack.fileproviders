@@ -1,4 +1,4 @@
-﻿namespace Ramstack.FileProviders.Composition;
+namespace Ramstack.FileProviders.Composition;
 
 [TestFixture]
 public sealed class ChangeTokenComposerTests
