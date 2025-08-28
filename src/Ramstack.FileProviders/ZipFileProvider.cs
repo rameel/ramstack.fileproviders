@@ -150,7 +150,7 @@ public sealed class ZipFileProvider : IFileProvider, IDisposable
 
         /// <inheritdoc />
         public Stream CreateReadStream() =>
-            throw new NotSupportedException("Cannot create a stream for a directory");
+            throw new NotSupportedException("Cannot create a read stream for a directory.");
 
         /// <inheritdoc />
         public IEnumerator<IFileInfo> GetEnumerator() =>
@@ -217,7 +217,7 @@ public sealed class ZipFileProvider : IFileProvider, IDisposable
         /// A string containing information about the current instance.
         /// </returns>
         private string ToStringDebugger() =>
-            $"/{entry.FullName}";
+            entry.FullName;
     }
 
     #endregion
