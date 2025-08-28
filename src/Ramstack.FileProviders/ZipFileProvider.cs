@@ -71,21 +71,24 @@ public sealed class ZipFileProvider : IFileProvider, IDisposable
     {
         foreach (var entry in archive.Entries)
         {
-            // Skip directories.
-            // Directory entries are represented by a trailing slash in their names.
-            //
-            // Since we cannot rely on all archivers to represent directory entries within the archive,
-            // it's simpler to assume their absence and disregard entries ending with a forward slash '/'
+            var path = FilePath.Normalize(entry.FullName);
 
             if (FilePath.HasTrailingSlash(entry.FullName))
+            {
+                GetDirectory(path);
                 continue;
+            }
 
-            var path = FilePath.Normalize(entry.FullName);
             var directory = GetDirectory(FilePath.GetDirectoryName(path));
             var file = new ZipFileInfo(entry);
 
-            directory.RegisterFile(file);
-            cache.Add(path, file);
+            //
+            // Archives legitimately may contain entries with identical names,
+            // so skip if a file with this name has already been added,
+            // avoiding duplicates in the directory file list.
+            //
+            if (cache.TryAdd(path, file))
+                directory.RegisterFile(file);
         }
 
         ZipDirectoryInfo GetDirectory(string path)
