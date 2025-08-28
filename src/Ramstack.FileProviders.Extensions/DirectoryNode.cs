@@ -166,7 +166,7 @@ public sealed class DirectoryNode : FileNodeBase
 
         /// <inheritdoc />
         public Stream CreateReadStream() =>
-            throw new NotSupportedException("Cannot create a stream for a directory");
+            throw new NotSupportedException("Cannot create a read stream for a directory.");
 
         /// <inheritdoc />
         public IEnumerator<IFileInfo> GetEnumerator() =>

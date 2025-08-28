@@ -1,4 +1,5 @@
 using System.IO.Compression;
+using System.Runtime.CompilerServices;
 
 namespace Ramstack.FileProviders;
 
@@ -8,7 +9,7 @@ namespace Ramstack.FileProviders;
 public sealed class ZipFileProvider : IFileProvider, IDisposable
 {
     private readonly ZipArchive _archive;
-    private readonly Dictionary<string, IFileInfo> _directories =
+    private readonly Dictionary<string, IFileInfo> _cache =
         new() { ["/"] = new ZipDirectoryInfo("/") };
 
     /// <summary>
@@ -29,8 +30,12 @@ public sealed class ZipFileProvider : IFileProvider, IDisposable
     /// <param name="leaveOpen"><see langword="true" /> to leave the stream open
     /// after the <see cref="ZipFileProvider"/> object is disposed; otherwise, <see langword="false" />.</param>
     public ZipFileProvider(Stream stream, bool leaveOpen = false)
-        : this(new ZipArchive(stream, ZipArchiveMode.Read, leaveOpen))
     {
+        if (!stream.CanSeek)
+            throw new ArgumentException("Stream does not support seeking.", nameof(stream));
+
+        _archive = new ZipArchive(stream, ZipArchiveMode.Read, leaveOpen);
+        Initialize(_archive, _cache);
     }
 
     /// <summary>
@@ -41,13 +46,18 @@ public sealed class ZipFileProvider : IFileProvider, IDisposable
     /// to use for providing access to ZIP archive content.</param>
     public ZipFileProvider(ZipArchive archive)
     {
+        if (archive.Mode != ZipArchiveMode.Read)
+            throw new ArgumentException(
+                "Archive must be opened in read mode (ZipArchiveMode.Read).",
+                nameof(archive));
+
         _archive = archive;
-        Initialize(archive, _directories);
+        Initialize(archive, _cache);
     }
 
     /// <inheritdoc />
     public IFileInfo GetFileInfo(string subpath) =>
-        Find(subpath) ?? new NotFoundFileInfo(Path.GetFileName(subpath));
+        Find(subpath) ?? new NotFoundFileInfo(FilePath.GetFileName(subpath));
 
     /// <inheritdoc />
     public IDirectoryContents GetDirectoryContents(string subpath) =>
@@ -62,7 +72,7 @@ public sealed class ZipFileProvider : IFileProvider, IDisposable
         _archive.Dispose();
 
     private IFileInfo? Find(string path) =>
-        _directories.GetValueOrDefault(FilePath.Normalize(path));
+        _cache.GetValueOrDefault(FilePath.Normalize(path));
 
     /// <summary>
     /// Initializes the current provider by populating it with entries from the underlying ZIP archive.
@@ -71,21 +81,29 @@ public sealed class ZipFileProvider : IFileProvider, IDisposable
     {
         foreach (var entry in archive.Entries)
         {
-            // Skip directories.
-            // Directory entries are represented by a trailing slash in their names.
             //
-            // Since we cannot rely on all archivers to represent directory entries within the archive,
-            // it's simpler to assume their absence and disregard entries ending with a forward slash '/'
+            // Strip common path prefixes from zip entries to handle archives
+            // saved with absolute paths.
+            //
+            var path = FilePath.Normalize(
+                entry.FullName[GetPrefixLength(entry.FullName)..]);
 
-            if (entry.FullName.EndsWith('/'))
+            if (FilePath.HasTrailingSlash(entry.FullName))
+            {
+                GetDirectory(path);
                 continue;
+            }
 
-            var path = FilePath.Normalize(entry.FullName);
             var directory = GetDirectory(FilePath.GetDirectoryName(path));
-            var file = new ZipFileInfo(entry);
+            var file = new ZipFileInfo(FilePath.GetFileName(path), entry);
 
-            directory.RegisterFile(file);
-            cache.Add(path, file);
+            //
+            // Archives legitimately may contain entries with identical names,
+            // so skip if a file with this name has already been added,
+            // avoiding duplicates in the directory file list.
+            //
+            if (cache.TryAdd(path, file))
+                directory.RegisterFile(file);
         }
 
         ZipDirectoryInfo GetDirectory(string path)
@@ -93,7 +111,7 @@ public sealed class ZipFileProvider : IFileProvider, IDisposable
             if (cache.TryGetValue(path, out var di))
                 return (ZipDirectoryInfo)di;
 
-            di = new ZipDirectoryInfo(path);
+            di = new ZipDirectoryInfo(FilePath.GetFileName(path));
             var parent = GetDirectory(FilePath.GetDirectoryName(path));
             parent.RegisterFile(di);
             cache.Add(path, di);
@@ -102,16 +120,47 @@ public sealed class ZipFileProvider : IFileProvider, IDisposable
         }
     }
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private static int GetPrefixLength(string path)
+    {
+        //
+        // Check only well-known prefixes.
+        // Note: Since entry names can be arbitrary,
+        // we specifically target only common absolute path patterns.
+        //
+
+        if (path.StartsWith(@"\\?\UNC\", StringComparison.OrdinalIgnoreCase)
+            || path.StartsWith(@"\\.\UNC\", StringComparison.OrdinalIgnoreCase)
+            || path.StartsWith("//?/UNC/", StringComparison.OrdinalIgnoreCase)
+            || path.StartsWith("//./UNC/", StringComparison.OrdinalIgnoreCase))
+            return 8;
+
+        if (path.StartsWith(@"\\?\", StringComparison.Ordinal)
+            || path.StartsWith(@"\\.\", StringComparison.Ordinal)
+            || path.StartsWith("//?/", StringComparison.Ordinal)
+            || path.StartsWith("//./", StringComparison.Ordinal))
+            return path.Length >= 6 && IsAsciiLetter(path[4]) && path[5] == ':' ? 6 : 4;
+
+        if (path.Length >= 2
+            && IsAsciiLetter(path[0]) && path[1] == ':')
+            return 2;
+
+        return 0;
+
+        static bool IsAsciiLetter(char ch) =>
+            (uint)((ch | 0x20) - 'a') <= 'z' - 'a';
+    }
+
     #region Inner type: ZipDirectoryInfo
 
     /// <summary>
     /// Represents directory contents and file information within a ZIP archive for the specified path.
     /// This class is used to provide both <see cref="IDirectoryContents"/> and <see cref="IFileInfo"/> interfaces for directory entries in the ZIP archive.
     /// </summary>
-    /// <param name="path">The path of the directory within the ZIP archive.</param>
-    [DebuggerDisplay("{ToStringDebugger(),nq}")]
+    /// <param name="name">The name of the directory, not including any path.</param>
+    [DebuggerDisplay("{Name,nq}")]
     [DebuggerTypeProxy(typeof(ZipDirectoryInfoDebuggerProxy))]
-    private sealed class ZipDirectoryInfo(string path) : IDirectoryContents, IFileInfo
+    private sealed class ZipDirectoryInfo(string name) : IDirectoryContents, IFileInfo
     {
         /// <summary>
         /// The list of the <see cref="IFileInfo"/> within this directory.
@@ -128,7 +177,7 @@ public sealed class ZipFileProvider : IFileProvider, IDisposable
         public string? PhysicalPath => null;
 
         /// <inheritdoc />
-        public string Name => Path.GetFileName(path);
+        public string Name => name;
 
         /// <inheritdoc />
         public DateTimeOffset LastModified => default;
@@ -138,7 +187,7 @@ public sealed class ZipFileProvider : IFileProvider, IDisposable
 
         /// <inheritdoc />
         public Stream CreateReadStream() =>
-            throw new NotSupportedException("Cannot create a stream for a directory");
+            throw new NotSupportedException("Cannot create a read stream for a directory.");
 
         /// <inheritdoc />
         public IEnumerator<IFileInfo> GetEnumerator() =>
@@ -154,15 +203,6 @@ public sealed class ZipFileProvider : IFileProvider, IDisposable
         /// <param name="file">The file associated with this directory.</param>
         public void RegisterFile(IFileInfo file) =>
             _files.Add(file);
-
-        /// <summary>
-        /// Returns a string representation of the current instance's state, intended for debugging purposes.
-        /// </summary>
-        /// <returns>
-        /// A string containing information about the current instance.
-        /// </returns>
-        private string ToStringDebugger() =>
-            path;
     }
 
     #endregion
@@ -172,9 +212,10 @@ public sealed class ZipFileProvider : IFileProvider, IDisposable
     /// <summary>
     /// Represents a file within a ZIP archive as an implementation of the <see cref="IFileInfo"/> interface.
     /// </summary>
+    /// <param name="name">The name of the file, not including any path.</param>
     /// <param name="entry">The ZIP archive entry representing the file.</param>
     [DebuggerDisplay("{ToStringDebugger(),nq}")]
-    private sealed class ZipFileInfo(ZipArchiveEntry entry) : IFileInfo
+    private sealed class ZipFileInfo(string name, ZipArchiveEntry entry) : IFileInfo
     {
         /// <inheritdoc />
         public bool Exists => true;
@@ -192,20 +233,14 @@ public sealed class ZipFileProvider : IFileProvider, IDisposable
         public string? PhysicalPath => null;
 
         /// <inheritdoc />
-        public string Name => entry.Name;
+        public string Name => name;
 
         /// <inheritdoc />
         public Stream CreateReadStream() =>
             entry.Open();
 
-        /// <summary>
-        /// Returns a string representation of the current instance's state, intended for debugging purposes.
-        /// </summary>
-        /// <returns>
-        /// A string containing information about the current instance.
-        /// </returns>
         private string ToStringDebugger() =>
-            $"/{entry.FullName}";
+            entry.FullName;
     }
 
     #endregion
