@@ -29,8 +29,12 @@ public sealed class ZipFileProvider : IFileProvider, IDisposable
     /// <param name="leaveOpen"><see langword="true" /> to leave the stream open
     /// after the <see cref="ZipFileProvider"/> object is disposed; otherwise, <see langword="false" />.</param>
     public ZipFileProvider(Stream stream, bool leaveOpen = false)
-        : this(new ZipArchive(stream, ZipArchiveMode.Read, leaveOpen))
     {
+        if (!stream.CanSeek)
+            throw new ArgumentException("Stream does not support seeking.", nameof(stream));
+
+        _archive = new ZipArchive(stream, ZipArchiveMode.Read, leaveOpen);
+        Initialize(_archive, _directories);
     }
 
     /// <summary>
@@ -41,6 +45,11 @@ public sealed class ZipFileProvider : IFileProvider, IDisposable
     /// to use for providing access to ZIP archive content.</param>
     public ZipFileProvider(ZipArchive archive)
     {
+        if (archive.Mode != ZipArchiveMode.Read)
+            throw new ArgumentException(
+                "Archive must be opened in read mode (ZipArchiveMode.Read).",
+                nameof(archive));
+
         _archive = archive;
         Initialize(archive, _directories);
     }
