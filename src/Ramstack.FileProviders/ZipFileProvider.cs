@@ -57,7 +57,7 @@ public sealed class ZipFileProvider : IFileProvider, IDisposable
 
     /// <inheritdoc />
     public IFileInfo GetFileInfo(string subpath) =>
-        Find(subpath) ?? new NotFoundFileInfo(Path.GetFileName(subpath));
+        Find(subpath) ?? new NotFoundFileInfo(FilePath.GetFileName(subpath));
 
     /// <inheritdoc />
     public IDirectoryContents GetDirectoryContents(string subpath) =>
@@ -95,7 +95,7 @@ public sealed class ZipFileProvider : IFileProvider, IDisposable
             }
 
             var directory = GetDirectory(FilePath.GetDirectoryName(path));
-            var file = new ZipFileInfo(Path.GetFileName(path), entry);
+            var file = new ZipFileInfo(FilePath.GetFileName(path), entry);
 
             //
             // Archives legitimately may contain entries with identical names,
