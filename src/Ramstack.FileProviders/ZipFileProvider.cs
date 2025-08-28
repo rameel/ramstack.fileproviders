@@ -1,4 +1,5 @@
 using System.IO.Compression;
+using System.Runtime.CompilerServices;
 
 namespace Ramstack.FileProviders;
 
@@ -80,7 +81,8 @@ public sealed class ZipFileProvider : IFileProvider, IDisposable
     {
         foreach (var entry in archive.Entries)
         {
-            var path = FilePath.Normalize(entry.FullName);
+            var path = FilePath.Normalize(
+                entry.FullName[GetPrefixLength(entry.FullName)..]);
 
             if (FilePath.HasTrailingSlash(entry.FullName))
             {
@@ -112,6 +114,31 @@ public sealed class ZipFileProvider : IFileProvider, IDisposable
 
             return (ZipDirectoryInfo)di;
         }
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private static int GetPrefixLength(string path)
+    {
+        if (path.StartsWith(@"\\?\UNC\", StringComparison.OrdinalIgnoreCase)
+            || path.StartsWith(@"\\.\UNC\", StringComparison.OrdinalIgnoreCase)
+            || path.StartsWith("//?/UNC/", StringComparison.OrdinalIgnoreCase)
+            || path.StartsWith("//./UNC/", StringComparison.OrdinalIgnoreCase))
+            return 8;
+
+        if (path.StartsWith(@"\\?\", StringComparison.Ordinal)
+            || path.StartsWith(@"\\.\", StringComparison.Ordinal)
+            || path.StartsWith("//?/", StringComparison.Ordinal)
+            || path.StartsWith("//./", StringComparison.Ordinal))
+            return path.Length >= 6 && IsAsciiLetter(path[4]) && path[5] == ':' ? 6 : 4;
+
+        if (path.Length >= 2
+            && IsAsciiLetter(path[0]) && path[1] == ':')
+            return 2;
+
+        return 0;
+
+        static bool IsAsciiLetter(char ch) =>
+            (uint)((ch | 0x20) - 'a') <= 'z' - 'a';
     }
 
     #region Inner type: ZipDirectoryInfo
