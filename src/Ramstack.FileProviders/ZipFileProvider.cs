@@ -95,7 +95,7 @@ public sealed class ZipFileProvider : IFileProvider, IDisposable
             }
 
             var directory = GetDirectory(FilePath.GetDirectoryName(path));
-            var file = new ZipFileInfo(entry);
+            var file = new ZipFileInfo(Path.GetFileName(path), entry);
 
             //
             // Archives legitimately may contain entries with identical names,
@@ -111,7 +111,7 @@ public sealed class ZipFileProvider : IFileProvider, IDisposable
             if (cache.TryGetValue(path, out var di))
                 return (ZipDirectoryInfo)di;
 
-            di = new ZipDirectoryInfo(path);
+            di = new ZipDirectoryInfo(FilePath.GetFileName(path));
             var parent = GetDirectory(FilePath.GetDirectoryName(path));
             parent.RegisterFile(di);
             cache.Add(path, di);
@@ -157,10 +157,10 @@ public sealed class ZipFileProvider : IFileProvider, IDisposable
     /// Represents directory contents and file information within a ZIP archive for the specified path.
     /// This class is used to provide both <see cref="IDirectoryContents"/> and <see cref="IFileInfo"/> interfaces for directory entries in the ZIP archive.
     /// </summary>
-    /// <param name="path">The path of the directory within the ZIP archive.</param>
-    [DebuggerDisplay("{ToStringDebugger(),nq}")]
+    /// <param name="name">The name of the directory within the ZIP archive.</param>
+    [DebuggerDisplay("{Name,nq}")]
     [DebuggerTypeProxy(typeof(ZipDirectoryInfoDebuggerProxy))]
-    private sealed class ZipDirectoryInfo(string path) : IDirectoryContents, IFileInfo
+    private sealed class ZipDirectoryInfo(string name) : IDirectoryContents, IFileInfo
     {
         /// <summary>
         /// The list of the <see cref="IFileInfo"/> within this directory.
@@ -177,7 +177,7 @@ public sealed class ZipFileProvider : IFileProvider, IDisposable
         public string? PhysicalPath => null;
 
         /// <inheritdoc />
-        public string Name => Path.GetFileName(path);
+        public string Name => name;
 
         /// <inheritdoc />
         public DateTimeOffset LastModified => default;
@@ -203,15 +203,6 @@ public sealed class ZipFileProvider : IFileProvider, IDisposable
         /// <param name="file">The file associated with this directory.</param>
         public void RegisterFile(IFileInfo file) =>
             _files.Add(file);
-
-        /// <summary>
-        /// Returns a string representation of the current instance's state, intended for debugging purposes.
-        /// </summary>
-        /// <returns>
-        /// A string containing information about the current instance.
-        /// </returns>
-        private string ToStringDebugger() =>
-            path;
     }
 
     #endregion
@@ -223,7 +214,7 @@ public sealed class ZipFileProvider : IFileProvider, IDisposable
     /// </summary>
     /// <param name="entry">The ZIP archive entry representing the file.</param>
     [DebuggerDisplay("{ToStringDebugger(),nq}")]
-    private sealed class ZipFileInfo(ZipArchiveEntry entry) : IFileInfo
+    private sealed class ZipFileInfo(string name, ZipArchiveEntry entry) : IFileInfo
     {
         /// <inheritdoc />
         public bool Exists => true;
@@ -241,18 +232,12 @@ public sealed class ZipFileProvider : IFileProvider, IDisposable
         public string? PhysicalPath => null;
 
         /// <inheritdoc />
-        public string Name => entry.Name;
+        public string Name => name;
 
         /// <inheritdoc />
         public Stream CreateReadStream() =>
             entry.Open();
 
-        /// <summary>
-        /// Returns a string representation of the current instance's state, intended for debugging purposes.
-        /// </summary>
-        /// <returns>
-        /// A string containing information about the current instance.
-        /// </returns>
         private string ToStringDebugger() =>
             entry.FullName;
     }
