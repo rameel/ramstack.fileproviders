@@ -31,7 +31,7 @@ public class ZipFileProviderTests : AbstractFileProviderTests
         File.Delete(_path);
     }
 
-    // [Test]
+    [Test]
     public void ZipArchive_WithIdenticalNameEntries()
     {
         using var provider = new ZipFileProvider(CreateArchive());
@@ -85,15 +85,6 @@ public class ZipFileProviderTests : AbstractFileProviderTests
                 f.FullName)
             .OrderBy(f => f)
             .ToArray();
-
-        // Console.Error.WriteLine("--- files ---");
-        // foreach (var name in files) Console.Error.WriteLine(name);
-        //
-        // Console.Error.WriteLine("--- directories ---");
-        // foreach (var name in directories) Console.Error.WriteLine(name);
-        //
-        // Console.Error.WriteLine("--- archive ---");
-        // foreach (var entry in archive.Entries) Console.Error.WriteLine(entry.FullName);
 
         Assert.That(files, Is.EquivalentTo(
         [
@@ -150,7 +141,7 @@ public class ZipFileProviderTests : AbstractFileProviderTests
         }
     }
 
-    // [Test]
+    [Test]
     public void ZipArchive_Directories()
     {
         using var provider = new ZipFileProvider(CreateArchive());
