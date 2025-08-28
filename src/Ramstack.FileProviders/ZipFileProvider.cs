@@ -81,6 +81,10 @@ public sealed class ZipFileProvider : IFileProvider, IDisposable
     {
         foreach (var entry in archive.Entries)
         {
+            //
+            // Strip common path prefixes from zip entries to handle archives
+            // saved with absolute paths.
+            //
             var path = FilePath.Normalize(
                 entry.FullName[GetPrefixLength(entry.FullName)..]);
 
@@ -119,6 +123,12 @@ public sealed class ZipFileProvider : IFileProvider, IDisposable
     [MethodImpl(MethodImplOptions.NoInlining)]
     private static int GetPrefixLength(string path)
     {
+        //
+        // Check only well-known prefixes.
+        // Note: Since entry names can be arbitrary,
+        // we specifically target only common absolute path patterns.
+        //
+
         if (path.StartsWith(@"\\?\UNC\", StringComparison.OrdinalIgnoreCase)
             || path.StartsWith(@"\\.\UNC\", StringComparison.OrdinalIgnoreCase)
             || path.StartsWith("//?/UNC/", StringComparison.OrdinalIgnoreCase)
