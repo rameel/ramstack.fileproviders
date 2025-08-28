@@ -77,7 +77,7 @@ public sealed class ZipFileProvider : IFileProvider, IDisposable
             // Since we cannot rely on all archivers to represent directory entries within the archive,
             // it's simpler to assume their absence and disregard entries ending with a forward slash '/'
 
-            if (entry.FullName.EndsWith('/'))
+            if (FilePath.HasTrailingSlash(entry.FullName))
                 continue;
 
             var path = FilePath.Normalize(entry.FullName);
