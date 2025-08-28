@@ -9,7 +9,7 @@ namespace Ramstack.FileProviders;
 public sealed class ZipFileProvider : IFileProvider, IDisposable
 {
     private readonly ZipArchive _archive;
-    private readonly Dictionary<string, IFileInfo> _directories =
+    private readonly Dictionary<string, IFileInfo> _cache =
         new() { ["/"] = new ZipDirectoryInfo("/") };
 
     /// <summary>
@@ -35,7 +35,7 @@ public sealed class ZipFileProvider : IFileProvider, IDisposable
             throw new ArgumentException("Stream does not support seeking.", nameof(stream));
 
         _archive = new ZipArchive(stream, ZipArchiveMode.Read, leaveOpen);
-        Initialize(_archive, _directories);
+        Initialize(_archive, _cache);
     }
 
     /// <summary>
@@ -52,7 +52,7 @@ public sealed class ZipFileProvider : IFileProvider, IDisposable
                 nameof(archive));
 
         _archive = archive;
-        Initialize(archive, _directories);
+        Initialize(archive, _cache);
     }
 
     /// <inheritdoc />
@@ -72,7 +72,7 @@ public sealed class ZipFileProvider : IFileProvider, IDisposable
         _archive.Dispose();
 
     private IFileInfo? Find(string path) =>
-        _directories.GetValueOrDefault(FilePath.Normalize(path));
+        _cache.GetValueOrDefault(FilePath.Normalize(path));
 
     /// <summary>
     /// Initializes the current provider by populating it with entries from the underlying ZIP archive.
