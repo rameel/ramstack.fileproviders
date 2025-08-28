@@ -86,12 +86,13 @@ public class ZipFileProviderTests : AbstractFileProviderTests
             .OrderBy(f => f)
             .ToArray();
 
-        foreach (var name in files) Console.WriteLine(name);
-        Console.WriteLine("--- directories ---");
-        foreach (var name in directories) Console.WriteLine(name);
+        Console.Error.WriteLine("--- files ---");
+        foreach (var name in files) Console.Error.WriteLine(name);
+        Console.Error.WriteLine("--- directories ---");
+        foreach (var name in directories) Console.Error.WriteLine(name);
 
-        Console.WriteLine("--- archive ---");
-        foreach (var entry in archive.Entries) Console.WriteLine(entry.FullName);
+        Console.Error.WriteLine("--- archive ---");
+        foreach (var entry in archive.Entries) Console.Error.WriteLine(entry.FullName);
 
         // Assert.That(files, Is.EquivalentTo(
         // [
