@@ -157,7 +157,7 @@ public sealed class ZipFileProvider : IFileProvider, IDisposable
     /// Represents directory contents and file information within a ZIP archive for the specified path.
     /// This class is used to provide both <see cref="IDirectoryContents"/> and <see cref="IFileInfo"/> interfaces for directory entries in the ZIP archive.
     /// </summary>
-    /// <param name="name">The name of the directory within the ZIP archive.</param>
+    /// <param name="name">The name of the directory, not including any path.</param>
     [DebuggerDisplay("{Name,nq}")]
     [DebuggerTypeProxy(typeof(ZipDirectoryInfoDebuggerProxy))]
     private sealed class ZipDirectoryInfo(string name) : IDirectoryContents, IFileInfo
@@ -212,6 +212,7 @@ public sealed class ZipFileProvider : IFileProvider, IDisposable
     /// <summary>
     /// Represents a file within a ZIP archive as an implementation of the <see cref="IFileInfo"/> interface.
     /// </summary>
+    /// <param name="name">The name of the file, not including any path.</param>
     /// <param name="entry">The ZIP archive entry representing the file.</param>
     [DebuggerDisplay("{ToStringDebugger(),nq}")]
     private sealed class ZipFileInfo(string name, ZipArchiveEntry entry) : IFileInfo
