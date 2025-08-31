@@ -1,6 +1,4 @@
 # Ramstack.FileProviders.Composition
-[![NuGet](https://img.shields.io/nuget/v/Ramstack.FileProviders.Composition.svg)](https://nuget.org/packages/Ramstack.FileProviders.Composition)
-[![MIT](https://img.shields.io/github/license/rameel/ramstack.fileproviders)](https://github.com/rameel/ramstack.fileproviders/blob/main/LICENSE)
 
 Represents a .NET library that provides a helper class for flattening and composing `IFileProvider` instances.
 
@@ -65,14 +63,14 @@ var changeToken = compositeFileProvider.Watch("**/*.json").Flatten();
 
 ## Related Packages
 - [Ramstack.FileProviders.Extensions](https://www.nuget.org/packages/Ramstack.FileProviders.Extensions) — Useful and convenient extensions for `IFileProvider`, bringing its capabilities and experience closer to what's provided by the `DirectoryInfo` and `FileInfo` classes.
-- [Ramstack.FileProviders](https://www.nuget.org/packages/Ramstack.FileProviders) — Additional file providers, including `PrefixedFileProvider` and `SubFileProvider`.
+- [Ramstack.FileProviders](https://www.nuget.org/packages/Ramstack.FileProviders) — Additional file providers, including `ZipFileProvider`, `PrefixedFileProvider`, and `SubFileProvider`.
 - [Ramstack.FileProviders.Globbing](https://www.nuget.org/packages/Ramstack.FileProviders.Globbing) — A file provider that filters files using include and/or exclude glob patterns. Include patterns make only matching files visible, while exclude patterns hide specific files. Both include and exclude patterns can be combined for flexible file visibility control.
 
 ## Supported versions
 
-|      | Version        |
-|------|----------------|
-| .NET | 6, 7, 8, 9, 10 |
+|      | Version    |
+|------|------------|
+| .NET | 6, 7, 8, 9 |
 
 ## Contributions
 

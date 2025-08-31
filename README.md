@@ -16,6 +16,7 @@ building upon `Microsoft.Extensions.FileProviders`.
     * [Ramstack.FileProviders](#ramstackfileproviders-2)
       * [PrefixedFileProvider](#prefixedfileprovider)
       * [SubFileProvider](#subfileprovider)
+      * [ZipFileProvider](#zipfileprovider)
     * [Ramstack.FileProviders.Globbing](#ramstackfileprovidersglobbing-1)
     * [Ramstack.FileProviders.Extensions](#ramstackfileprovidersextensions-1)
     * [Ramstack.FileProviders.Composition](#ramstackfileproviderscomposition-1)
@@ -44,7 +45,7 @@ dotnet add package Ramstack.FileProviders.Extensions
 ```
 
 ### Ramstack.FileProviders
-Provides additional implementations of `IFileProvider` including `PrefixedFileProvider` and `SubFileProvider`.
+Provides additional implementations of `IFileProvider` including `PrefixedFileProvider`, `SubFileProvider`, and `ZipFileProvider`.
 
 To install the `Ramstack.FileProviders` [NuGet package](https://www.nuget.org/packages/Ramstack.FileProviders) in your project,
 run the following command:
@@ -79,6 +80,7 @@ This library offers additional implementations of the [IFileProvider](https://le
 
 - `SubFileProvider`
 - `PrefixedFileProvider`
+- `ZipFileProvider`
 
 #### PrefixedFileProvider
 
@@ -146,6 +148,17 @@ Example:
 IFileProvider provider = new SubFileProvider(innerProvider, "/docs");
 IFileInfo file = provider.GetFileInfo("/README");
 Console.WriteLine(file.Exists);
+```
+
+#### ZipFileProvider
+
+`ZipFileProvider` enables access to files within ZIP archives as if they were part of the file system.
+
+Example:
+```csharp
+IFileProvider provider = new ZipFileProvider("/path/to/archive.zip");
+foreach (IFileInfo file in provider.GetDirectoryContents("/"))
+    Console.WriteLine(file.Name);
 ```
 
 ### Ramstack.FileProviders.Globbing
@@ -277,15 +290,15 @@ var changeToken = compositeFileProvider.Watch("**/*.json").Flatten();
 
 ## NuGet Packages
 - [Ramstack.FileProviders.Extensions](https://www.nuget.org/packages/Ramstack.FileProviders.Extensions) — Useful and convenient extensions for `IFileProvider`, bringing its capabilities and experience closer to what's provided by the `DirectoryInfo` and `FileInfo` classes.
-- [Ramstack.FileProviders](https://www.nuget.org/packages/Ramstack.FileProviders) — Additional file providers, including `PrefixedFileProvider` and `SubFileProvider`.
+- [Ramstack.FileProviders](https://www.nuget.org/packages/Ramstack.FileProviders) — Additional file providers, including `ZipFileProvider`, `PrefixedFileProvider`, and `SubFileProvider`.
 - [Ramstack.FileProviders.Globbing](https://www.nuget.org/packages/Ramstack.FileProviders.Globbing) — A file provider that filters files using include and/or exclude glob patterns. Include patterns make only matching files visible, while exclude patterns hide specific files. Both include and exclude patterns can be combined for flexible file visibility control.
 - [Ramstack.FileProviders.Composition](https://www.nuget.org/packages/Ramstack.FileProviders.Composition) — Provides a helper class for flattening and composing `IFileProvider`.
 
 ## Supported versions
 
-|      | Version        |
-|------|----------------|
-| .NET | 6, 7, 8, 9, 10 |
+|      | Version    |
+|------|------------|
+| .NET | 6, 7, 8, 9 |
 
 ## Contributions
 
