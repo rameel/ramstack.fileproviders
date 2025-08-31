@@ -6,6 +6,14 @@ namespace Ramstack.FileProviders;
 /// <summary>
 /// Provides access to files within a ZIP archive.
 /// </summary>
+/// <remarks>
+/// **WARNING:**
+/// <para>
+///   This class is not thread-safe and is designed to handle only one file read operation at a time.
+///   It does not support parallel or simultaneous opening of multiple files.
+/// </para>
+/// </remarks>
+[Obsolete("Deprecated due to thread safety limitations and parallel file access capabilities.")]
 public sealed class ZipFileProvider : IFileProvider, IDisposable
 {
     private readonly ZipArchive _archive;
