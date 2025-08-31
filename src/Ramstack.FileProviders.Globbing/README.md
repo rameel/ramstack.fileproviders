@@ -1,4 +1,6 @@
 # Ramstack.FileProviders.Globbing
+[![NuGet](https://img.shields.io/nuget/v/Ramstack.FileProviders.Globbing.svg)](https://nuget.org/packages/Ramstack.FileProviders.Globbing)
+[![MIT](https://img.shields.io/github/license/rameel/ramstack.fileproviders)](https://github.com/rameel/ramstack.fileproviders/blob/main/LICENSE)
 
 Represents a .NET library implementing an `IFileProvider` that filters files using include and/or exclude glob patterns
 for flexible file visibility control.
@@ -26,15 +28,15 @@ foreach (IFileInfo file in provider.GetDirectoryContents("/"))
 
 ## Related Packages
 - [Ramstack.FileProviders.Extensions](https://www.nuget.org/packages/Ramstack.FileProviders.Extensions) — Useful and convenient extensions for `IFileProvider`, bringing its capabilities and experience closer to what's provided by the `DirectoryInfo` and `FileInfo` classes.
-- [Ramstack.FileProviders](https://www.nuget.org/packages/Ramstack.FileProviders) — Additional file providers, including `ZipFileProvider`, `PrefixedFileProvider`, and `SubFileProvider`.
+- [Ramstack.FileProviders](https://www.nuget.org/packages/Ramstack.FileProviders) — Additional file providers, including `PrefixedFileProvider` and `SubFileProvider`.
 - [Ramstack.FileProviders.Composition](https://www.nuget.org/packages/Ramstack.FileProviders.Composition) — Provides a helper class for flattening and composing `IFileProvider`.
 
 
 ## Supported versions
 
-|      | Version |
-|------|---------|
-| .NET | 6, 7, 8 |
+|      | Version        |
+|------|----------------|
+| .NET | 6, 7, 8, 9, 10 |
 
 ## Contributions
 

@@ -1,9 +1,10 @@
 # Ramstack.FileProviders
+[![NuGet](https://img.shields.io/nuget/v/Ramstack.FileProviders.svg)](https://nuget.org/packages/Ramstack.FileProviders)
+[![MIT](https://img.shields.io/github/license/rameel/ramstack.fileproviders)](https://github.com/rameel/ramstack.fileproviders/blob/main/LICENSE)
 
 Represents a .NET library that provides additional implementations for `Microsoft.Extensions.FileProviders` including:
 - `PrefixedFileProvider`
 - `SubFileProvider`
-- `ZipFileProvider`
 
 ## Getting Started
 
@@ -81,16 +82,6 @@ IFileInfo file = provider.GetFileInfo("/README");
 Console.WriteLine(file.Exists);
 ```
 
-## ZipFileProvider
-`ZipFileProvider` enables access to files within ZIP archives as if they were part of the file system.
-
-Example:
-```csharp
-IFileProvider provider = new ZipFileProvider("/path/to/archive.zip");
-foreach (IFileInfo file in provider.GetDirectoryContents("/"))
-    Console.WriteLine(file.Name);
-```
-
 ## Related Packages
 - [Ramstack.FileProviders.Extensions](https://www.nuget.org/packages/Ramstack.FileProviders.Extensions) — Useful and convenient extensions for `IFileProvider`, bringing its capabilities and experience closer to what's provided by the `DirectoryInfo` and `FileInfo` classes.
 - [Ramstack.FileProviders.Globbing](https://www.nuget.org/packages/Ramstack.FileProviders.Globbing) — A file provider that filters files using include and/or exclude glob patterns. Include patterns make only matching files visible, while exclude patterns hide specific files. Both include and exclude patterns can be combined for flexible file visibility control.
@@ -98,9 +89,9 @@ foreach (IFileInfo file in provider.GetDirectoryContents("/"))
 
 ## Supported versions
 
-|      | Version    |
-|------|------------|
-| .NET | 6, 7, 8, 9 |
+|      | Version        |
+|------|----------------|
+| .NET | 6, 7, 8, 9, 10 |
 
 ## Contributions
 
