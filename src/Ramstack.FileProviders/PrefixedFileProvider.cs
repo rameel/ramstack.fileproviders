@@ -98,6 +98,9 @@ public sealed class PrefixedFileProvider : IFileProvider, IDisposable
     {
         Debug.Assert(path == FilePath.Normalize(path));
 
+        if (prefix == "/")
+            return path;
+
         if (path == prefix)
             return "/";
 
