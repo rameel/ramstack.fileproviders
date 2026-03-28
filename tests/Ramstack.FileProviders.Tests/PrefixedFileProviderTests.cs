@@ -60,7 +60,7 @@ public sealed class PrefixedFileProviderTests : AbstractFileProviderTests
         s_resolvePath(prefix, path);
 
     [Test]
-    public void RootPrefix_GetFileInfo_DelegatesToInnerProvider()
+    public void GetFileInfo_RootPrefix_DelegatesToInnerProvider()
     {
         using var provider = new PrefixedFileProvider("/",
             new PhysicalFileProvider(_storage.Root, ExclusionFilters.None));
@@ -71,7 +71,7 @@ public sealed class PrefixedFileProviderTests : AbstractFileProviderTests
     }
 
     [Test]
-    public void RootPrefix_GetDirectoryContents_DelegatesToInnerProvider()
+    public void GetDirectoryContents_RootPrefix_DelegatesToInnerProvider()
     {
         using var provider = new PrefixedFileProvider("/",
             new PhysicalFileProvider(_storage.Root, ExclusionFilters.None));
@@ -82,7 +82,7 @@ public sealed class PrefixedFileProviderTests : AbstractFileProviderTests
     }
 
     [Test]
-    public void RootPrefix_GetFileInfo_ReturnsNotFound_ForMissingFile()
+    public void GetFileInfo_RootPrefix_MissingFile_ReturnsNotFound()
     {
         using var provider = new PrefixedFileProvider("/",
             new PhysicalFileProvider(_storage.Root, ExclusionFilters.None));
