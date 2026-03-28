@@ -58,4 +58,36 @@ public sealed class PrefixedFileProviderTests : AbstractFileProviderTests
     [TestCase("/a/b", "/a",        ExpectedResult = null)]
     public string? ResolvePath(string prefix, string path) =>
         s_resolvePath(prefix, path);
+
+    [Test]
+    public void RootPrefix_GetFileInfo_DelegatesToInnerProvider()
+    {
+        using var provider = new PrefixedFileProvider("/",
+            new PhysicalFileProvider(_storage.Root, ExclusionFilters.None));
+
+        var file = provider.GetFileInfo("/project/README.md");
+        Assert.That(file.Exists, Is.True);
+        Assert.That(file.IsDirectory, Is.False);
+    }
+
+    [Test]
+    public void RootPrefix_GetDirectoryContents_DelegatesToInnerProvider()
+    {
+        using var provider = new PrefixedFileProvider("/",
+            new PhysicalFileProvider(_storage.Root, ExclusionFilters.None));
+
+        var contents = provider.GetDirectoryContents("/project/docs");
+        Assert.That(contents.Exists, Is.True);
+        Assert.That(contents.Any(), Is.True);
+    }
+
+    [Test]
+    public void RootPrefix_GetFileInfo_ReturnsNotFound_ForMissingFile()
+    {
+        using var provider = new PrefixedFileProvider("/",
+            new PhysicalFileProvider(_storage.Root, ExclusionFilters.None));
+
+        var file = provider.GetFileInfo("/project/nonexistent.txt");
+        Assert.That(file.Exists, Is.False);
+    }
 }
