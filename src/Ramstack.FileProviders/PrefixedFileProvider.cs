@@ -202,13 +202,12 @@ public sealed class PrefixedFileProvider : IFileProvider, IDisposable
                 // This guarantees:
                 //   - No false negatives caused by prefix misalignment
                 //   - Possible false positives, which are acceptable for Watch()
-                var lastSegment = fs;
                 while (filterSegments.MoveNext())
-                    lastSegment = filterSegments.Current;
+                    fs = filterSegments.Current;
 
                 list.Add("**");
-                if (lastSegment is not "**")
-                    list.Add(lastSegment.ToString());
+                if (fs is not "**")
+                    list.Add(fs.ToString());
 
                 return string.Join("/", list);
             }
