@@ -29,6 +29,12 @@ public sealed class PrefixedFileProviderTests : AbstractFileProviderTests
 
     [TestCase("/modules/profile/assets", "/modules/**", ExpectedResult = "**")]
     [TestCase("/modules/profile/assets", "/modules/**/*.js", ExpectedResult = "**/*.js")]
+    [TestCase("/modules/profile/assets", "/modules/**/assets/*.js", ExpectedResult = "**/*.js")]
+    [TestCase("/modules/profile/assets", "/modules/**/profile/assets/*.{js,css}", ExpectedResult = "**/*.{js,css}")]
+    [TestCase("/modules/profile/assets", "/modules/**/profile/assets/**", ExpectedResult = "**")]
+    [TestCase("/modules/profile/assets", "/modules/**/profile/assets/**/*", ExpectedResult = "**/*")]
+    [TestCase("/modules/profile/assets", "/**/*.js", ExpectedResult = "**/*.js")]
+    [TestCase("/modules/profile/assets", "/**", ExpectedResult = "**")]
     [TestCase("/modules/profile/assets", "/modules/profile/*/*.js", ExpectedResult = "*.js")]
     [TestCase("/modules/profile/assets", "/modules/profile/{js,css,assets}/*.js", ExpectedResult = "*.js")]
     [TestCase("/modules/profile/assets", "/modules/{settings,profile}/{js,css,assets}/*.js", ExpectedResult = "*.js")]
