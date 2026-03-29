@@ -49,7 +49,7 @@ public sealed class SubFileProvider : IFileProvider, IDisposable
     private string ResolvePath(string subpath)
     {
         subpath = FilePath.Normalize(subpath);
-        if (subpath.Length == 0 || subpath == "/")
+        if (subpath == "/")
             return _path;
 
         return FilePath.Join(_path, subpath);
