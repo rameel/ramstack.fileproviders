@@ -141,9 +141,67 @@ public sealed class PrefixedFileProvider : IFileProvider, IDisposable
         {
             var fs = filterSegments.Current;
 
-            // The globstar '**' matches any number of remaining segments, including none
             if (fs is "**")
             {
+                // The globstar '**' matches zero or more path segments.
+                // Once we encounter '**', we lose the ability to deterministically align
+                // the remaining filter segments with the remaining prefix segments.
+                //
+                // Why this matters:
+                //   We are transforming a filter defined over the 'outer' virtual path
+                //   into a filter for the 'inner' provider (mounted at 'prefix').
+                //   To do that precisely, we would need to know how many segments '**' consumes.
+                //
+                // However, this is fundamentally ambiguous:
+                //   - '**' may consume 0 segments
+                //   - '**' may consume N segments (including prefix tail segments)
+                //   - or it may match entirely within the underlying provider
+                //
+                // Example (false negative if we over-reduce):
+                //   prefix: /modules/profile/assets
+                //   filter: /modules/**/assets/*.js
+                //
+                //   Underlying provider may contain:
+                //     /src/_build/assets/main.js
+                //
+                //   Which corresponds to:
+                //     /modules/profile/assets/src/_build/assets/main.js
+                //
+                //   In this case:
+                //     '**/assets/*.js' --> MUST match
+                //     '*.js'           --> would NOT match
+                //
+                // Counter-example (false negative if we try to keep prefix tail):
+                //   prefix: /modules/profile/assets
+                //   filter: /modules/**/assets/*.js
+                //
+                //   Suppose 'assets' in the filter refers to the *prefix itself*,
+                //   and the underlying provider contains only flat files:
+                //     /main.js
+                //
+                //   (i.e. no nested 'assets/' directory inside the provider)
+                //
+                //   Then:
+                //     '*.js'             --> MUST match
+                //     '**/assets/*.js'   --> would NOT match
+                //
+                // Conclusion:
+                //   After '**', we cannot know whether subsequent segments belong
+                //   to the prefix or to the underlying provider.
+                //
+                // Therefore, any attempt to:
+                //   - consume prefix segments (--> '*.js')
+                //   - or preserve intermediate literals (--> '**/assets/*.js')
+                //   will break valid scenarios.
+                //
+                // Strategy:
+                //   - Preserve '**' to allow arbitrary depth
+                //   - Drop ambiguous intermediate segments
+                //   - Keep only the final segment if it is a file pattern (e.g. '*.js')
+                //
+                // This guarantees:
+                //   - No false negatives caused by prefix misalignment
+                //   - Possible false positives, which are acceptable for Watch()
                 var lastSegment = fs;
                 while (filterSegments.MoveNext())
                     lastSegment = filterSegments.Current;
