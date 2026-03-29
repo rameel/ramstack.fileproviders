@@ -144,13 +144,13 @@ public sealed class PrefixedFileProvider : IFileProvider, IDisposable
             // The globstar '**' matches any number of remaining segments, including none
             if (fs is "**")
             {
-                // Add '**' and all remaining filter segments to the result.
-                do
-                {
-                    var segment = filterSegments.Current.ToString();
-                    list.Add(segment);
-                }
-                while (filterSegments.MoveNext());
+                var lastSegment = fs;
+                while (filterSegments.MoveNext())
+                    lastSegment = filterSegments.Current;
+
+                list.Add("**");
+                if (lastSegment is not "**")
+                    list.Add(lastSegment.ToString());
 
                 return string.Join("/", list);
             }
