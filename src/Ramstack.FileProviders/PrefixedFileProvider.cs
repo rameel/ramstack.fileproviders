@@ -135,8 +135,6 @@ public sealed class PrefixedFileProvider : IFileProvider, IDisposable
         var prefixSegments = new PathTokenizer(prefix).GetEnumerator();
         var filterSegments = new PathTokenizer(filter).GetEnumerator();
 
-        var list = new List<string>();
-
         while (prefixSegments.MoveNext() && filterSegments.MoveNext())
         {
             var fs = filterSegments.Current;
@@ -205,11 +203,9 @@ public sealed class PrefixedFileProvider : IFileProvider, IDisposable
                 while (filterSegments.MoveNext())
                     fs = filterSegments.Current;
 
-                list.Add("**");
-                if (fs is not "**")
-                    list.Add(fs.ToString());
-
-                return string.Join("/", list);
+                return fs is not "**"
+                    ? "**/" + fs.ToString()
+                    : "**";
             }
 
             if (fs is "*")
@@ -231,6 +227,8 @@ public sealed class PrefixedFileProvider : IFileProvider, IDisposable
 
         if (!prefixSegments.MoveNext())
         {
+            var list = new List<string>();
+
             // All prefix segments have been matched and consumed successfully.
             // Append all remaining filter segments.
             while (filterSegments.MoveNext())
