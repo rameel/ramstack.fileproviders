@@ -2,7 +2,7 @@
 [![NuGet](https://img.shields.io/nuget/v/Ramstack.FileProviders.svg)](https://nuget.org/packages/Ramstack.FileProviders)
 [![MIT](https://img.shields.io/github/license/rameel/ramstack.fileproviders)](https://github.com/rameel/ramstack.fileproviders/blob/main/LICENSE)
 
-Represents a .NET library that provides additional implementations for `Microsoft.Extensions.FileProviders` including:
+Represents a .NET library that provides additional implementations of `IFileProvider` including:
 - `PrefixedFileProvider`
 - `SubFileProvider`
 
@@ -22,12 +22,12 @@ This is useful when you need to organize files in a virtual hierarchy.
 
 Example:
 ```csharp
-IFileProvider provider = new PrefixedFileProvider(innerProvider, "/project/app");
+IFileProvider provider = new PrefixedFileProvider("/project/app", innerProvider);
 IFileInfo file = provider.GetFileInfo("/project/app/docs/README");
 Console.WriteLine(file.Exists);
 ```
 
-This is how you can add virtual directories to your project that are external to the project root:
+This is how you can add virtual directories to your project that are outside the project root:
 ```csharp
 string packagesPath = Path.Combine(environment.ContentRootPath, "../Packages");
 string themesPath   = Path.Combine(environment.ContentRootPath, "../Themes");
@@ -64,11 +64,11 @@ as if they were originally defined within your project.
 ├── Models
 ├── Views
 ├── Packages         <-- (virtual)
-│   ├── package1
-│   └── package2
+│   ├── package-1
+│   └── package-2
 ├── Themes           <-- (virtual)
-│   ├── theme1
-│   └── theme2
+│   ├── theme-1
+│   └── theme-2
 └── wwwroot
 ```
 
@@ -77,7 +77,7 @@ as if they were originally defined within your project.
 
 Example:
 ```csharp
-IFileProvider provider = new SubFileProvider(innerProvider, "/docs");
+IFileProvider provider = new SubFileProvider("/docs", innerProvider);
 IFileInfo file = provider.GetFileInfo("/README");
 Console.WriteLine(file.Exists);
 ```
