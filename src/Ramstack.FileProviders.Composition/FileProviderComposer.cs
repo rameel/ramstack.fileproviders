@@ -16,7 +16,7 @@ public static class FileProviderComposer
     /// </remarks>
     /// <param name="provider">The <see cref="IFileProvider"/> to flatten.</param>
     /// <returns>
-    /// An <see cref="IFileProvider"/> representing the flattened version from the specified <see cref="IFileProvider"/>.
+    /// An <see cref="IFileProvider"/> representing the flattened version of the specified <see cref="IFileProvider"/>.
     /// </returns>
     public static IFileProvider Flatten(this IFileProvider provider) =>
         FlattenProvider(provider);
@@ -30,7 +30,7 @@ public static class FileProviderComposer
     /// </remarks>
     /// <param name="provider">The <see cref="IFileProvider"/> to flatten.</param>
     /// <returns>
-    /// An <see cref="IFileProvider"/> representing the flattened version from the specified <see cref="IFileProvider"/>.
+    /// An <see cref="IFileProvider"/> representing the flattened version of the specified <see cref="IFileProvider"/>.
     /// </returns>
     public static IFileProvider FlattenProvider(IFileProvider provider)
     {
@@ -64,7 +64,7 @@ public static class FileProviderComposer
     /// </remarks>
     /// <param name="providers">The list of <see cref="IFileProvider"/> instances to compose and flatten.</param>
     /// <returns>
-    /// An <see cref="IFileProvider"/> representing the flattened version from the specified list of providers.
+    /// An <see cref="IFileProvider"/> representing the flattened version of the specified list of providers.
     /// </returns>
     public static IFileProvider ComposeProviders(params IFileProvider[] providers) =>
         ComposeProviders(providers.AsEnumerable());
@@ -77,7 +77,7 @@ public static class FileProviderComposer
     /// </remarks>
     /// <param name="providers">The list of <see cref="IFileProvider"/> instances to compose and flatten.</param>
     /// <returns>
-    /// An <see cref="IFileProvider"/> representing the flattened version from the specified list of providers.
+    /// An <see cref="IFileProvider"/> representing the flattened version of the specified list of providers.
     /// </returns>
     public static IFileProvider ComposeProviders(IEnumerable<IFileProvider> providers)
     {
