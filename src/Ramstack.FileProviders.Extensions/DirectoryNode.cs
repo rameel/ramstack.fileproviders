@@ -103,7 +103,7 @@ public sealed class DirectoryNode : FileNodeBase
     }
 
     /// <summary>
-    /// Returns an enumerable collection of files in the current directory.
+    /// Returns an enumerable collection of directories in the current directory.
     /// </summary>
     /// <returns>
     /// An enumerable collection of directories in the current directory.

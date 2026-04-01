@@ -207,7 +207,7 @@ public static class DirectoryNodeExtensions
     /// <param name="patterns">An array of glob patterns to match against the names of directories.</param>
     /// <param name="excludes">An optional array of glob patterns to exclude directories.</param>
     /// <returns>
-    /// An enumerable collection of directories in the specified that match any of the given glob patterns.
+    /// An enumerable collection of directories in the specified directory that match any of the given glob patterns.
     /// </returns>
     /// <remarks>
     /// Glob pattern:

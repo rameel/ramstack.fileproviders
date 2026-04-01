@@ -297,20 +297,19 @@ public static class FileInfoExtensions
         }
     }
 
-    private static byte[] ResizeBuffer(byte[] bytes)
+    private static byte[] ResizeBuffer(byte[] oldArray)
     {
-        var length = (uint)bytes.Length * 2;
-        if (length > (uint)Array.MaxLength)
-            length = (uint)Math.Max(Array.MaxLength, bytes.Length + 1);
+        var length = oldArray.Length * 2;
+        if ((uint)length > (uint)Array.MaxLength)
+            length = Math.Max(Array.MaxLength, oldArray.Length + 1);
 
-        var tmp = ArrayPool<byte>.Shared.Rent((int)length);
-        Buffer.BlockCopy(bytes, 0, tmp, 0, bytes.Length);
+        var newArray = ArrayPool<byte>.Shared.Rent(length);
 
-        var rented = bytes;
-        bytes = tmp;
+        Debug.Assert(oldArray.Length <= newArray.Length);
+        oldArray.AsSpan().TryCopyTo(newArray);
 
-        ArrayPool<byte>.Shared.Return(rented);
-        return bytes;
+        ArrayPool<byte>.Shared.Return(oldArray);
+        return newArray;
     }
 
     private static long GetStreamLength(Stream stream)
