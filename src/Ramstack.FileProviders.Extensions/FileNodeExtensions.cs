@@ -40,7 +40,7 @@ public static class FileNodeExtensions
         file.ToFileInfo().ReadAllBytes();
 
     /// <summary>
-    /// Asynchronously reads all the text in the current file with the specified encoding.
+    /// Asynchronously reads all the text in the current file.
     /// </summary>
     /// <param name="file">The file from which to read the entire text content.</param>
     /// <param name="cancellationToken">An optional cancellation token to cancel the operation.</param>
