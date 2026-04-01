@@ -68,7 +68,7 @@ partial class FileProviderExtensions
     ///   </item>
     ///   <item>
     ///     <description>
-    ///       Brace patterns are supported, including nested brace pattern:
+    ///       Brace patterns are supported, including nested brace patterns:
     ///       <c>{file,dir,name}</c>, <c>{file-1.{c,cpp},file-2.{cs,f}}</c>
     ///     </description>
     ///   </item>
@@ -129,7 +129,7 @@ partial class FileProviderExtensions
     ///   </item>
     ///   <item>
     ///     <description>
-    ///       Brace patterns are supported, including nested brace pattern:
+    ///       Brace patterns are supported, including nested brace patterns:
     ///       <c>{file,dir,name}</c>, <c>{file-1.{c,cpp},file-2.{cs,f}}</c>
     ///     </description>
     ///   </item>
@@ -190,7 +190,7 @@ partial class FileProviderExtensions
     ///   </item>
     ///   <item>
     ///     <description>
-    ///       Brace patterns are supported, including nested brace pattern:
+    ///       Brace patterns are supported, including nested brace patterns:
     ///       <c>{file,dir,name}</c>, <c>{file-1.{c,cpp},file-2.{cs,f}}</c>
     ///     </description>
     ///   </item>
@@ -251,7 +251,7 @@ partial class FileProviderExtensions
     ///   </item>
     ///   <item>
     ///     <description>
-    ///       Brace patterns are supported, including nested brace pattern:
+    ///       Brace patterns are supported, including nested brace patterns:
     ///       <c>{file,dir,name}</c>, <c>{file-1.{c,cpp},file-2.{cs,f}}</c>
     ///     </description>
     ///   </item>
@@ -312,7 +312,7 @@ partial class FileProviderExtensions
     ///   </item>
     ///   <item>
     ///     <description>
-    ///       Brace patterns are supported, including nested brace pattern:
+    ///       Brace patterns are supported, including nested brace patterns:
     ///       <c>{file,dir,name}</c>, <c>{file-1.{c,cpp},file-2.{cs,f}}</c>
     ///     </description>
     ///   </item>
@@ -341,7 +341,7 @@ partial class FileProviderExtensions
         provider.GetDirectory(path).EnumerateFileNodes(pattern, exclude);
 
     /// <summary>
-    /// Returns an enumerable collection of file nodes in the specified directory that match any of the provided glob patterns.
+    /// Returns an enumerable collection of file nodes in the specified directory that match any of the given glob patterns.
     /// </summary>
     /// <param name="provider">The file provider to use.</param>
     /// <param name="path">The path of the directory from which to retrieve file nodes.</param>
@@ -373,7 +373,7 @@ partial class FileProviderExtensions
     ///   </item>
     ///   <item>
     ///     <description>
-    ///       Brace patterns are supported, including nested brace pattern:
+    ///       Brace patterns are supported, including nested brace patterns:
     ///       <c>{file,dir,name}</c>, <c>{file-1.{c,cpp},file-2.{cs,f}}</c>
     ///     </description>
     ///   </item>
