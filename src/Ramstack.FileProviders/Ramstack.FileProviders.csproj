@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-    <Description>A .NET library providing additional implementations for Microsoft.Extensions.FileProviders.</Description>
+    <Description>A .NET library providing additional implementations of IFileProvider.</Description>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <LangVersion>preview</LangVersion>
