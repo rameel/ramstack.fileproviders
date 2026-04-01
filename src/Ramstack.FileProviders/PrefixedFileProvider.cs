@@ -194,7 +194,7 @@ public sealed class PrefixedFileProvider : IFileProvider, IDisposable
                 // Strategy:
                 //   - Preserve '**' to allow arbitrary depth
                 //   - Drop ambiguous intermediate segments
-                //   - Keep only the final segment if it is a file pattern (e.g. '*.js')
+                //   - Keep only the final segment after '**', if any (e.g. '*.js')
                 //
                 // This guarantees:
                 //   - No false negatives caused by prefix misalignment
