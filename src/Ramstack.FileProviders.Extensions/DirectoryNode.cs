@@ -14,7 +14,7 @@ public sealed class DirectoryNode : FileNodeBase
     public bool IsRoot => FullName == "/";
 
     /// <summary>
-    /// Gets an <see cref="DirectoryNode"/> instance representing the root directory.
+    /// Gets a <see cref="DirectoryNode"/> instance representing the root directory.
     /// </summary>
     public DirectoryNode Root
     {
@@ -29,7 +29,7 @@ public sealed class DirectoryNode : FileNodeBase
     }
 
     /// <summary>
-    /// Gets an <see cref="DirectoryNode"/> instance representing the parent directory.
+    /// Gets a <see cref="DirectoryNode"/> instance representing the parent directory.
     /// </summary>
     public DirectoryNode? Parent
     {
@@ -103,7 +103,7 @@ public sealed class DirectoryNode : FileNodeBase
     }
 
     /// <summary>
-    /// Returns an enumerable collection of files in the current directory.
+    /// Returns an enumerable collection of directories in the current directory.
     /// </summary>
     /// <returns>
     /// An enumerable collection of directories in the current directory.

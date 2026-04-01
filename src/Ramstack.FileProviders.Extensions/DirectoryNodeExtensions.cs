@@ -4,7 +4,7 @@ using Ramstack.Globbing.Traversal;
 namespace Ramstack.FileProviders;
 
 /// <summary>
-/// Provides extension methods for <see cref="DirectoryNode"/> class.
+/// Provides extension methods for the <see cref="DirectoryNode"/> class.
 /// </summary>
 public static class DirectoryNodeExtensions
 {
@@ -40,7 +40,7 @@ public static class DirectoryNodeExtensions
     ///   </item>
     ///   <item>
     ///     <description>
-    ///       Brace patterns are supported, including nested brace pattern:
+    ///       Brace patterns are supported, including nested brace patterns:
     ///       <c>{file,dir,name}</c>, <c>{file-1.{c,cpp},file-2.{cs,f}}</c>
     ///     </description>
     ///   </item>
@@ -100,7 +100,7 @@ public static class DirectoryNodeExtensions
     ///   </item>
     ///   <item>
     ///     <description>
-    ///       Brace patterns are supported, including nested brace pattern:
+    ///       Brace patterns are supported, including nested brace patterns:
     ///       <c>{file,dir,name}</c>, <c>{file-1.{c,cpp},file-2.{cs,f}}</c>
     ///     </description>
     ///   </item>
@@ -172,7 +172,7 @@ public static class DirectoryNodeExtensions
     ///   </item>
     ///   <item>
     ///     <description>
-    ///       Brace patterns are supported, including nested brace pattern:
+    ///       Brace patterns are supported, including nested brace patterns:
     ///       <c>{file,dir,name}</c>, <c>{file-1.{c,cpp},file-2.{cs,f}}</c>
     ///     </description>
     ///   </item>
@@ -207,7 +207,7 @@ public static class DirectoryNodeExtensions
     /// <param name="patterns">An array of glob patterns to match against the names of directories.</param>
     /// <param name="excludes">An optional array of glob patterns to exclude directories.</param>
     /// <returns>
-    /// An enumerable collection of directories in the specified that match any of the given glob patterns.
+    /// An enumerable collection of directories in the specified directory that match any of the given glob patterns.
     /// </returns>
     /// <remarks>
     /// Glob pattern:
@@ -232,7 +232,7 @@ public static class DirectoryNodeExtensions
     ///   </item>
     ///   <item>
     ///     <description>
-    ///       Brace patterns are supported, including nested brace pattern:
+    ///       Brace patterns are supported, including nested brace patterns:
     ///       <c>{file,dir,name}</c>, <c>{file-1.{c,cpp},file-2.{cs,f}}</c>
     ///     </description>
     ///   </item>
@@ -305,7 +305,7 @@ public static class DirectoryNodeExtensions
     ///   </item>
     ///   <item>
     ///     <description>
-    ///       Brace patterns are supported, including nested brace pattern:
+    ///       Brace patterns are supported, including nested brace patterns:
     ///       <c>{file,dir,name}</c>, <c>{file-1.{c,cpp},file-2.{cs,f}}</c>
     ///     </description>
     ///   </item>
@@ -365,7 +365,7 @@ public static class DirectoryNodeExtensions
     ///   </item>
     ///   <item>
     ///     <description>
-    ///       Brace patterns are supported, including nested brace pattern:
+    ///       Brace patterns are supported, including nested brace patterns:
     ///       <c>{file,dir,name}</c>, <c>{file-1.{c,cpp},file-2.{cs,f}}</c>
     ///     </description>
     ///   </item>

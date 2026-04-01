@@ -28,7 +28,7 @@ public sealed class FileNode : FileNodeBase
     public DateTimeOffset LastWriteTime => _file.LastModified;
 
     /// <summary>
-    /// Gets an <see cref="DirectoryNode"/> instance representing the parent directory.
+    /// Gets a <see cref="DirectoryNode"/> instance representing the parent directory.
     /// </summary>
     public DirectoryNode Directory
     {

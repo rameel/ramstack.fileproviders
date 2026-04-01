@@ -8,12 +8,12 @@ namespace Ramstack.FileProviders;
 public static partial class FileProviderExtensions
 {
     /// <summary>
-    /// Returns file contents as readonly stream.
+    /// Returns file contents as a read-only stream.
     /// </summary>
     /// <param name="provider">The <see cref="IFileProvider"/>.</param>
     /// <param name="path">The path of the file to open.</param>
     /// <returns>
-    /// The file contents as readonly stream.
+    /// The file contents as a read-only stream.
     /// </returns>
     public static Stream OpenRead(this IFileProvider provider, string path) =>
         provider.GetFileInfo(path).OpenRead();
@@ -66,7 +66,7 @@ public static partial class FileProviderExtensions
         provider.GetFileInfo(path).ReadAllBytes();
 
     /// <summary>
-    /// Asynchronously reads all the text in the current file with the specified encoding.
+    /// Asynchronously reads all the text in the current file.
     /// </summary>
     /// <param name="provider">The <see cref="IFileProvider"/>.</param>
     /// <param name="path">The path of the file to read from.</param>

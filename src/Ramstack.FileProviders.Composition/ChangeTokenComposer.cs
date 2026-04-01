@@ -17,7 +17,7 @@ public static class ChangeTokenComposer
     /// </remarks>
     /// <param name="changeToken">The <see cref="IChangeToken"/> to flatten.</param>
     /// <returns>
-    /// An <see cref="IChangeToken"/> representing the flattened version from the specified <see cref="IChangeToken"/>.
+    /// An <see cref="IChangeToken"/> representing the flattened version of the specified <see cref="IChangeToken"/>.
     /// </returns>
     public static IChangeToken Flatten(this IChangeToken changeToken) =>
         FlattenChangeToken(changeToken);
@@ -31,7 +31,7 @@ public static class ChangeTokenComposer
     /// </remarks>
     /// <param name="changeToken">The <see cref="IChangeToken"/> to flatten.</param>
     /// <returns>
-    /// An <see cref="IChangeToken"/> representing the flattened version from the specified <see cref="IChangeToken"/>.
+    /// An <see cref="IChangeToken"/> representing the flattened version of the specified <see cref="IChangeToken"/>.
     /// </returns>
     public static IChangeToken FlattenChangeToken(IChangeToken changeToken)
     {
@@ -65,7 +65,7 @@ public static class ChangeTokenComposer
     /// </remarks>
     /// <param name="changeTokens">The list of <see cref="IChangeToken"/> instances to compose and flatten.</param>
     /// <returns>
-    /// An <see cref="IChangeToken"/> representing the flattened version from the specified list of tokens.
+    /// An <see cref="IChangeToken"/> representing the flattened version of the specified list of tokens.
     /// </returns>
     public static IChangeToken ComposeChangeTokens(params IChangeToken[] changeTokens) =>
         ComposeChangeTokens((IReadOnlyList<IChangeToken>)changeTokens);
@@ -78,7 +78,7 @@ public static class ChangeTokenComposer
     /// </remarks>
     /// <param name="changeTokens">The list of <see cref="IChangeToken"/> instances to compose and flatten.</param>
     /// <returns>
-    /// An <see cref="IChangeToken"/> representing the flattened version from the specified list of tokens.
+    /// An <see cref="IChangeToken"/> representing the flattened version of the specified list of tokens.
     /// </returns>
     public static IChangeToken ComposeChangeTokens(IReadOnlyList<IChangeToken> changeTokens)
     {
@@ -120,7 +120,7 @@ public static class ChangeTokenComposer
     /// </remarks>
     /// <param name="changeTokens">The list of <see cref="IChangeToken"/> instances to compose and flatten.</param>
     /// <returns>
-    /// An <see cref="IChangeToken"/> representing the flattened version from the specified list of tokens.
+    /// An <see cref="IChangeToken"/> representing the flattened version of the specified list of tokens.
     /// </returns>
     public static IChangeToken ComposeChangeTokens(IEnumerable<IChangeToken> changeTokens)
     {

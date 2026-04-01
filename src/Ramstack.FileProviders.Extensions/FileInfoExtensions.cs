@@ -9,11 +9,11 @@ namespace Ramstack.FileProviders;
 public static class FileInfoExtensions
 {
     /// <summary>
-    /// Returns file contents as readonly stream.
+    /// Returns file contents as a read-only stream.
     /// </summary>
     /// <param name="file">The <see cref="IFileInfo"/>.</param>
     /// <returns>
-    /// The file contents as readonly stream.
+    /// The file contents as a read-only stream.
     /// </returns>
     public static Stream OpenRead(this IFileInfo file) =>
         file.CreateReadStream();
@@ -130,7 +130,7 @@ public static class FileInfoExtensions
     }
 
     /// <summary>
-    /// Asynchronously reads all the text in the current file with the specified encoding.
+    /// Asynchronously reads all the text in the current file.
     /// </summary>
     /// <param name="file">The file from which to read the entire text content.</param>
     /// <param name="cancellationToken">An optional cancellation token to cancel the operation.</param>
@@ -139,7 +139,7 @@ public static class FileInfoExtensions
     /// containing the full text from the current file.
     /// </returns>
     public static ValueTask<string> ReadAllTextAsync(this IFileInfo file, CancellationToken cancellationToken = default) =>
-        ReadAllTextAsync(file, Encoding.UTF8, cancellationToken);
+        ReadAllTextAsync(file, null, cancellationToken);
 
     /// <summary>
     /// Asynchronously reads all the text in the current file with the specified encoding.
@@ -297,20 +297,19 @@ public static class FileInfoExtensions
         }
     }
 
-    private static byte[] ResizeBuffer(byte[] bytes)
+    private static byte[] ResizeBuffer(byte[] oldArray)
     {
-        var length = (uint)bytes.Length * 2;
-        if (length > (uint)Array.MaxLength)
-            length = (uint)Math.Max(Array.MaxLength, bytes.Length + 1);
+        var length = oldArray.Length * 2;
+        if ((uint)length > (uint)Array.MaxLength)
+            length = Math.Max(Array.MaxLength, oldArray.Length + 1);
 
-        var tmp = ArrayPool<byte>.Shared.Rent((int)length);
-        Buffer.BlockCopy(bytes, 0, tmp, 0, bytes.Length);
+        var newArray = ArrayPool<byte>.Shared.Rent(length);
 
-        var rented = bytes;
-        bytes = tmp;
+        Debug.Assert(oldArray.Length <= newArray.Length);
+        oldArray.AsSpan().TryCopyTo(newArray);
 
-        ArrayPool<byte>.Shared.Return(rented);
-        return bytes;
+        ArrayPool<byte>.Shared.Return(oldArray);
+        return newArray;
     }
 
     private static long GetStreamLength(Stream stream)
