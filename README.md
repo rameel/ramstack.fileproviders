@@ -31,11 +31,11 @@ building upon `Microsoft.Extensions.FileProviders`.
 
 ## Projects
 
-This repository contains projects:
+This repository contains the following projects:
 
 ### Ramstack.FileProviders.Extensions
-Offers useful and convenient extensions for `IFileProviders`, bringing its capabilities and experience
-closer to what's provided by the `DirectoryInfo` and `FileInfo` standard classes.
+Offers useful and convenient extensions for `IFileProvider`, bringing its capabilities and experience
+closer to what's provided by the `DirectoryInfo` and `FileInfo` classes.
 
 To install the `Ramstack.FileProviders.Extensions` [NuGet package](https://www.nuget.org/packages/Ramstack.FileProviders.Extensions) in your project,
 run the following command:
@@ -87,12 +87,12 @@ This is useful when you need to organize files in a virtual hierarchy.
 
 Example:
 ```csharp
-IFileProvider provider = new PrefixedFileProvider(innerProvider, "/project/app");
+IFileProvider provider = new PrefixedFileProvider("/project/app", innerProvider);
 IFileInfo file = provider.GetFileInfo("/project/app/docs/README");
 Console.WriteLine(file.Exists);
 ```
 
-This is how you can add virtual directories to your project that are external to the project root:
+This is how you can add virtual directories to your project that are outside the project root:
 ```csharp
 string packagesPath = Path.Combine(environment.ContentRootPath, "../Packages");
 string themesPath   = Path.Combine(environment.ContentRootPath, "../Themes");
@@ -129,11 +129,11 @@ as if they were originally defined within your project.
 ├── Models
 ├── Views
 ├── Packages         <-- (virtual)
-│   ├── package1
-│   └── package2
+│   ├── package-1
+│   └── package-2
 ├── Themes           <-- (virtual)
-│   ├── theme1
-│   └── theme2
+│   ├── theme-1
+│   └── theme-2
 └── wwwroot
 ```
 
@@ -143,29 +143,29 @@ as if they were originally defined within your project.
 
 Example:
 ```csharp
-IFileProvider provider = new SubFileProvider(innerProvider, "/docs");
+IFileProvider provider = new SubFileProvider("/docs", innerProvider);
 IFileInfo file = provider.GetFileInfo("/README");
 Console.WriteLine(file.Exists);
 ```
 
 ### Ramstack.FileProviders.Globbing
 
-`GlobbingFileProvider` class filters files using include and/or exclude glob patterns. Include patterns make only matching files visible,
+The `GlobbingFileProvider` class filters files using include and/or exclude glob patterns. Include patterns make only matching files visible,
 while exclude patterns hide specific files. Both include and exclude patterns can be combined for flexible file visibility control.
 
 It relies on the [Ramstack.Globbing](https://www.nuget.org/packages/Ramstack.Globbing) package for its globbing capabilities.
 
 Example:
 ```csharp
-IFileProvider provider = new GlobbingFileProvider(innerProvider, patterns: ["**/*.txt", "docs/*.md" ], excludes: ["**/README.md"]);
+IFileProvider provider = new GlobbingFileProvider(innerProvider, patterns: ["**/*.txt", "docs/*.md"], excludes: ["**/README.md"]);
 foreach (IFileInfo file in provider.GetDirectoryContents("/"))
     Console.WriteLine(file.Name);
 ```
 
 ### Ramstack.FileProviders.Extensions
 
-Provides useful extensions for `IFileProvider`, bringing its capabilities and experience closer to what's being
-provided by `DirectoryInfo` and `FileInfo` classes.
+Provides useful extensions for `IFileProvider`, bringing its capabilities and experience closer to what's
+provided by the `DirectoryInfo` and `FileInfo` classes.
 
 Simply stated, a `FileNode` knows which directory it is located in, and a directory represented by the `DirectoryNode` class can access
 its parent directory and list all files within it, recursively.
@@ -242,15 +242,15 @@ builder.Environment.ContentRootFileProvider = FileProviderComposer.FlattenProvid
 #### Composing Providers
 
 The `ComposeProviders` method combines a list of `IFileProvider` instances into a single `IFileProvider`.
-During this process, all encountered `CompositeFileProvider` instances recursively flattened and merged into a single level.
-This eliminates unnecessary indirectness and streamline the file provider hierarchy.
+During this process, all encountered `CompositeFileProvider` instances are recursively flattened and merged into a single level.
+This eliminates unnecessary indirectness and streamlines the file provider hierarchy.
 
 ```csharp
 string packagesPath = Path.Combine(environment.ContentRootPath, "../Packages");
 string themesPath   = Path.Combine(environment.ContentRootPath, "../Themes");
 
 environment.ContentRootFileProvider = FileProviderComposer.ComposeProviders(
-    // Inject external Modules directory
+    // Inject external Packages directory
     new PrefixedFileProvider("/Packages", new PhysicalFileProvider(packagesPath)),
 
     // Inject external Themes directory
@@ -261,7 +261,7 @@ environment.ContentRootFileProvider = FileProviderComposer.ComposeProviders(
 ```
 
 In this example, the `ComposeProviders` method handles any unnecessary nesting that might occur, including when the current
-`environment.ContentRootFileProvider` is a `CompositeFileProvider`. This ensures that all file providers merged into a single
+`environment.ContentRootFileProvider` is a `CompositeFileProvider`. This ensures that all file providers are merged into a single
 flat structure, avoiding unnecessary indirectness.
 
 #### Flattening Change Tokens

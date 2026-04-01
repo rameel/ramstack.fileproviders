@@ -16,7 +16,7 @@ dotnet add package Ramstack.FileProviders.Extensions
 ## Overview
 
 The library provides useful extensions for `IFileProvider`, bringing its capabilities and experience
-closer to what's being provided by `DirectoryInfo` and `FileInfo` classes.
+closer to what's provided by the `DirectoryInfo` and `FileInfo` classes.
 
 Simply stated, a `FileNode` knows which directory it is located in, and a directory represented
 by the `DirectoryNode` class can access its parent directory and list all files within it, recursively.

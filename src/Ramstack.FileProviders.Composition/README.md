@@ -31,15 +31,15 @@ builder.Environment.ContentRootFileProvider = FileProviderComposer.FlattenProvid
 
 ## Composing Providers
 The `ComposeProviders` method combines a list of `IFileProvider` instances into a single `IFileProvider`.
-During this process, all encountered `CompositeFileProvider` instances recursively flattened and merged into a single level.
-This eliminates unnecessary indirectness and streamline the file provider hierarchy.
+During this process, all encountered `CompositeFileProvider` instances are recursively flattened and merged into a single level.
+This eliminates unnecessary indirectness and streamlines the file provider hierarchy.
 
 ```csharp
 string packagesPath = Path.Combine(environment.ContentRootPath, "../Packages");
 string themesPath   = Path.Combine(environment.ContentRootPath, "../Themes");
 
 environment.ContentRootFileProvider = FileProviderComposer.ComposeProviders(
-    // Inject external Modules directory
+    // Inject external Packages directory
     new PrefixedFileProvider("/Packages", new PhysicalFileProvider(packagesPath)),
 
     // Inject external Themes directory
