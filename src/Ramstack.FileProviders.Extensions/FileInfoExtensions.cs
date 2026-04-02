@@ -75,7 +75,7 @@ public static class FileInfoExtensions
         // ReSharper disable once UseAwaitUsing
         using var stream = file.OpenRead();
 
-        var length = GetStreamLength(stream);
+        var length = stream.CanSeek ? stream.Length : 0;
         if (length > Array.MaxLength)
             throw new IOException("The file is too large.");
 
@@ -89,16 +89,15 @@ public static class FileInfoExtensions
         static byte[] ReadAllBytesImpl(Stream stream)
         {
             var bytes = new byte[stream.Length];
-            var index = 0;
+            var total = 0;
             do
             {
-                var count = stream.Read(bytes.AsSpan(index));
+                var count = stream.Read(bytes.AsSpan(total));
                 if (count == 0)
                     Error_EndOfStream();
 
-                index += count;
-            }
-            while (index < bytes.Length);
+                total += count;
+            } while (total < bytes.Length);
 
             return bytes;
         }
@@ -106,26 +105,23 @@ public static class FileInfoExtensions
         static byte[] ReadAllBytesUnknownLengthImpl(Stream stream)
         {
             var bytes = ArrayPool<byte>.Shared.Rent(512);
-            var index = 0;
+            var total = 0;
 
-            try
+            while (true)
             {
-                while (true)
-                {
-                    if (index == bytes.Length)
-                        bytes = ResizeBuffer(bytes);
+                if (total == bytes.Length)
+                    bytes = ResizeBuffer(bytes);
 
-                    var count = stream.Read(bytes.AsSpan(index));
-                    if (count == 0)
-                        return bytes.AsSpan(0, index).ToArray();
+                var count = stream.Read(bytes.AsSpan(total));
+                if (count == 0)
+                    break;
 
-                    index += count;
-                }
+                total += count;
             }
-            finally
-            {
-                ArrayPool<byte>.Shared.Return(bytes);
-            }
+
+            var result = bytes.AsSpan(0, total).ToArray();
+            ArrayPool<byte>.Shared.Return(bytes);
+            return result;
         }
     }
 
@@ -139,7 +135,7 @@ public static class FileInfoExtensions
     /// containing the full text from the current file.
     /// </returns>
     public static ValueTask<string> ReadAllTextAsync(this IFileInfo file, CancellationToken cancellationToken = default) =>
-        ReadAllTextAsync(file, null, cancellationToken);
+        ReadAllTextAsync(file, encoding: null, cancellationToken);
 
     /// <summary>
     /// Asynchronously reads all the text in the current file with the specified encoding.
@@ -170,7 +166,7 @@ public static class FileInfoExtensions
     /// containing an array of all lines in the current file.
     /// </returns>
     public static ValueTask<string[]> ReadAllLinesAsync(this IFileInfo file, CancellationToken cancellationToken = default) =>
-        ReadAllLinesAsync(file, Encoding.UTF8, cancellationToken);
+        ReadAllLinesAsync(file, encoding: null, cancellationToken);
 
     /// <summary>
     /// Asynchronously reads all lines of the current file with the specified encoding.
@@ -209,7 +205,7 @@ public static class FileInfoExtensions
         // ReSharper disable once UseAwaitUsing
         using var stream = file.OpenRead();
 
-        var length = GetStreamLength(stream);
+        var length = stream.CanSeek ? stream.Length : 0;
         if (length > Array.MaxLength)
             throw new IOException("The file is too large.");
 
@@ -225,16 +221,16 @@ public static class FileInfoExtensions
         static async ValueTask<byte[]> ReadAllBytesImplAsync(Stream stream, CancellationToken cancellationToken)
         {
             var bytes = new byte[stream.Length];
-            var index = 0;
+            var total = 0;
+
             do
             {
-                var count = await stream.ReadAsync(bytes.AsMemory(index), cancellationToken).ConfigureAwait(false);
+                var count = await stream.ReadAsync(bytes.AsMemory(total), cancellationToken).ConfigureAwait(false);
                 if (count == 0)
                     Error_EndOfStream();
 
-                index += count;
-            }
-            while (index < bytes.Length);
+                total += count;
+            } while (total < bytes.Length);
 
             return bytes;
         }
@@ -244,27 +240,24 @@ public static class FileInfoExtensions
             var bytes = ArrayPool<byte>.Shared.Rent(512);
             var total = 0;
 
-            try
+            while (true)
             {
-                while (true)
-                {
-                    if (total == bytes.Length)
-                        bytes = ResizeBuffer(bytes);
+                if (total == bytes.Length)
+                    bytes = ResizeBuffer(bytes);
 
-                    var count = await stream
-                        .ReadAsync(bytes.AsMemory(total), cancellationToken)
-                        .ConfigureAwait(false);
+                var count = await stream
+                    .ReadAsync(bytes.AsMemory(total), cancellationToken)
+                    .ConfigureAwait(false);
 
-                    if (count == 0)
-                        return bytes.AsSpan(0, total).ToArray();
+                if (count == 0)
+                    break;
 
-                    total += count;
-                }
+                total += count;
             }
-            finally
-            {
-                ArrayPool<byte>.Shared.Return(bytes);
-            }
+
+            var result = bytes.AsSpan(0, total).ToArray();
+            ArrayPool<byte>.Shared.Return(bytes);
+            return result;
         }
     }
 
@@ -275,27 +268,10 @@ public static class FileInfoExtensions
             length = Math.Max(Array.MaxLength, oldArray.Length + 1);
 
         var newArray = ArrayPool<byte>.Shared.Rent(length);
-
-        Debug.Assert(oldArray.Length <= newArray.Length);
         oldArray.AsSpan().TryCopyTo(newArray);
 
         ArrayPool<byte>.Shared.Return(oldArray);
         return newArray;
-    }
-
-    private static long GetStreamLength(Stream stream)
-    {
-        try
-        {
-            if (stream.CanSeek)
-                return stream.Length;
-        }
-        catch
-        {
-            // skip
-        }
-
-        return 0;
     }
 
     private static void Error_EndOfStream() =>
