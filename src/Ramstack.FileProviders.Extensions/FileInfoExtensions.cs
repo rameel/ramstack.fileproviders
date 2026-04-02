@@ -153,38 +153,11 @@ public static class FileInfoExtensions
     /// </returns>
     public static async ValueTask<string> ReadAllTextAsync(this IFileInfo file, Encoding? encoding, CancellationToken cancellationToken = default)
     {
-        const int BufferSize = 4096;
+        // ReSharper disable once UseAwaitUsing
+        using var stream = file.OpenRead();
+        using var reader = new StreamReader(stream, encoding!);
 
-        var stream = file.OpenRead();
-        var reader = new StreamReader(stream, encoding ??= Encoding.UTF8);
-        var buffer = (char[]?)null;
-
-        try
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-
-            buffer = ArrayPool<char>.Shared.Rent(encoding.GetMaxCharCount(BufferSize));
-            var sb = new StringBuilder();
-
-            while (true)
-            {
-                var count = await reader
-                    .ReadAsync(new Memory<char>(buffer), cancellationToken)
-                    .ConfigureAwait(false);
-
-                if (count == 0)
-                    return sb.ToString();
-
-                sb.Append(buffer.AsSpan(0, count));
-            }
-        }
-        finally
-        {
-            reader.Dispose();
-
-            if (buffer is not null)
-                ArrayPool<char>.Shared.Return(buffer);
-        }
+        return await reader.ReadToEndAsync(cancellationToken).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -211,15 +184,13 @@ public static class FileInfoExtensions
     /// </returns>
     public static async ValueTask<string[]> ReadAllLinesAsync(this IFileInfo file, Encoding? encoding, CancellationToken cancellationToken = default)
     {
-        var stream = file.OpenRead();
+        // ReSharper disable once UseAwaitUsing
+        using var stream = file.OpenRead();
         using var reader = new StreamReader(stream, encoding!);
 
         var list = new List<string>();
-        while (await reader.ReadLineAsync().ConfigureAwait(false) is { } line)
-        {
-            cancellationToken.ThrowIfCancellationRequested();
+        while (await reader.ReadLineAsync(cancellationToken).ConfigureAwait(false) is { } line)
             list.Add(line);
-        }
 
         return list.ToArray();
     }
