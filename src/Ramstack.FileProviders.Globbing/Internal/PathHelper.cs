@@ -110,7 +110,10 @@ internal static class PathHelper
             if (depth < 1
                 || r.final == length
                 || IsGlobStar(ref s, r.start, r.final))
+            {
+                Debug.Assert(r.final >= 0 && r.final <= pattern.Length);
                 return MemoryMarshal.CreateReadOnlySpan(ref s, r.final);
+            }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -245,7 +248,7 @@ internal static class PathHelper
                     return (start, _last);
                 }
 
-                if (Avx2.IsSupported && (int)_position + Vector256<ushort>.Count <= length)
+                if (Avx2.IsSupported && (int)_position <= length - Vector256<ushort>.Count)
                 {
                     var chunk = LoadVector256(ref source, _position);
                     var slash = Vector256.Create('/');
@@ -265,7 +268,7 @@ internal static class PathHelper
                     if (_mask == 0)
                         _position += Vector256<ushort>.Count;
                 }
-                else if (Sse2.IsSupported && !Avx2.IsSupported && (int)_position + Vector128<ushort>.Count <= length)
+                else if (Sse2.IsSupported && !Avx2.IsSupported && (int)_position <= length - Vector128<ushort>.Count)
                 {
                     var chunk = LoadVector128(ref source, _position);
                     var slash = Vector128.Create('/');
@@ -285,7 +288,7 @@ internal static class PathHelper
                     if (_mask == 0)
                         _position += Vector128<ushort>.Count;
                 }
-                else if (AdvSimd.Arm64.IsSupported && (int)_position + Vector128<ushort>.Count <= length)
+                else if (AdvSimd.Arm64.IsSupported && (int)_position <= length - Vector128<ushort>.Count)
                 {
                     var chunk = LoadVector128(ref source, _position);
                     var slash = Vector128.Create('/');
