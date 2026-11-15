@@ -112,19 +112,16 @@ public sealed class PrefixedFileProvider : IFileProvider, IDisposable
     }
 
     /// <summary>
-    /// Attempts to resolve a glob filter relative to a virtual path prefix,
-    /// removing any prefix segments that match corresponding parts of the filter.
+    /// Attempts to translate a glob filter for use under a virtual path prefix.
     /// </summary>
     /// <param name="prefix">The virtual path prefix representing the base of the current provider.</param>
     /// <param name="filter">The incoming glob filter that may include glob patterns.</param>
     /// <returns>
-    /// A normalized filter value that can be safely passed to the wrapped file provider
-    /// or <see langword="null" /> if the filter cannot be applied.
+    /// A filter relative to <paramref name="prefix" />, or <see langword="null" />
+    /// if no applicable filter can be resolved.
     /// </returns>
     /// <remarks>
-    /// The goal is to determine whether a specified glob filter
-    /// (e.g., "/modules/*/{assets,css,js}/**/*.{css,js}") applies to this provider, which is
-    /// virtually mounted at a specific prefix path (e.g., "/modules/profile/assets").
+    /// The translated filter may match additional paths.
     /// </remarks>
     private static string? ResolveGlobFilter(string prefix, string filter)
     {
