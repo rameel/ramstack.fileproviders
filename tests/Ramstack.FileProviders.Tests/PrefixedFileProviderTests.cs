@@ -19,6 +19,10 @@ public sealed class PrefixedFileProviderTests : AbstractFileProviderTests
 
     private readonly TempFileStorage _storage = new TempFileStorage();
 
+    [OneTimeTearDown]
+    public void Cleanup() =>
+        _storage.Dispose();
+
     protected override IFileProvider GetFileProvider() =>
         new PrefixedFileProvider("/project",
             new PhysicalFileProvider(

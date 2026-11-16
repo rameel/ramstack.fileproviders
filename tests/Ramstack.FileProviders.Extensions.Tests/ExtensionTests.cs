@@ -12,8 +12,11 @@ public class ExtensionTests
         _provider = new PhysicalFileProvider(root: _storage.Root, ExclusionFilters.None);
 
     [OneTimeTearDown]
-    public void Cleanup() =>
+    public void Cleanup()
+    {
+        _provider.Dispose();
         _storage.Dispose();
+    }
 
     [Test]
     public void Structures_ShouldMatch()
